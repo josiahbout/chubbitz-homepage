@@ -1,271 +1,40 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Motion Treasures — Links</title>
-<meta name="description" content="Motion Treasures — 3D animation for product launches. Links, work, and newsletter.">
-
-<!-- ================================================================
-  HOW TO EDIT THIS PAGE
-  1. Change the name / tagline in the <header> section below.
-  2. Edit the LINKS list further down — each <a class="link-card">
-     is one button. Change the href, the label text, and the small
-     description line.
-  3. Replace "MT" in the logo mark with your own initials/mark if
-     you want, or swap it for an <img> tag pointing at a logo file.
-  4. Save this file as index.html at the ROOT of your GitHub repo
-     (same folder as your CNAME file), commit, and push. GitHub
-     Pages will pick it up automatically — no build step needed.
-================================================================= -->
-
-<style>
-  :root {
-    --bg: #0e0d12;
-    --panel: #17161d;
-    --panel-border: #2a2830;
-    --text: #f3f1ea;
-    --text-muted: #8b889c;
-    --gold: #c8a662;
-    --violet: #6e7bff;
-  }
-
-  * { box-sizing: border-box; }
-
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  body {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    padding: 64px 20px 80px;
-    background-image:
-      radial-gradient(circle at 50% -10%, rgba(110, 123, 255, 0.10), transparent 45%),
-      radial-gradient(circle at 50% 110%, rgba(200, 166, 98, 0.08), transparent 50%);
-  }
-
-  .page {
-    width: 100%;
-    max-width: 480px;
-  }
-
-  /* ---------- Header / mark ---------- */
-
-  header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    margin-bottom: 48px;
-  }
-
-  .mark {
-    position: relative;
-    width: 64px;
-    height: 64px;
-    border-radius: 16px;
-    background: var(--panel);
-    border: 1px solid var(--panel-border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Space Grotesk', 'Inter', sans-serif;
-    font-weight: 700;
-    font-size: 20px;
-    letter-spacing: 0.02em;
-    color: var(--text);
-    overflow: hidden;
-    margin-bottom: 20px;
-  }
-
-  /* signature: a slow diagonal light sweep across the mark,
-     like a turntable light pass across a rendered product */
-  .mark::after {
-    content: "";
-    position: absolute;
-    top: -50%;
-    left: -60%;
-    width: 40%;
-    height: 200%;
-    background: linear-gradient(
-      100deg,
-      transparent,
-      rgba(200, 166, 98, 0.55),
-      rgba(110, 123, 255, 0.35),
-      transparent
-    );
-    transform: rotate(20deg);
-    animation: sweep 5s ease-in-out infinite;
-  }
-
-  @keyframes sweep {
-    0%   { left: -60%; }
-    45%  { left: 130%; }
-    100% { left: 130%; }
-  }
-
-  h1 {
-    font-family: 'Space Grotesk', 'Inter', sans-serif;
-    font-weight: 700;
-    font-size: 26px;
-    letter-spacing: -0.01em;
-    margin: 0 0 8px;
-  }
-
-  .tagline {
-    font-size: 14px;
-    color: var(--text-muted);
-    max-width: 320px;
-    line-height: 1.5;
-    margin: 0;
-  }
-
-  /* ---------- Link cards ---------- */
-
-  .links {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .link-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    padding: 16px 20px;
-    background: var(--panel);
-    border: 1px solid var(--panel-border);
-    border-radius: 12px;
-    text-decoration: none;
-    color: var(--text);
-    overflow: hidden;
-    transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
-  }
-
-  .link-card:hover,
-  .link-card:focus-visible {
-    transform: translateY(-2px);
-    border-color: rgba(200, 166, 98, 0.5);
-    background: #1c1b23;
-  }
-
-  .link-card:focus-visible {
-    outline: 2px solid var(--violet);
-    outline-offset: 2px;
-  }
-
-  .link-card .label {
-    font-weight: 600;
-    font-size: 15px;
-  }
-
-  .link-card .desc {
-    font-size: 13px;
-    color: var(--text-muted);
-  }
-
-  /* hover sweep, echoes the header mark's light pass */
-  .link-card::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -30%;
-    width: 24%;
-    height: 100%;
-    background: linear-gradient(
-      100deg,
-      transparent,
-      rgba(255, 255, 255, 0.06),
-      transparent
-    );
-    transform: skewX(-20deg);
-    transition: left 0.5s ease;
-    pointer-events: none;
-  }
-
-  .link-card:hover::after {
-    left: 130%;
-  }
-
-  /* ---------- Footer ---------- */
-
-  footer {
-    margin-top: 48px;
-    text-align: center;
-    font-size: 12px;
-    color: var(--text-muted);
-  }
-
-  footer a {
-    color: var(--text-muted);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .mark::after,
-    .link-card::after {
-      animation: none;
-      transition: none;
-      display: none;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitHub Pages Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      margin: 0;
+      align-items: center;
+      justify-content: center;
+      background: #111;
+      color: #fff;
     }
-  }
-</style>
+    .box {
+      text-align: center;
+      padding: 24px;
+      border: 1px solid #333;
+      border-radius: 12px;
+      background: #1a1a1a;
+    }
+    h1 {
+      margin: 0 0 10px;
+    }
+    p {
+      margin: 0;
+      color: #aaa;
+    }
+  </style>
 </head>
 <body>
-
-<div class="page">
-
-  <header>
-    <div class="mark">MT</div>
-    <h1>Motion Treasures</h1>
-    <p class="tagline">3D animation for product launches — from render to reveal.</p>
-  </header>
-
-  <!-- ============ EDIT YOUR LINKS BELOW ============ -->
-  <div class="links">
-
-    <a class="link-card" href="https://motiontreasures.com" target="_blank" rel="noopener">
-      <span class="label">Studio site &amp; portfolio</span>
-      <span class="desc">See recent product launch work</span>
-    </a>
-
-    <a class="link-card" href="#" target="_blank" rel="noopener">
-      <span class="label">Newsletter</span>
-      <span class="desc">Blender tips &amp; freelancing notes</span>
-    </a>
-
-    <a class="link-card" href="#" target="_blank" rel="noopener">
-      <span class="label">Book a call</span>
-      <span class="desc">Talk through your next launch</span>
-    </a>
-
-    <a class="link-card" href="#" target="_blank" rel="noopener">
-      <span class="label">Instagram</span>
-      <span class="desc">Behind the scenes &amp; reels</span>
-    </a>
-
-    <a class="link-card" href="#" target="_blank" rel="noopener">
-      <span class="label">YouTube</span>
-      <span class="desc">Shorts &amp; process breakdowns</span>
-    </a>
-
+  <div class="box">
+    <h1>It works</h1>
+    <p>GitHub Pages is live</p>
   </div>
-  <!-- ============ END LINKS ============ -->
-
-  <footer>
-    <p>&copy; 2026 Motion Treasures</p>
-  </footer>
-
-</div>
-
 </body>
 </html>
