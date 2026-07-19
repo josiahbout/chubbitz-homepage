@@ -199,6 +199,30 @@
     cursor: pointer;
   }
 
+  /* featured link-card with an image on the right, e.g. the sticker sheet promo */
+  .link-card.featured {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-color: rgba(200, 166, 98, 0.5);
+  }
+
+  .link-card.featured .text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .link-card.featured .thumb {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid var(--panel-border);
+  }
+
   /* ---------- Social icons ---------- */
 
   .socials {
@@ -286,6 +310,14 @@
 
   <!-- ============ EDIT YOUR LINKS BELOW ============ -->
   <div class="links">
+
+    <a class="link-card featured" href="https://buy.stripe.com/bJe3cv4VO5cseN7aqkbQY03" target="_blank" rel="noopener">
+      <span class="text">
+        <span class="label">Pre-order a sticker sheet - U.S. only</span>
+        <span class="desc">Limited time discount</span>
+      </span>
+      <img class="thumb" src="sticker-sheet.png" alt="Sticker sheet preview">
+    </a>
 
     <a class="link-card" href="https://thechubbitz.s.gy/OQph93" target="_blank" rel="noopener">
       <span class="label">Get a web domain at Porkbun.com!</span>
