@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Chubbitz — Membership</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plum: #0B1E3D;
+    --plum-deep: #071427;
+    --cream: #FFF4E3;
+    --cream-soft: #FFEBCF;
+    --pink: #FF5D8F;
+    --pink-deep: #E4467A;
+    --lime: #7DD3F0;
+    --lime-deep: #4FB8DE;
+    --gold: #FFC145;
+    --gold-deep: #F0A61E;
+    --ink: #1b1f34;
+    --ink-soft: #68727e;
+    --paper: #FDF6EC;
+    --radius-lg: 28px;
+    --radius-md: 18px;
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--plum);
+    background-image:
+      radial-gradient(circle at 15% 8%, rgba(255,93,143,0.16), transparent 45%),
+      radial-gradient(circle at 85% 92%, rgba(125,211,240,0.14), transparent 40%);
+    color:var(--paper);
+    font-family:'Nunito Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fredoka', sans-serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+
+  /* ---------- Layout shell ---------- */
+  .wrap{max-width:1080px; margin:0 auto; padding:0 20px;}
+
+  /* ---------- Header ---------- */
+  header.site{
+    padding:22px 0 6px;
+  }
+  .brand-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .brand-dot{
+    width:14px; height:14px; border-radius:50%;
+    background:var(--gold);
+    box-shadow:0 0 0 4px rgba(255,193,69,0.18);
+  }
+  .brand-name{
+    font-size:15px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--cream-soft);
+    font-weight:800;
+    font-family:'Nunito Sans', sans-serif;
+  }
+  .brand-home-link{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--cream-soft);
+    transition:color .18s ease, transform .18s ease;
+  }
+  .brand-home-link:hover,
+  .brand-home-link:focus-visible{
+    color:var(--gold);
+    transform:translateY(-1px);
+  }
+  .brand-home-link svg{
+    width:22px;
+    height:22px;
+    display:block;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding:28px 0 40px;
+    text-align:center;
+  }
+  .mascot{
+    width:300px;
+    height:300px;
+    object-fit:contain;
+    margin:6px auto 10px;
+    display:block;
+  }
+  @keyframes bob{
+    0%,100%{ transform:translateY(0) rotate(-1.5deg); }
+    50%{ transform:translateY(-9px) rotate(1.5deg); }
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:rgba(255,244,227,0.08);
+    border:1px solid rgba(255,244,227,0.18);
+    padding:6px 14px;
+    border-radius:999px;
+    font-size:12.5px;
+    font-weight:700;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:var(--lime);
+    margin-bottom:16px;
+  }
+  .hero h1{
+    font-size:clamp(28px, 7vw, 44px);
+    line-height:1.08;
+    margin:0 0 14px;
+    color:var(--cream);
+  }
+  .hero h1 em{
+    font-style:normal;
+    color:var(--gold);
+  }
+  .hero p{
+    font-size:16px;
+    line-height:1.55;
+    color:var(--ink-soft);
+    color:#e0e0e0;
+    max-width:480px;
+    margin:0 auto 26px;
+  }
+
+  /* ---------- Progress ---------- */
+  .progress-card{
+    max-width:420px;
+    margin:0 auto;
+    background:rgba(255,244,227,0.06);
+    border:1px solid rgba(255,244,227,0.16);
+    border-radius:var(--radius-md);
+    padding:16px 18px 18px;
+    text-align:left;
+  }
+  .progress-top{
+    margin-bottom:12px;
+  }
+  .progress-amount{
+    display:block;
+    font-family:'Fredoka', sans-serif;
+    font-size:clamp(38px, 11vw, 52px);
+    font-weight:700;
+    color:var(--cream);
+    line-height:1;
+  }
+  .progress-amount .unit{
+    font-family:'Nunito Sans', sans-serif;
+    font-size:15px;
+    font-weight:700;
+    color:#cecece;
+    margin-left:6px;
+  }
+  .progress-goal{
+    display:block;
+    font-size:13px;
+    font-weight:700;
+    color:var(--gold);
+    margin-top:4px;
+  }
+  .progress-track{
+    position:relative;
+    height:14px;
+    background:rgba(0,0,0,0.28);
+    border-radius:999px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    position:absolute;
+    top:0; left:0; bottom:0;
+    width:0%;
+    background:linear-gradient(90deg, var(--lime) 0%, var(--gold) 100%);
+    border-radius:999px;
+    transition:width 1.1s cubic-bezier(.3,.8,.3,1);
+  }
+  .progress-fill::after{
+    content:'';
+    position:absolute;
+    right:0; top:0; bottom:0;
+    width:14px;
+    background:rgba(255,255,255,0.35);
+    filter:blur(4px);
+  }
+
+  /* ---------- Tier grid ---------- */
+  .tiers{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    padding:0 20px 24px;
+    max-width:1080px;
+    margin:0 auto;
+  }
+  /* this tier shown first on mobile; DOM/desktop order untouched */
+  .tier.featured{order:-1;}
+  @media (min-width:860px){
+    .tiers{
+      flex-direction:row;
+      align-items:stretch;
+      max-width:1400px;
+    }
+    .tier{flex:1;}
+    .tier.featured{order:0;}
+  }
+
+  .tier{
+    background:var(--paper);
+    color:var(--ink);
+    border-radius:var(--radius-lg);
+    padding:26px 22px 24px;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    box-shadow:0 18px 40px -18px rgba(0,0,0,0.55);
+    border:2px solid transparent;
+  }
+  .tier.featured{
+    border-color:var(--gold-deep);
+    background:linear-gradient(180deg, #FFF8F0 0%, var(--paper) 100%);
+  }
+
+  .ribbon{
+    position:absolute;
+    top:-13px;
+    left:22px;
+    background:var(--gold-deep);
+    color:#fff;
+    font-size:11.5px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    padding:5px 12px;
+    border-radius:999px;
+    box-shadow:0 6px 14px -4px rgba(228,70,122,0.6);
+  }
+
+  .tier-name{
+    font-size:13px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--ink-soft);
+    margin:2px 0 6px;
+  }
+  .price-row{
+    display:flex;
+    align-items:baseline;
+    gap:6px;
+    margin-bottom:4px;
+  }
+  .price{
+    font-family:'Fredoka', sans-serif;
+    font-size:44px;
+    font-weight:700;
+    color:var(--ink);
+    line-height:1;
+  }
+  .price-unit{
+    font-size:14px;
+    font-weight:700;
+    color:var(--ink-soft);
+  }
+  .tier-sub{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    margin-bottom:18px;
+  }
+  .price-row + ul.features{
+    margin-top:14px;
+  }
+
+  /* toggle */
+  .toggle-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .toggle{
+    position:relative;
+    display:inline-block;
+    width:42px;
+    height:24px;
+    flex:none;
+  }
+  .toggle input{
+    opacity:0;
+    width:0;
+    height:0;
+    position:absolute;
+  }
+  .toggle-track{
+    position:absolute;
+    inset:0;
+    background:rgba(43,27,52,0.2);
+    border-radius:999px;
+    transition:background .22s ease;
+    cursor:pointer;
+  }
+  .toggle-track::before{
+    content:'';
+    position:absolute;
+    left:3px;
+    top:3px;
+    width:18px;
+    height:18px;
+    background:#fff;
+    border-radius:50%;
+    box-shadow:0 1px 3px rgba(0,0,0,0.3);
+    transition:transform .22s cubic-bezier(.5,1.4,.5,1);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .toggle input:checked + .toggle-track{
+    background:var(--gold);
+  }
+  .toggle input:checked + .toggle-track::before{
+    transform:translateX(18px);
+  }
+  .toggle-check{
+    position:absolute;
+    left:3px;
+    top:3px;
+    width:18px;
+    height:18px;
+    opacity:0;
+    transition:opacity .22s ease, transform .22s cubic-bezier(.5,1.4,.5,1);
+    pointer-events:none;
+  }
+  .toggle input:checked ~ .toggle-check{
+    opacity:1;
+    transform:translateX(18px);
+  }
+  .toggle-label{
+    font-size:14px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .toggle-label .save{ color:var(--gold-deep); }
+
+  ul.features{
+    list-style:none;
+    margin:0 0 22px;
+    padding:0;
+    flex:1;
+  }
+  ul.features li{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    font-size:14.5px;
+    line-height:1.4;
+    padding:8px 0;
+    border-bottom:1px solid rgba(43,27,52,0.08);
+  }
+  ul.features li:last-child{ border-bottom:none; }
+  ul.features li .check{
+    flex:none;
+    width:19px; height:19px;
+    margin-top:2px;
+    border-radius:50%;
+    background:var(--lime);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  ul.features li .check svg{ width:11px; height:11px; }
+  .tier.featured ul.features li .check{
+    background:var(--gold);
+  }
+  ul.features li strong{ color:var(--ink); }
+  ul.features li .label{
+    flex:1;
+    min-width:0;
+  }
+
+  .cta{
+    display:block;
+    width:100%;
+    text-align:center;
+    border:none;
+    border-radius:14px;
+    padding:15px 18px;
+    font-family:'Fredoka', sans-serif;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    color:#fff;
+    background:var(--ink);
+    transition:transform .15s ease, box-shadow .15s ease;
+    box-shadow:0 10px 22px -10px rgba(43,27,52,0.55);
+  }
+  .cta:hover{ transform:translateY(-2px) scale(1.01); }
+  .cta:active{ transform:translateY(0) scale(0.98); }
+  .tier.featured .cta{ background:var(--gold-deep); box-shadow:0 10px 22px -10px rgba(255, 238, 0, 0.6);}
+
+  /* ---------- Brand callout ---------- */
+  .brand-cta{
+    max-width:520px;
+    margin:0 auto 40px;
+    padding:20px 22px;
+    text-align:center;
+    background:rgba(255,244,227,0.06);
+    border:1px solid rgba(255,244,227,0.16);
+    border-radius:var(--radius-md);
+  }
+  .brand-cta p{
+    margin:0;
+    font-size:14.5px;
+    line-height:1.55;
+    color:#D8C9DE;
+  }
+  .brand-cta a{
+    color:var(--lime-deep);
+    font-weight:800;
+    text-decoration:underline;
+    text-underline-offset:3px;
+  }
+
+  /* ---------- Footer ---------- */
+  footer{
+    padding:34px 0 46px;
+    text-align:center;
+    color:#B7A6C0;
+    font-size:12.5px;
+    line-height:1.6;
+  }
+  footer .paw{
+    display:inline-block;
+    margin-bottom:8px;
+    opacity:.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="site">
+    <div class="brand-row">
+      <a class="brand-home-link" href="/" aria-label="The Chubbitz home">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M3 11L12 4L21 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M5.5 9.5V19C5.5 19.5523 5.94772 20 6.5 20H9.5C10.0523 20 10.5 19.5523 10.5 19V15C10.5 14.4477 10.9477 14 11.5 14H12.5C13.0523 14 13.5 14.4477 13.5 15V19C13.5 19.5523 13.9477 20 14.5 20H17.5C18.0523 20 18.5 19.5523 18.5 19V9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <video class="mascot" autoplay loop muted playsinline aria-label="A round Chubbitz creature dancing">
+      <source src="random_chub.webm" type="video/webm">
+      <source src="random_chub.mp4" type="video/mp4">
+    </video>
+    <h1>Help curse another <em>Chubbitz</em> with<br>existence in this wretched world.</h1>
+    <p>Your support crowd-funds the next Chubbitz to life!<br>You also get some exclusive perks!</p>
+
+    <div class="progress-card">
+      <div class="progress-top">
+        <span class="progress-amount">$<span id="raisedCount">0</span><span class="unit">raised</span></span>
+        <span class="progress-goal">out of $1,000 · till Chubbitz #8</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+  <section class="tiers">
+
+    <!-- member -->
+    <article class="tier">
+      <p class="tier-name">Member</p>
+      <div class="price-row">
+        <span class="price">Free</span>
+      </div>
+      <ul class="features">
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12.5L9.5 18L20 6" stroke="#2B1B34" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="label">Access to the Discord server</span></li>
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12.5L9.5 18L20 6" stroke="#2B1B34" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="label">1 vote on every crowd-funded Chubbitz' name &amp; shape</span></li>
+      </ul>
+      <a class="cta" href="https://discord.gg/HCnecgrZGj">Join</a>
+    </article>
+
+    <!-- SUPPORTER (toggle) -->
+    <article class="tier featured">
+      <span class="ribbon">Most popular</span>
+      <p class="tier-name">Supporter</p>
+
+      <label class="toggle-row" for="annualToggle">
+        <span class="toggle">
+          <input type="checkbox" id="annualToggle">
+          <span class="toggle-track"></span>
+          <svg class="toggle-check" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12.5L9.5 18L20 6" stroke="#FFC145" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="toggle-label">Pay annually <span class="save">(Save 30%)</span></span>
+      </label>
+
+      <div class="price-row">
+        <span class="price" id="supporterPrice">$5</span>
+        <span class="price-unit" id="supporterUnit">/ month - cancel anytime</span>
+      </div>
+
+      <ul class="features">
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12.5L9.5 18L20 6" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="label">Access to the Discord server</span></li>
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12.5L9.5 18L20 6" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="label">Access to the private supporters channels</span></li>
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12.5L9.5 18L20 6" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="label">Early access to videos &amp; sneak peak content</span></li>
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12.5L9.5 18L20 6" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="label">Choose the options for the next Chubbitz' name and shape</span></li>
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12.5L9.5 18L20 6" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="label">10 votes on every crowd-funded Chubbitz' name & shape</span></li>
+      </ul>
+      <a class="cta" id="supporterCta" href="https://buy.stripe.com/aFa3cwdej10q5gMah673G00">Join</a>
+    </article>
+
+    <!-- SMALL BUSINESS -->
+    <article class="tier brand">
+      <p class="tier-name">Small business</p>
+      <div class="price-row">
+        <span class="price">$300</span>
+        <span class="price-unit">one‑time</span>
+      </div>
+      <ul class="features">
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12.5L9.5 18L20 6" stroke="#2B1B34" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="label">Lifetime access to the supporters tier perks!</span></li>
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12.5L9.5 18L20 6" stroke="#2B1B34" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="label">One sentence about your product/service, <strong>read aloud</strong> in the video that launches the crowd-funded Chubbitz</span></li>
+      </ul>
+      <a class="cta" href="https://buy.stripe.com/14AdRa6PV38ycJeah673G01">Join</a>
+    </article>
+
+    <!-- BRAND -->
+    <article class="tier brand">
+      <p class="tier-name">Brand</p>
+      <div class="price-row">
+        <span class="price">Custom</span>
+      </div>
+      <ul class="features">
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12.5L9.5 18L20 6" stroke="#2B1B34" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="label">A video made just for you with a full promotional segment prominently featuring your logo and product</span></li>
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12.5L9.5 18L20 6" stroke="#2B1B34" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="label">A link in my bio</span></li>
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12.5L9.5 18L20 6" stroke="#2B1B34" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="label">Complementary organic shout-outs in future videos</span></li>
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12.5L9.5 18L20 6" stroke="#2B1B34" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="label">A follow from TheChubbitz socials to your brand's socials</span></li>
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12.5L9.5 18L20 6" stroke="#2B1B34" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="label">A unique Chubbitz I customize for your brand that joins the overarching story</span></li>
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12.5L9.5 18L20 6" stroke="#2B1B34" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="label">Lifetime access to the supporters tier perks!</span></li>
+      </ul>
+      <a href="mailto:hello@thechubbitz.com?subject=Custom%20Chubbitz%20quote" class="cta">Contact</a>
+    </article>
+
+  </section>
+
+<div class="wrap">
+  <section class="brand-cta">
+    <p>Have a question or just want to reach out to me directly? <a href="mailto:hello@thechubbitz.com?">Email me here!</a></p>
+  </section>
+
+  <footer>
+    <div></div>
+  </footer>
+</div>
+
+<script>
+  // Fundraising progress bar — fills in on load
+  const RAISED = 392;
+  const GOAL = 1000;
+  requestAnimationFrame(() => {
+    document.getElementById('progressFill').style.width = (RAISED / GOAL * 100) + '%';
+  });
+
+  // Animate the raised amount counting up from 0
+  (function animateRaised(){
+    const el = document.getElementById('raisedCount');
+    if(!el) return;
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      el.textContent = RAISED;
+      return;
+    }
+    const duration = 1400;
+    const start = performance.now();
+    function tick(now){
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(eased * RAISED);
+      if(progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
+
+  // Monthly / Annual toggle for Supporter tier
+  const annualToggle = document.getElementById('annualToggle');
+  const priceEl = document.getElementById('supporterPrice');
+  const unitEl = document.getElementById('supporterUnit');
+  const cta = document.getElementById('supporterCta');
+
+  const modes = {
+    monthly: {
+      price: '$5', unit: '/ month - cancel anytime',
+      cta: 'Join', url: 'https://buy.stripe.com/aFa3cwdej10q5gMah673G00'
+    },
+    annual: {
+      price: '$42', unit: '/ year - cancel anytime',
+      cta: 'Join', url: 'https://buy.stripe.com/bJe00k0rxbF47oUdti73G02'
+    }
+  };
+
+  annualToggle.addEventListener('change', () => {
+    const m = annualToggle.checked ? modes.annual : modes.monthly;
+    priceEl.textContent = m.price;
+    unitEl.textContent = m.unit;
+    cta.textContent = m.cta;
+    cta.href = m.url;
+  });
+</script>
+
+</body>
+</html>
