@@ -9,8 +9,6 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://media.link.me">
-<link rel="preconnect" href="https://hls.link.me">
 <link rel="preconnect" href="https://i.ytimg.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -292,7 +290,7 @@
     z-index:3;              /* must beat .hero, which is positioned and would otherwise cover it */
     background:var(--bg);
     margin:calc(-1 * var(--overlay-lift)) -18px 0;
-    padding:40px 18px 0;    /* padding (not margin) so the background starts at the seam */
+    padding:25px 18px 0;    /* padding (not margin) so the background starts at the seam */
   }
   .content > .section:first-child{ margin-top:0; }
   section[aria-labelledby="links-title"] + section{
@@ -655,7 +653,7 @@
     <div class="banner">
       <div class="banner-frame">
         <video autoplay muted loop playsinline preload="auto" aria-label="The Chubbitz" tabindex="-1">
-          <source src="skyman_waving.mp4" type="video/mp4">
+          <source src="/media/skyman_waving.mp4" type="video/mp4">
         </video>
         <div class="banner-fade" aria-hidden="true"></div>
 
@@ -693,7 +691,7 @@
     <ul class="links">
       <li>
         <a class="link-card" href="https://discord.gg/G9R9sPUDy8" target="_blank" rel="noopener noreferrer">
-          <img class="link-icon" loading="lazy" src="https://media.link.me/_resize/image/width=128,height=128,quality=90,format=webp/images/external-links/2982807/1787059490165.gif" alt="">
+          <img class="link-icon" loading="lazy" src="/media/chub-club.webp" alt="">
           <span class="link-text">
             <span class="link-title">Join "The Chub Club" community!</span>
             <span class="link-sub">It's free and fun!</span>
@@ -713,7 +711,7 @@
         </span>
         <span class="product-cta">Buy now</span>
       </span>
-      <img loading="lazy" src="https://media.link.me/_resize/image/width=786,quality=90,format=webp/images/external-links/2982807/1785156881886.png" alt="Chubbitz sticker sheet">
+      <img loading="lazy" src="/media/sticker-sheet.webp" alt="Chubbitz sticker sheet">
     </a>
     <ul class="links">
       <li>
@@ -736,28 +734,28 @@
     <ul class="links">
       <li>
         <a class="link-card" href="https://join.link.me/thechubbitz/creator" target="_blank" rel="noopener noreferrer">
-          <img class="link-icon" loading="lazy" src="https://media.link.me/_resize/image/width=128,height=128,quality=90,format=webp/images/external-links/2982807/1786186958511.png" alt="">
+          <img class="link-icon" loading="lazy" src="/media/linkme.webp" alt="">
           <span class="link-text"><span class="link-title">Get 20% off Link.me</span></span>
           <svg class="link-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
         </a>
       </li>
       <li>
         <a class="link-card" href="https://thechubbitz.s.gy/rustyretirement" target="_blank" rel="noopener noreferrer">
-          <img class="link-icon" loading="lazy" src="https://media.link.me/_resize/image/width=128,height=128,quality=90,format=webp/images/external-links/2982807/1785504516018.jpeg" alt="">
+          <img class="link-icon" loading="lazy" src="/media/rustys-retirement.webp" alt="">
           <span class="link-text"><span class="link-title">Play Rusty's Retirement</span><span class="link-sub">On Steam</span></span>
           <svg class="link-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
         </a>
       </li>
       <li>
         <a class="link-card" href="https://thechubbitz.s.gy/airlearn" target="_blank" rel="noopener noreferrer">
-          <img class="link-icon" loading="lazy" src="https://media.link.me/_resize/image/width=128,height=128,quality=90,format=webp/images/external-links/2982807/1784942900721.png" alt="">
+          <img class="link-icon" loading="lazy" src="/media/airlearn.webp" alt="">
           <span class="link-text"><span class="link-title">Learn a language</span><span class="link-sub">Airlearn</span></span>
           <svg class="link-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
         </a>
       </li>
       <li>
         <a class="link-card" href="https://thechubbitz.s.gy/OQph93" target="_blank" rel="noopener noreferrer">
-          <img class="link-icon" loading="lazy" src="https://media.link.me/_resize/image/width=128,height=128,quality=90,format=webp/images/external-links/2982807/1784942923395.png" alt="">
+          <img class="link-icon" loading="lazy" src="/media/porkbun.webp" alt="">
           <span class="link-text"><span class="link-title">Cheap web domains</span><span class="link-sub">Porkbun</span></span>
           <svg class="link-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
         </a>
@@ -777,11 +775,11 @@
 
   <section class="section">
     <nav class="socials" aria-label="Social profiles">
-      <a href="https://www.youtube.com/@TheChubbitz" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><img loading="lazy" src="https://media.link.me/_resize/image/width=160,height=160,quality=90,format=webp/images/style/icons/v5.0/YouTube-1.png" alt=""></a>
-      <a href="https://www.instagram.com/thechubbitz" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><img loading="lazy" src="https://media.link.me/_resize/image/width=160,height=160,quality=90,format=webp/images/style/icons/v5.0/Instagram-1.png" alt=""></a>
-      <a href="https://www.tiktok.com/@thechubbitz" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><img loading="lazy" src="https://media.link.me/_resize/image/width=160,height=160,quality=90,format=webp/images/style/icons/v5.0/TikTok-1.png" alt=""></a>
-      <a href="https://discord.gg/G9R9sPUDy8" target="_blank" rel="noopener noreferrer" aria-label="Discord"><img loading="lazy" src="https://media.link.me/_resize/image/width=160,height=160,quality=90,format=webp/images/style/icons/v5.0/Discord-1.png" alt=""></a>
-      <a href="https://www.snapchat.com/@thechubbitz" target="_blank" rel="noopener noreferrer" aria-label="Snapchat"><img loading="lazy" src="https://media.link.me/_resize/image/width=160,height=160,quality=90,format=webp/images/style/icons/v5.0/Snapchat-1.png" alt=""></a>
+      <a href="https://www.youtube.com/@TheChubbitz" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><img loading="lazy" src="/media/youtube.webp" alt=""></a>
+      <a href="https://www.instagram.com/thechubbitz" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><img loading="lazy" src="/media/instagram.webp" alt=""></a>
+      <a href="https://www.tiktok.com/@thechubbitz" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><img loading="lazy" src="/media/tiktok.webp" alt=""></a>
+      <a href="https://discord.gg/G9R9sPUDy8" target="_blank" rel="noopener noreferrer" aria-label="Discord"><img loading="lazy" src="/media/discord.webp" alt=""></a>
+      <a href="https://www.snapchat.com/@thechubbitz" target="_blank" rel="noopener noreferrer" aria-label="Snapchat"><img loading="lazy" src="/media/snapchat.webp" alt=""></a>
     </nav>
   </section>
 
