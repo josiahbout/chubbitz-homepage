@@ -643,6 +643,7 @@
     *{ transition:none !important; }
   }
 </style>
+<script src="/analytics.js" defer></script>
 </head>
 <body>
 <div class="glow" aria-hidden="true"></div>
@@ -667,7 +668,7 @@
           </div>
 
           <div class="cta-row">
-            <button type="button" class="cta cta-combo" id="sponsor-btn">
+            <button type="button" class="cta cta-combo" id="sponsor-btn" data-track="sponsor_open">
               <span class="stat-rotator" aria-hidden="true">
                 <span class="stat-item">52.6K followers</span>
                 <span class="stat-item">4.7M+ views</span>
@@ -690,7 +691,7 @@
     </div>
     <ul class="links">
       <li>
-        <a class="link-card" href="https://discord.gg/G9R9sPUDy8" target="_blank" rel="noopener noreferrer">
+        <a class="link-card" data-track="link_click" data-track-label="discord" href="https://discord.gg/G9R9sPUDy8" target="_blank" rel="noopener noreferrer">
           <img class="link-icon" loading="lazy" src="/media/chub-club.webp" alt="">
           <span class="link-text">
             <span class="link-title">Join "The Chub Club" community!</span>
@@ -703,7 +704,7 @@
   </section>
 
   <section class="section" aria-label="Shop">
-    <a class="product" href="https://buy.stripe.com/bJe3cv4VO5cseN7aqkbQY03" target="_blank" rel="noopener noreferrer">
+    <a class="product" data-track="shop_click" data-track-label="sticker_sheet" href="https://buy.stripe.com/bJe3cv4VO5cseN7aqkbQY03" target="_blank" rel="noopener noreferrer">
       <span class="product-body">
         <span>
           <span class="product-title">Sticker sheet</span>
@@ -715,7 +716,7 @@
     </a>
     <ul class="links">
       <li>
-        <button type="button" class="link-card" id="email-link">
+        <button type="button" class="link-card" id="email-link" data-track="email_copy">
           <span class="link-icon link-icon-mail" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>
           </span>
@@ -733,28 +734,28 @@
     <div class="section-head"><span class="section-title" id="sponsors-title">My Sponsors</span></div>
     <ul class="links">
       <li>
-        <a class="link-card" href="https://join.link.me/thechubbitz/creator" target="_blank" rel="noopener noreferrer">
+        <a class="link-card" data-track="sponsor_click" data-track-label="linkme" href="https://join.link.me/thechubbitz/creator" target="_blank" rel="noopener noreferrer">
           <img class="link-icon" loading="lazy" src="/media/linkme.webp" alt="">
           <span class="link-text"><span class="link-title">Get 20% off Link.me</span></span>
           <svg class="link-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
         </a>
       </li>
       <li>
-        <a class="link-card" href="https://thechubbitz.s.gy/rustyretirement" target="_blank" rel="noopener noreferrer">
+        <a class="link-card" data-track="sponsor_click" data-track-label="rustys_retirement" href="https://thechubbitz.s.gy/rustyretirement" target="_blank" rel="noopener noreferrer">
           <img class="link-icon" loading="lazy" src="/media/rustys-retirement.webp" alt="">
           <span class="link-text"><span class="link-title">Play Rusty's Retirement</span><span class="link-sub">On Steam</span></span>
           <svg class="link-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
         </a>
       </li>
       <li>
-        <a class="link-card" href="https://thechubbitz.s.gy/airlearn" target="_blank" rel="noopener noreferrer">
+        <a class="link-card" data-track="sponsor_click" data-track-label="airlearn" href="https://thechubbitz.s.gy/airlearn" target="_blank" rel="noopener noreferrer">
           <img class="link-icon" loading="lazy" src="/media/airlearn.webp" alt="">
           <span class="link-text"><span class="link-title">Learn a language</span><span class="link-sub">Airlearn</span></span>
           <svg class="link-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
         </a>
       </li>
       <li>
-        <a class="link-card" href="https://thechubbitz.s.gy/OQph93" target="_blank" rel="noopener noreferrer">
+        <a class="link-card" data-track="sponsor_click" data-track-label="porkbun" href="https://thechubbitz.s.gy/OQph93" target="_blank" rel="noopener noreferrer">
           <img class="link-icon" loading="lazy" src="/media/porkbun.webp" alt="">
           <span class="link-text"><span class="link-title">Cheap web domains</span><span class="link-sub">Porkbun</span></span>
           <svg class="link-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
@@ -766,7 +767,7 @@
   <section class="section" aria-labelledby="yt-title">
     <div class="section-head">
       <span class="section-title" id="yt-title">Latest videos</span>
-      <a class="section-link" href="https://www.youtube.com/@TheChubbitz" target="_blank" rel="noopener noreferrer">See all
+      <a class="section-link" data-track="link_click" data-track-label="youtube_channel" href="https://www.youtube.com/@TheChubbitz" target="_blank" rel="noopener noreferrer">See all
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
       </a>
     </div>
@@ -775,11 +776,11 @@
 
   <section class="section">
     <nav class="socials" aria-label="Social profiles">
-      <a href="https://www.youtube.com/@TheChubbitz" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><img loading="lazy" src="/media/youtube.webp" alt=""></a>
-      <a href="https://www.instagram.com/thechubbitz" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><img loading="lazy" src="/media/instagram.webp" alt=""></a>
-      <a href="https://www.tiktok.com/@thechubbitz" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><img loading="lazy" src="/media/tiktok.webp" alt=""></a>
-      <a href="https://discord.gg/G9R9sPUDy8" target="_blank" rel="noopener noreferrer" aria-label="Discord"><img loading="lazy" src="/media/discord.webp" alt=""></a>
-      <a href="https://www.snapchat.com/@thechubbitz" target="_blank" rel="noopener noreferrer" aria-label="Snapchat"><img loading="lazy" src="/media/snapchat.webp" alt=""></a>
+      <a href="https://www.youtube.com/@TheChubbitz" target="_blank" rel="noopener noreferrer" aria-label="YouTube" data-track="social_click" data-track-label="youtube"><img loading="lazy" src="/media/youtube.webp" alt=""></a>
+      <a href="https://www.instagram.com/thechubbitz" target="_blank" rel="noopener noreferrer" aria-label="Instagram" data-track="social_click" data-track-label="instagram"><img loading="lazy" src="/media/instagram.webp" alt=""></a>
+      <a href="https://www.tiktok.com/@thechubbitz" target="_blank" rel="noopener noreferrer" aria-label="TikTok" data-track="social_click" data-track-label="tiktok"><img loading="lazy" src="/media/tiktok.webp" alt=""></a>
+      <a href="https://discord.gg/G9R9sPUDy8" target="_blank" rel="noopener noreferrer" aria-label="Discord" data-track="social_click" data-track-label="discord"><img loading="lazy" src="/media/discord.webp" alt=""></a>
+      <a href="https://www.snapchat.com/@thechubbitz" target="_blank" rel="noopener noreferrer" aria-label="Snapchat" data-track="social_click" data-track-label="snapchat"><img loading="lazy" src="/media/snapchat.webp" alt=""></a>
     </nav>
   </section>
 
@@ -804,7 +805,7 @@
           </svg>
         </span>
         <p class="modal-text">For fans who want special benefits</p>
-        <a class="modal-btn" href="/support">Support!</a>
+        <a class="modal-btn" href="/support" data-track="modal_cta" data-track-label="support">Support!</a>
       </div>
 
       <div class="modal-block">
@@ -816,7 +817,7 @@
           </svg>
         </span>
         <p class="modal-text">For brands who want to collaborate</p>
-        <a class="modal-btn" id="sponsor-contact" href="#">Contact!</a>
+        <a class="modal-btn" id="sponsor-contact" href="#" data-track="modal_cta" data-track-label="contact">Contact!</a>
       </div>
     </div>
   </div>
@@ -913,6 +914,8 @@
     a.rel = 'noopener noreferrer';
     a.setAttribute('role', 'listitem');
     a.setAttribute('aria-label', title);
+    a.dataset.track = 'video_click';
+    a.dataset.trackLabel = id;
     a.innerHTML = `
       <img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" loading="lazy" width="120" height="160">
       <span class="video-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
