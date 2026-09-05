@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0d10">
-<meta name="description" content="The Chubbitz — helping brands get attention with funny stories. Watch, follow, and shop.">
+<meta name="description" content="The Chubbitz — helping brands get attention with funny stories! Watch, follow, and shop.">
 <title>The Chubbitz (@thechubbitz)</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,7 +34,7 @@
          higher number (e.g. 80px) = everything slides UP, further onto the video
          negative number (e.g. -20px) = everything slides DOWN
        The video itself never moves, no matter what you set here. */
-    --overlay-lift:70px;
+    --overlay-lift:200px;
     --radius-lg:20px;
     --radius-md:16px;
     --radius-sm:12px;
@@ -118,7 +118,7 @@
   .hero-copy{
     display:flex;
     flex-direction:column;
-    gap:3px;
+    gap:8px;
     min-width:0;
     flex:1 1 auto;
   }
@@ -145,6 +145,10 @@
     color:#a8aeba;
     line-height:1.35;
     text-shadow:0 1px 3px rgba(0,0,0,.6), 0 4px 14px rgba(0,0,0,.5);
+  }
+  /* On phones the tagline breaks after "attention" instead of wherever it lands */
+  @media (max-width:480px){
+    .hero-subtitle span{ display:block; }
   }
   /* Metrics pill, floating on the bottom edge of the Sponsor button (and bobbing with it) */
   .stat-rotator{
@@ -661,7 +665,7 @@
               <h1 class="hero-title">@TheChubbitz</h1>
             </div>
 
-            <p class="hero-subtitle">Helping brands get attention with funny stories.</p>
+            <p class="hero-subtitle"><span>Helping brands get attention</span> <span>with funny stories!</span></p>
           </div>
 
           <div class="cta-row">
