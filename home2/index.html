@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Chubbitz (@thechubbitz)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#284272;
+    --card:#ffffff;
+    --card-text:#111319;
+    --muted:#5b6472;
+    --pill:#33507f;
+    --white:#ffffff;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    background:var(--bg);
+    color:var(--white);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:32px 16px 64px;
+  }
+  .page{
+    width:100%;
+    max-width:460px;
+  }
+  .banner{
+    position:relative;
+    width:100%;
+    border-radius:20px;
+    overflow:hidden;
+    aspect-ratio:16/11;
+    background:#0c1a33;
+  }
+  .banner img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .profile{
+    text-align:center;
+    margin-top:18px;
+  }
+  .name-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+  }
+  .name-row h1{
+    font-size:20px;
+    font-weight:800;
+    margin:0;
+  }
+  .badge{
+    width:18px;height:18px;
+    border-radius:50%;
+    background:#3897f0;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .badge svg{width:11px;height:11px;fill:#fff;}
+  .handle{
+    color:#b9c3d6;
+    font-size:14px;
+    margin-top:2px;
+  }
+  .socials{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    margin:16px 0 14px;
+    flex-wrap:wrap;
+  }
+  .socials a{
+    width:40px;height:40px;
+    border-radius:50%;
+    overflow:hidden;
+    display:block;
+    background:#0f1f3d;
+  }
+  .socials img{width:100%;height:100%;object-fit:cover;}
+  .followers{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--pill);
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+    padding:6px 14px;
+    border-radius:999px;
+    border:none;
+    cursor:pointer;
+  }
+  .bio{
+    font-size:14px;
+    color:#f0c73d;
+    margin:14px 8px 10px;
+    line-height:1.4;
+    font-weight:600;
+  }
+  .email{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--pill);
+    color:#fff;
+    text-decoration:none;
+    font-size:13px;
+    padding:8px 16px;
+    border-radius:999px;
+    margin-top:4px;
+  }
+  .section-title{
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:#c3cde0;
+    margin:26px 4px 10px;
+  }
+  .card-link{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#fff;
+    text-decoration:none;
+    border-radius:var(--radius);
+    padding:12px 14px;
+    margin-bottom:10px;
+    font-weight:700;
+    font-size:14px;
+    text-shadow:0 1px 3px rgba(0,0,0,.35);
+  }
+  .card-link img{
+    width:44px;height:44px;
+    border-radius:10px;
+    object-fit:cover;
+    flex-shrink:0;
+  }
+  .card-link.discord{ background:linear-gradient(100deg,#2f7d4c 0%,#5c4550 55%,#1c2740 100%); }
+  .card-link.linkme{ background:linear-gradient(100deg,#101012 0%,#2c2c30 100%); }
+  .card-link.rusty{ background:linear-gradient(100deg,#55694a 0%,#6d6478 100%); }
+  .card-link.airlearn{ background:linear-gradient(100deg,#2f6fa0 0%,#5db3d9 100%); }
+  .card-link.porkbun{ background:linear-gradient(100deg,#c1453f 0%,#e08a5f 100%); }
+  .product-card{
+    display:block;
+    position:relative;
+    border-radius:var(--radius);
+    overflow:hidden;
+    margin-bottom:10px;
+  }
+  .product-card img{
+    width:100%;
+    display:block;
+  }
+  .product-overlay{
+    position:absolute;
+    left:0;right:0;bottom:0;
+    padding:24px 14px 12px;
+    background:linear-gradient(to top, rgba(0,0,0,.75), rgba(0,0,0,0));
+    color:#fff;
+    font-size:13px;
+    font-weight:700;
+  }
+  .yt-heading{
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .yt-heading svg{width:16px;height:16px;fill:#ff2d2d;}
+  .yt-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:6px;
+  }
+  .yt-card{
+    display:block;
+    border-radius:10px;
+    overflow:hidden;
+    background:#0f1f3d;
+    text-decoration:none;
+    position:relative;
+  }
+  .yt-card img{
+    width:100%;
+    aspect-ratio:3/4;
+    object-fit:cover;
+    display:block;
+  }
+  .yt-play{
+    position:absolute;
+    top:5px;right:5px;
+    width:16px;height:16px;
+    background:rgba(0,0,0,.55);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .yt-play svg{width:7px;height:7px;fill:#fff;}
+  footer{
+    text-align:center;
+    margin-top:30px;
+    font-size:12px;
+    color:#8b95a8;
+  }
+  footer a, footer span{
+    color:#8b95a8;
+    text-decoration:underline;
+    margin:0 6px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="banner">
+    <img src="https://hls.link.me/outputs/pv-e61ace7db9959bf15ee66ec1da74-36436e01cc6847d08f76ddbc039d92b1/thumbnail.jpg" alt="The Chubbitz banner">
+  </div>
+
+  <div class="profile">
+    <div class="name-row">
+      <h1>The Chubbitz</h1>
+      <span class="badge"><svg viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5L4 14.2l5 5 11-11-1.5-1.5z"/></svg></span>
+    </div>
+    <div class="handle">@thechubbitz</div>
+
+    <div class="socials">
+      <a href="https://www.youtube.com/@TheChubbitz" target="_blank" rel="noopener"><img src="https://media.link.me/_resize/image/width=160,height=160,quality=90,format=webp/images/style/icons/v5.0/YouTube-1.png" alt="YouTube"></a>
+      <a href="https://www.instagram.com/thechubbitz" target="_blank" rel="noopener"><img src="https://media.link.me/_resize/image/width=160,height=160,quality=90,format=webp/images/style/icons/v5.0/Instagram-1.png" alt="Instagram"></a>
+      <a href="https://www.tiktok.com/@thechubbitz" target="_blank" rel="noopener"><img src="https://media.link.me/_resize/image/width=160,height=160,quality=90,format=webp/images/style/icons/v5.0/TikTok-1.png" alt="TikTok"></a>
+      <a href="https://discord.gg/G9R9sPUDy8" target="_blank" rel="noopener"><img src="https://media.link.me/_resize/image/width=160,height=160,quality=90,format=webp/images/style/icons/v5.0/Discord-1.png" alt="Discord"></a>
+      <a href="https://www.snapchat.com/@thechubbitz" target="_blank" rel="noopener"><img src="https://media.link.me/_resize/image/width=160,height=160,quality=90,format=webp/images/style/icons/v5.0/Snapchat-1.png" alt="Snapchat"></a>
+    </div>
+
+    <button class="followers" type="button">56.3K Total Followers ▾</button>
+
+    <p class="bio">Helping brands get attention with funny stories.</p>
+
+    <a class="email" href="mailto:hello@thechubbitz.com">✉ hello@thechubbitz.com</a>
+  </div>
+
+  <div class="section-title">My Links</div>
+
+  <a class="card-link discord" href="https://discord.gg/G9R9sPUDy8" target="_blank" rel="noopener">
+    <img src="https://media.link.me/_resize/image/width=128,height=128,quality=90,format=webp/images/external-links/2982807/1787059490165.gif" alt="Join The Chub Club">
+    Join "The Chub Club" community!
+  </a>
+
+  <div class="section-title">Carousel</div>
+  <a class="product-card" href="https://buy.stripe.com/bJe3cv4VO5cseN7aqkbQY03" target="_blank" rel="noopener">
+    <img src="https://media.link.me/_resize/image/width=786,quality=90,format=webp/images/external-links/2982807/1785156881886.png" alt="Buy a sticker sheet! (U.S. Only)">
+    <div class="product-overlay">Buy a sticker sheet! (U.S. Only)</div>
+  </a>
+
+  <div class="section-title">Sponsors</div>
+
+  <a class="card-link linkme" href="https://join.link.me/thechubbitz/creator" target="_blank" rel="noopener">
+    <img src="https://media.link.me/_resize/image/width=128,height=128,quality=90,format=webp/images/external-links/2982807/1786186958511.png" alt="Get 20% Off Link.me!">
+    Get 20% Off Link.me!
+  </a>
+
+  <a class="card-link rusty" href="https://thechubbitz.s.gy/rustyretirement" target="_blank" rel="noopener">
+    <img src="https://media.link.me/_resize/image/width=128,height=128,quality=90,format=webp/images/external-links/2982807/1785504516018.jpeg" alt="Play Rusty's Retirement on Steam!">
+    Play Rusty's Retirement on Steam!
+  </a>
+
+  <a class="card-link airlearn" href="https://thechubbitz.s.gy/airlearn" target="_blank" rel="noopener">
+    <img src="https://media.link.me/_resize/image/width=128,height=128,quality=90,format=webp/images/external-links/2982807/1784942900721.png" alt="Learn a language! - Airlearn">
+    Learn a language! - Airlearn
+  </a>
+
+  <a class="card-link porkbun" href="https://thechubbitz.s.gy/OQph93" target="_blank" rel="noopener">
+    <img src="https://media.link.me/_resize/image/width=128,height=128,quality=90,format=webp/images/external-links/2982807/1784942923395.png" alt="Cheap web domains - Porkbun">
+    Cheap web domains - Porkbun
+  </a>
+
+  <div class="section-title yt-heading"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.8zM9.6 15.6V8.4L15.8 12z"/></svg>YouTube</div>
+  <div class="yt-grid" id="yt-grid"></div>
+
+  <footer>
+    <a href="https://about.link.me/privacypolicy" target="_blank" rel="noopener">Privacy Policy</a>|
+    <a href="https://about.link.me/termsandconditions" target="_blank" rel="noopener">Terms</a>|
+    <span>Report</span>
+  </footer>
+</div>
+
+<script>
+  const videos = [
+    ["4a-hWu4LZ0Q", "I'm sorry for waiting so long to say this 😞"],
+    ["v5XtW4vRGRk", "Day 31!!!"],
+    ["SvALCkJsJkE", "Send this to your unemployed friends"],
+    ["FN6-dpyhlOQ", "day 27!"],
+    ["FbfaeCZeTNE", "day 26!"],
+    ["GI7XK5QRXOs", "Day 25!"],
+    ["QTU1SCgu0JA", "day 25"],
+    ["NA1ts-dPyQM", "ch24"],
+    ["Qgg2MwLJxxs", "Day 23!"],
+    ["zHlpLr2L600", "Day 22 of the race to the top of mount chudalud! Who do you think will win?"],
+    ["ph-g2xpwwQk", "Chubbitz dancing"],
+    ["NjO-f4occIQ", "Day 21!"],
+    ["Gb0_o-JeLC4", "day 20!"],
+    ["MWGkvKIt40c", "day 19"],
+    ["oqNV8UwF5ck", "day 18"],
+    ["vKIY3T9gXLk", "day 17"],
+    ["zi3l2QRCfq0", "Day 16!!!"],
+    ["ZJyI2xv7yiQ", "playing games with friends be like"],
+    ["vmUeAq2gtJo", "Day 15"],
+    ["4-bYvXQUR5I", "chubbitz 14"]
+  ];
+  const grid = document.getElementById('yt-grid');
+  grid.innerHTML = videos.map(([id, title]) => `
+    <a class="yt-card" href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener">
+      <img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="${title.replace(/"/g,'&quot;')}" loading="lazy">
+      <span class="yt-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+    </a>
+  `).join('');
+</script>
+
+</body>
+</html>
