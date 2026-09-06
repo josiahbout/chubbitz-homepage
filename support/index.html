@@ -57,7 +57,9 @@
   }
   .brand-row{
     display:flex;
-    align-items:center;
+    /* top-aligned, not centred — the goal panel makes this row tall, and centring
+       would push the home icon down out of the corner */
+    align-items:flex-start;
     justify-content:space-between;   /* home icon left, goal panel right */
     gap:10px;
   }
@@ -217,6 +219,20 @@
     width:14px;
     background:rgba(255,255,255,0.35);
     filter:blur(4px);
+  }
+
+  /* Above phone width there's room to spare, so the whole goal panel scales up
+     about 20% — card, type, spacing and bar together. */
+  @media (min-width:601px){
+    .progress-card{
+      width:300px;
+      padding:11px 15px 12px;
+    }
+    .progress-top{ margin-bottom:8px; }
+    .progress-amount{ font-size:31px; }
+    .progress-amount .unit{ font-size:14px; }
+    .progress-goal{ font-size:13px; }
+    .progress-track{ height:10px; }
   }
 
   /* ---------- Tier grid ---------- */
@@ -518,7 +534,7 @@
         <li><span class="check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12.5L9.5 18L20 6" stroke="#2B1B34" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="label">Access to the Discord server</span></li>
         <li><span class="check"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12.5L9.5 18L20 6" stroke="#2B1B34" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="label">1 vote on every crowd-funded Chubbitz' name &amp; shape</span></li>
       </ul>
-      <a class="cta" data-track="tier_click" data-track-label="free_discord" href="https://discord.gg/HCnecgrZGj">Join</a>
+      <a class="cta" data-track="tier_click" data-track-label="free_discord" href="https://discord.gg/G9R9sPUDy8">Join</a>
     </article>
 
     <!-- SUPPORTER (toggle) -->
