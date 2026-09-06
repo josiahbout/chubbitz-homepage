@@ -58,6 +58,7 @@
   .brand-row{
     display:flex;
     align-items:center;
+    justify-content:space-between;   /* home icon left, goal panel right */
     gap:10px;
   }
   .brand-dot{
@@ -140,45 +141,63 @@
     max-width:480px;
     margin:0 auto 26px;
   }
+  /* The sub-heading is one sentence per line: break before the second sentence. */
+  .hero p .s3{ display:block; }
+
+  /* ---------- Phones ----------
+     At full size the title and sub-heading each overflow 320px and spill onto
+     extra lines, so both shrink and the sub-heading breaks a few words earlier
+     to sit evenly on two lines. */
+  @media (max-width:600px){
+    /* Sizes scale with the viewport so both stay on two lines all the way down to
+       a 320px phone — a flat size only holds at one width. */
+    .hero h1{ font-size:clamp(18px, 5.6vw, 26px); }
+    .hero p{ font-size:clamp(13.5px, 4.2vw, 16px); }
+    .hero p .s1{ display:block; }   /* break after "...next Chubbitz" instead */
+    .hero p .s3{ display:inline; }
+    .mascot{ width:240px; height:240px; }   /* 20% smaller */
+  }
 
   /* ---------- Progress ---------- */
+  /* Sits in the top-right of the header, opposite the home icon. Compact enough to
+     share that row down to a 320px phone. */
   .progress-card{
-    max-width:420px;
-    margin:0 auto;
+    width:min(56vw, 250px);
+    flex-shrink:0;
     background:rgba(255,244,227,0.06);
     border:1px solid rgba(255,244,227,0.16);
     border-radius:var(--radius-md);
-    padding:16px 18px 18px;
+    padding:9px 12px 10px;
     text-align:left;
   }
   .progress-top{
-    margin-bottom:12px;
+    margin-bottom:7px;
   }
   .progress-amount{
     display:block;
     font-family:'Fredoka', sans-serif;
-    font-size:clamp(38px, 11vw, 52px);
+    font-size:clamp(20px, 6vw, 26px);
     font-weight:700;
     color:var(--cream);
     line-height:1;
   }
   .progress-amount .unit{
     font-family:'Nunito Sans', sans-serif;
-    font-size:15px;
+    font-size: 12px;
     font-weight:700;
     color:#cecece;
     margin-left:6px;
   }
   .progress-goal{
     display:block;
-    font-size:13px;
+    font-size: 11px;
     font-weight:700;
     color:var(--gold);
     margin-top:4px;
   }
   .progress-track{
     position:relative;
-    height:14px;
+    height: 8px;
     background:rgba(0,0,0,0.28);
     border-radius:999px;
     overflow:hidden;
@@ -463,6 +482,16 @@
           <path d="M5.5 9.5V19C5.5 19.5523 5.94772 20 6.5 20H9.5C10.0523 20 10.5 19.5523 10.5 19V15C10.5 14.4477 10.9477 14 11.5 14H12.5C13.0523 14 13.5 14.4477 13.5 15V19C13.5 19.5523 13.9477 20 14.5 20H17.5C18.0523 20 18.5 19.5523 18.5 19V9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </a>
+
+      <div class="progress-card">
+        <div class="progress-top">
+          <span class="progress-amount">$<span id="raisedCount">0</span><span class="unit">raised</span></span>
+          <span class="progress-goal">out of $1,000 · till Chubbitz #8</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -472,17 +501,8 @@
       <source src="/media/random_chub.mp4" type="video/mp4">
     </video>
     <h1>Help curse another <em>Chubbitz</em> with<br>existence in this wretched world.</h1>
-    <p>Your support crowd-funds the next Chubbitz to life!<br>You also get some exclusive perks!</p>
+    <p><span class="s1">Your support crowd-funds the next Chubbitz</span> <span class="s2">to life!</span> <span class="s3">You also get some exclusive perks!</span></p>
 
-    <div class="progress-card">
-      <div class="progress-top">
-        <span class="progress-amount">$<span id="raisedCount">0</span><span class="unit">raised</span></span>
-        <span class="progress-goal">out of $1,000 · till Chubbitz #8</span>
-      </div>
-      <div class="progress-track">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
-    </div>
   </section>
 </div>
 

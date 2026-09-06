@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://i.ytimg.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
   :root{
@@ -50,15 +50,6 @@
     justify-content:center;
   }
   a{color:inherit;}
-  .glow{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    background:
-      radial-gradient(480px 320px at 50% -10%, rgba(255,122,69,.16), transparent 70%),
-      radial-gradient(600px 400px at 90% 10%, rgba(255,176,46,.06), transparent 70%);
-    z-index:0;
-  }
   .page{
     position:relative;
     z-index:1;
@@ -75,7 +66,8 @@
   .banner{
     width:100%;
     background:#000;
-    overflow:hidden;
+    /* deliberately not overflow:hidden — the video is exactly frame-sized and doesn't
+       spill, and clipping here would cut off the Sponsor button's glow at the edge */
   }
   .banner-frame{
     position:relative;
@@ -105,7 +97,9 @@
   .hero-overlay{
     position:absolute;
     left:0; right:0; bottom:var(--overlay-lift);
-    z-index:2;
+    /* above .content (z-index 3) so the metrics pill can hang below the button
+       without the opaque links panel clipping it */
+    z-index:4;
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -130,8 +124,9 @@
     margin:0;
     /* scales with screen width: as big as the space next to the button allows */
     font-size:clamp(22px, 6.4vw, 30px);
-    font-weight:800;
-    letter-spacing:-.01em;
+    font-family:'Fredoka', sans-serif;
+    font-weight:700;   /* Fredoka tops out at 700 — 800 would get faux-bolded */
+    letter-spacing:.01em;
     color:#fff;
     white-space:nowrap;
     text-shadow:0 2px 4px rgba(0,0,0,.55), 0 6px 18px rgba(0,0,0,.55);
@@ -151,7 +146,7 @@
   /* Metrics pill, floating on the bottom edge of the Sponsor button (and bobbing with it) */
   .stat-rotator{
     position:absolute;
-    bottom:-11px;
+    bottom:-25px;
     left:50%;
     transform:translateX(-50%);
     /* all three stats share one grid cell, so the pill sizes to the widest of them */
@@ -196,9 +191,12 @@
   .hero-overlay .cta{
     flex:0 0 auto;
     padding:15px 26px;
-    box-shadow:0 6px 20px rgba(0,0,0,.4);
+    box-shadow:
+      0 6px 20px rgba(0,0,0,.4),        /* depth */
+      0 0 18px rgba(79,142,247,.55),    /* close glow */
+      0 0 38px rgba(79,142,247,.3);     /* wider halo */
   }
-  .hero-overlay .cta-action{ font-size:19px; }
+  .hero-overlay .cta-action{ font-size:22px; }
 
   .badge{
     width:16px;height:16px;
@@ -447,7 +445,7 @@
     flex-shrink:0;
     background:linear-gradient(135deg,var(--accent),var(--accent-2));
     color:#0a0b0e;
-    font-size:12.5px;
+    font-size:15px;
     font-weight:700;
     padding:8px 14px;
     border-radius:999px;
@@ -619,6 +617,10 @@
     font-size:12.5px;
     font-weight:600;
     line-height:1.4;
+    /* the block is align-items:flex-start, which would otherwise shrink-wrap this
+       to its text width and leave text-align with nothing to center inside */
+    align-self:stretch;
+    text-align:center;
     color:var(--text-dim);
   }
   .modal-btn{
@@ -629,7 +631,7 @@
     margin-top:auto;          /* keeps both buttons aligned even when the text runs longer */
     padding:11px 14px;
     border-radius:var(--radius-md);
-    font-size:14px;
+    font-size:16px;
     font-weight:800;
     text-decoration:none;
     background:linear-gradient(135deg,var(--accent),var(--accent-2));
@@ -646,8 +648,6 @@
 <script src="/analytics.js" defer></script>
 </head>
 <body>
-<div class="glow" aria-hidden="true"></div>
-
 <div class="page">
 
   <div class="hero">
@@ -710,7 +710,7 @@
           <span class="product-title">Sticker sheet</span>
           <div class="product-sub">$10 &middot; U.S. shipping only</div>
         </span>
-        <span class="product-cta">Buy now</span>
+        <span class="product-cta">Buy</span>
       </span>
       <img loading="lazy" src="/media/sticker-sheet.webp" alt="Chubbitz sticker sheet">
     </a>
@@ -804,7 +804,7 @@
             <path d="M20.8 5.6a5.2 5.2 0 0 0-7.4 0L12 7l-1.4-1.4a5.2 5.2 0 1 0-7.4 7.4L12 21l8.8-8a5.2 5.2 0 0 0 0-7.4z"/>
           </svg>
         </span>
-        <p class="modal-text">For fans who want special benefits</p>
+        <p class="modal-text">For fans who want <br>special benefits</p>
         <a class="modal-btn" href="/support" data-track="modal_cta" data-track-label="support">Support!</a>
       </div>
 
@@ -816,7 +816,7 @@
             <path d="M2 13h20"/>
           </svg>
         </span>
-        <p class="modal-text">For brands who want to collaborate</p>
+        <p class="modal-text">For brands who <br>want to collaborate</p>
         <a class="modal-btn" id="sponsor-contact" href="#" data-track="modal_cta" data-track-label="contact">Contact!</a>
       </div>
     </div>
