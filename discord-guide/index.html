@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0b0e">
+<meta name="description" content="Never used Discord? Here's the 60-second version — servers, text channels, voice channels, and screen sharing.">
+<title>Discord in 60 seconds — The Chubbitz</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://support.discord.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  /* Same palette and type as /home3 and /purchased/supporter. */
+  :root{
+    --bg:#0a0b0e;
+    --bg-soft:#121419;
+    --text:#f4f5f7;
+    --text-dim:#a3a9b4;
+    --text-faint:#6b7280;
+    --line:rgba(255,255,255,.09);
+    --line-hover:rgba(255,255,255,.2);
+    --card:rgba(255,255,255,.045);
+    --card-hover:rgba(255,255,255,.075);
+    --accent:#4f8ef7;
+    --accent-2:#8ec9ff;
+    --radius-lg:20px;
+    --radius-md:16px;
+    --radius-sm:12px;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    overflow-x:hidden;
+  }
+  a{color:inherit;}
+  .page{
+    position:relative;
+    width:100%;
+    max-width:460px;
+    padding:0 18px 48px;
+  }
+
+  /* ---------- Header ---------- */
+  .glow{
+    /* stays inside the page box so it can't create a sideways scroll */
+    position:absolute;
+    left:0; right:0;
+    top:-140px;
+    height:460px;
+    pointer-events:none;
+    z-index:0;
+    background:radial-gradient(ellipse 85% 55% at 50% 30%, rgba(79,142,247,.26), transparent 70%);
+  }
+  header.top{
+    position:relative;
+    z-index:1;
+    text-align:center;
+    padding:34px 0 22px;
+  }
+  .kicker{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:5px 12px;
+    margin-bottom:16px;
+    border-radius:999px;
+    background:rgba(79,142,247,.12);
+    border:1px solid rgba(79,142,247,.28);
+    color:var(--accent-2);
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+  }
+  .kicker svg{ width:13px; height:13px; }
+  h1{
+    margin:0;
+    font-family:'Fredoka', sans-serif;
+    font-weight:700;
+    font-size:clamp(30px, 9vw, 40px);
+    line-height:1.05;
+    letter-spacing:.01em;
+    color:#fff;
+  }
+  h1 em{
+    font-style:normal;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .lede{
+    margin:12px auto 0;
+    max-width:330px;
+    font-size:15px;
+    font-weight:500;
+    line-height:1.5;
+    color:var(--text-dim);
+  }
+
+  /* ---------- Cards ---------- */
+  .cards{
+    position:relative;
+    z-index:1;
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    padding:16px 16px 16px;
+  }
+  .card-head{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    margin-bottom:9px;
+  }
+  .card-badge{
+    flex-shrink:0;
+    width:30px;
+    height:30px;
+    display:grid;
+    place-items:center;
+    border-radius:9px;
+    color:#0a0b0e;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow:0 0 14px rgba(79,142,247,.30);
+  }
+  .card-badge svg{ width:16px; height:16px; }
+  .card h2{
+    margin:0;
+    font-family:'Fredoka', sans-serif;
+    font-size:19px;
+    font-weight:700;
+    letter-spacing:.01em;
+    color:#fff;
+    line-height:1.1;
+  }
+  .card p{
+    margin:0;
+    font-size:14.5px;
+    line-height:1.5;
+    color:var(--text-dim);
+  }
+  .card p + p{ margin-top:7px; }
+  .card p b{ color:var(--text); font-weight:700; }
+
+  /* The Discord screenshots. Sized by aspect ratio so nothing jumps as they load. */
+  .shot{
+    display:block;
+    width:100%;
+    height:auto;
+    margin-top:12px;
+    border-radius:var(--radius-sm);
+    border:1px solid var(--line);
+    background:#1a1d23;
+  }
+
+  /* one-line takeaway under a screenshot */
+  .tip{
+    display:flex;
+    align-items:flex-start;
+    gap:7px;
+    margin-top:10px;
+    font-size:13px;
+    font-weight:600;
+    line-height:1.45;
+    color:var(--accent-2);
+  }
+  .tip svg{ flex-shrink:0; width:14px; height:14px; margin-top:2px; }
+
+  /* ---------- Closing CTA ---------- */
+  .outro{
+    position:relative;
+    z-index:1;
+    margin-top:22px;
+    padding:20px 18px;
+    text-align:center;
+    background:var(--bg-soft);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+  }
+  .outro h2{
+    margin:0 0 6px;
+    font-family:'Fredoka', sans-serif;
+    font-size:20px;
+    font-weight:700;
+    color:#fff;
+  }
+  .outro p{
+    margin:0 0 14px;
+    font-size:14px;
+    line-height:1.5;
+    color:var(--text-dim);
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:13px 24px;
+    border-radius:var(--radius-md);
+    text-decoration:none;
+    font-size:16px;
+    font-weight:800;
+    color:#0a0b0e;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow:0 6px 18px rgba(0,0,0,.35), 0 0 18px rgba(79,142,247,.35);
+    transition:transform .15s ease, filter .15s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); filter:brightness(1.06); }
+  .btn:active{ transform:translateY(0); }
+  .btn svg{ width:18px; height:18px; }
+
+  /* ---------- Footer ---------- */
+  footer{
+    position:relative;
+    z-index:1;
+    text-align:center;
+    margin-top:26px;
+    font-size:11.5px;
+    line-height:1.7;
+    color:var(--text-faint);
+  }
+  footer a{
+    color:var(--text-faint);
+    text-decoration:none;
+    border-bottom:1px solid var(--line);
+  }
+  footer a:hover{ color:var(--text-dim); border-bottom-color:var(--line-hover); }
+  .dot{ margin:0 8px; opacity:.5; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+</style>
+<script src="/analytics.js" defer></script>
+</head>
+<body>
+<div class="page">
+  <div class="glow" aria-hidden="true"></div>
+
+  <header class="top">
+    <span class="kicker">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      60-second read
+    </span>
+    <h1>Discord, <em>simplified</em></h1>
+    <p class="lede">Never used it before? This is everything you actually need to know. That's it.</p>
+  </header>
+
+  <ol class="cards">
+
+    <li class="card">
+      <div class="card-head">
+        <span class="card-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-3.6-.7L3 21l1.8-5.1A8.4 8.4 0 0 1 12 3.1a8.4 8.4 0 0 1 9 8.4z"/></svg>
+        </span>
+        <h2>What it is</h2>
+      </div>
+      <p>A chat app — <b>text, voice and video</b>. You hang out in communities called <b>servers</b>. Free, works in a browser or an app.</p>
+    </li>
+
+    <li class="card">
+      <div class="card-head">
+        <span class="card-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/></svg>
+        </span>
+        <h2>Servers</h2>
+      </div>
+      <p>The icons down the <b>far left</b> are the servers you've joined. Click one to open it.</p>
+      <img class="shot" src="https://support.discord.com/hc/article_attachments/33107296852247"
+           width="368" height="338" loading="lazy" decoding="async"
+           alt="The Discord app: a column of server icons on the far left, and that server's channel list beside it.">
+      <p class="tip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5L9.5 18L20 6"/></svg>
+        The Chub Club is one of these. Joining adds it to your list.
+      </p>
+    </li>
+
+    <li class="card">
+      <div class="card-head">
+        <span class="card-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3L8 21M16 3l-2 18M3.5 9h17M2.5 15h17"/></svg>
+        </span>
+        <h2>Text channels</h2>
+      </div>
+      <p>Anything with a <b>#</b> is a text channel — one room per topic. Click it, type at the bottom, hit enter.</p>
+      <img class="shot" src="https://support.discord.com/hc/article_attachments/33107296853911"
+           width="368" height="338" loading="lazy" decoding="async"
+           alt="The same channel list with the text channels — the ones marked with a # — highlighted in red.">
+      <p class="tip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5L9.5 18L20 6"/></svg>
+        Supporters get extra channels that other people can't see.
+      </p>
+    </li>
+
+    <li class="card">
+      <div class="card-head">
+        <span class="card-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6.5a8 8 0 0 1 0 11"/></svg>
+        </span>
+        <h2>Voice channels</h2>
+      </div>
+      <p>The ones with a <b>speaker icon</b> are voice rooms. Click one and you're instantly in — no calling, no ringing. Click <b>Disconnect</b> to leave.</p>
+      <img class="shot" src="https://support.discord.com/hc/article_attachments/33107286741783"
+           width="368" height="338" loading="lazy" decoding="async"
+           alt="The same channel list with the voice channels — the ones marked with a speaker icon — highlighted in red.">
+    </li>
+
+    <li class="card">
+      <div class="card-head">
+        <span class="card-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 21h8"/></svg>
+        </span>
+        <h2>Screen sharing</h2>
+      </div>
+      <p>Once you're in a voice channel you can share your screen, and watch anyone else who's sharing theirs.</p>
+      <img class="shot" src="https://support.discord.com/hc/article_attachments/33107286743063"
+           width="536" height="356" loading="lazy" decoding="async"
+           alt="A Discord voice channel where one member is live, with a Watch Stream button next to them.">
+    </li>
+
+  </ol>
+
+  <section class="outro">
+    <h2>That's genuinely it.</h2>
+    <p>Everything else you'll pick up as you go.</p>
+    <a class="btn" data-track="guide_click" data-track-label="discord_join"
+       href="https://discord.gg/G9R9sPUDy8" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.3 4.9A19.8 19.8 0 0 0 15.4 3.4l-.2.5c1.6.4 2.9 1 4.2 1.8a15.6 15.6 0 0 0-9.8-1 15 15 0 0 0-2.7.9c1.2-.7 2.6-1.4 4.2-1.7l-.2-.5c-1.9.3-3.6.9-4.9 1.5A20.3 20.3 0 0 0 2.5 19a15 15 0 0 0 4.6 2.3l1-1.7c-.9-.3-1.7-.7-2.4-1.2l.5-.4a13.9 13.9 0 0 0 11.6 0l.5.4c-.7.5-1.6.9-2.4 1.2l1 1.7a15 15 0 0 0 4.6-2.3 20.2 20.2 0 0 0-1.2-14.1zM9 15.2c-1 0-1.7-.9-1.7-2S8 11.2 9 11.2s1.8.9 1.8 2-.8 2-1.8 2zm6 0c-1 0-1.7-.9-1.7-2s.7-2 1.7-2 1.8.9 1.8 2-.8 2-1.8 2z"/></svg>
+      Join the Chub Club
+    </a>
+  </section>
+
+  <footer>
+    <!-- Screenshots are loaded from Discord's own Help Center rather than copied
+         into /media, so they stay current and stay Discord's. -->
+    Screenshots and source material from
+    <a data-track="guide_click" data-track-label="discord_full_guide"
+       href="https://support.discord.com/hc/en-us/articles/360045138571-Beginner-s-Guide-to-Discord" target="_blank" rel="noopener noreferrer">Discord's Beginner's Guide</a>.
+    <br>
+    Want the long version? That's the place.
+    <div style="margin-top:10px;">
+      <a href="/">The Chubbitz</a>
+    </div>
+  </footer>
+</div>
+</body>
+</html>
