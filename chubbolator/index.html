@@ -301,6 +301,66 @@
   .step-link:hover{ border-bottom-color:var(--accent-2); }
 
   /* ---------- Competition ---------- */
+  .comp-label{
+    display:block;
+    margin:16px 0 8px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+  }
+  .comp-label:first-of-type{ margin-top:0; }
+  .comp-length{
+    display:inline-block;
+    padding:4px 12px;
+    border-radius:999px;
+    background:rgba(79,142,247,.14);
+    border:1px solid rgba(79,142,247,.3);
+    color:var(--accent-2);
+    font-size:13px;
+    font-weight:800;
+  }
+  /* Shared by the criteria and the prize list - a numbered badge, then the text. */
+  .comp-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+    counter-reset:comp;
+  }
+  .comp-list li{
+    display:flex;
+    align-items:flex-start;
+    gap:9px;
+    font-size:14px;
+    line-height:1.45;
+    color:var(--text-dim);
+  }
+  .comp-list li::before{
+    counter-increment:comp;
+    content:counter(comp);
+    flex:none;
+    width:19px;
+    height:19px;
+    margin-top:1px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:rgba(79,142,247,.14);
+    border:1px solid rgba(79,142,247,.3);
+    color:var(--accent-2);
+    font-size:11px;
+    font-weight:800;
+  }
+  .comp-list.prizes li::before{
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    border-color:transparent;
+    color:#0a0b0e;
+  }
+  .comp-list b{ color:var(--text); font-weight:700; }
   .comp{
     position:relative;
     z-index:1;
@@ -318,7 +378,7 @@
     color:#fff;
   }
   .comp p{
-    margin:0;
+    margin: 0 0 9px;
     font-size:14px;
     line-height:1.55;
     color:var(--text-dim);
@@ -427,11 +487,26 @@
 
   </ol>
 
-  <!-- Competition details were still blank in the source doc. Replace this
-       paragraph with the rules when they're written. -->
   <section class="comp">
     <h2>Competition details</h2>
-    <p>Coming soon.</p>
+
+    <span class="comp-label">Length</span>
+    <span class="comp-length">1 week</span>
+
+    <span class="comp-label">Selection</span>
+    <p>Skyman and the Bash team will choose the Chubbitz to sponsor based on these criteria&hellip;</p>
+    <ol class="comp-list">
+      <li><span><b>Creativity</b> &mdash; is your Chubbitz unique and special?</span></li>
+      <li><span><b>Cohesion</b> &mdash; does your Chubbitz fit with the overall design of the other Chubbitz and Brandlandia?</span></li>
+    </ol>
+
+    <span class="comp-label">Prizes for the winner</span>
+    <ol class="comp-list prizes">
+      <li><span>$100</span></li>
+      <li><span>A Chubbitz sticker sheet</span></li>
+      <li><span>Bash merch</span></li>
+      <li><span>5k additional Bash credits on their account</span></li>
+    </ol>
   </section>
 
   <footer>
