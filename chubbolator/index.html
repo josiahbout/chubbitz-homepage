@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0b0e">
+<meta name="description" content="Make and publish your own Chubbitz in 3 easy steps.">
+<title>Make your Chubbitz</title>
+
+<meta property="og:site_name" content="The Chubbitz">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thechubbitz.com/chubbolator">
+<meta property="og:title" content="Make your own Chubbitz">
+<meta property="og:description" content="Make and publish your own Chubbitz in 3 easy steps.">
+<meta property="og:image" content="https://thechubbitz.com/media/embed_banner.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Chubbitz">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Make your own Chubbitz">
+<meta name="twitter:description" content="Make and publish your own Chubbitz in 3 easy steps.">
+<meta name="twitter:image" content="https://thechubbitz.com/media/embed_banner.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  /* Same tokens as the homepage and the other sub-pages. */
+  :root{
+    --bg:#0a0b0e;
+    --bg-soft:#121419;
+    --text:#f4f5f7;
+    --text-dim:#a3a9b4;
+    --text-faint:#6b7280;
+    --line:rgba(255,255,255,.09);
+    --line-hover:rgba(255,255,255,.2);
+    --card:rgba(255,255,255,.045);
+    --card-hover:rgba(255,255,255,.075);
+    --accent:#4f8ef7;
+    --accent-2:#8ec9ff;
+    --radius-lg:20px;
+    --radius-md:16px;
+    --radius-sm:12px;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    overflow-x:hidden;
+  }
+  a{color:inherit;}
+  .page{
+    position:relative;
+    width:100%;
+    max-width:460px;
+    padding:0 18px 48px;
+  }
+
+  /* ---------- Header ---------- */
+  .glow{
+    /* kept inside the page box so it can't create a sideways scroll */
+    position:absolute;
+    left:0; right:0;
+    top:-130px;
+    height:470px;
+    pointer-events:none;
+    z-index:0;
+    background:radial-gradient(ellipse 85% 55% at 50% 30%, rgba(79,142,247,.26), transparent 70%);
+  }
+  .home-link{
+    position:relative;
+    z-index:1;
+    display:inline-flex;
+    margin-top:20px;
+    color:var(--text-dim);
+    transition:color .15s ease, transform .15s ease;
+  }
+  .home-link:hover{ color:var(--text); transform:translateY(-1px); }
+  .home-link svg{ width:22px; height:22px; display:block; }
+
+  header.top{
+    position:relative;
+    z-index:1;
+    text-align:center;
+    padding:14px 0 24px;
+  }
+  .kicker{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:5px 12px;
+    margin-bottom:14px;
+    border-radius:999px;
+    background:rgba(79,142,247,.12);
+    border:1px solid rgba(79,142,247,.28);
+    color:var(--accent-2);
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+  }
+  .kicker svg{ width:13px; height:13px; }
+  h1{
+    margin:0;
+    font-family:'Fredoka', sans-serif;
+    font-weight:700;
+    font-size:clamp(26px, 8vw, 36px);
+    line-height:1.1;
+    letter-spacing:.01em;
+    color:#fff;
+  }
+  h1 em{
+    font-style:normal;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  /* ---------- Steps ---------- */
+  .steps{
+    position:relative;
+    z-index:1;
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .step{
+    position:relative;
+    display:grid;
+    /* number column + content column; the connector thread lives in the number column */
+    grid-template-columns:34px 1fr;
+    gap:13px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    padding:15px 16px 16px;
+  }
+  /* the thread running from one step's number down into the next */
+  .step:not(:last-child)::after{
+    content:"";
+    position:absolute;
+    left:calc(16px + 17px);   /* padding + half the number circle */
+    top:calc(15px + 34px);    /* padding + circle height */
+    height:calc(100% - 15px - 34px + 12px);  /* down through the 12px gap */
+    width:2px;
+    transform:translateX(-1px);
+    background:linear-gradient(to bottom, rgba(79,142,247,.45), rgba(79,142,247,.06));
+  }
+  .step-num{
+    width:34px;
+    height:34px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    font-family:'Fredoka', sans-serif;
+    font-size:17px;
+    font-weight:700;
+    color:#0a0b0e;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow:0 0 16px rgba(79,142,247,.35);
+  }
+  .step-num svg{ width:17px; height:17px; }
+  .step-body{ min-width:0; }
+  .step-title{
+    margin:6px 0 10px;
+    font-family:'Fredoka', sans-serif;
+    font-size:19px;
+    font-weight:700;
+    letter-spacing:.03em;
+    color:#fff;
+    line-height:1.15;
+  }
+  .step-body p{
+    margin:0 0 10px;
+    font-size:14px;
+    line-height:1.5;
+    color:var(--text-dim);
+  }
+  .step-body > :last-child{ margin-bottom:0; }
+
+  /* The lettered sub-steps inside step 1 */
+  .substeps{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    counter-reset:substep;
+  }
+  .substep{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .substep-text{
+    display:flex;
+    align-items:flex-start;
+    gap:9px;
+    font-size:14px;
+    line-height:1.5;
+    color:var(--text-dim);
+  }
+  .substep-text::before{
+    counter-increment:substep;
+    content:counter(substep);
+    flex:none;
+    width:19px;
+    height:19px;
+    margin-top:1px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:rgba(79,142,247,.14);
+    border:1px solid rgba(79,142,247,.3);
+    color:var(--accent-2);
+    font-size:11px;
+    font-weight:800;
+  }
+
+  /* Inline chips for things you click or type verbatim */
+  .chip{
+    display:inline-block;
+    padding:1px 7px;
+    border-radius:7px;
+    background:rgba(79,142,247,.14);
+    border:1px solid rgba(79,142,247,.30);
+    color:var(--accent-2);
+    font-size:13px;
+    font-weight:700;
+    font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    white-space:nowrap;
+  }
+
+  /* ---------- Media ---------- */
+  /* Finished GIFs use .shot. .gif-slot is the empty placeholder that stands in
+     until one exists - swap the whole <div> for an <img class="shot"> and the
+     spacing stays identical. */
+  .shot{
+    display:block;
+    width:100%;
+    height:auto;
+    border-radius:var(--radius-sm);
+    border:1px solid var(--line);
+    background:#1a1d23;
+  }
+  .gif-slot{
+    display:grid;
+    place-items:center;
+    width:100%;
+    /* deliberately short: it is a placeholder, and five tall empty boxes would
+       swamp the page. A real GIF sizes to its own aspect ratio. */
+    height:110px;
+    border-radius:var(--radius-sm);
+    border:1px dashed rgba(255,255,255,.16);
+    background:rgba(255,255,255,.02);
+    color:var(--text-faint);
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+  }
+
+  /* ---------- Buttons ---------- */
+  .step-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:12px 20px;
+    border-radius:var(--radius-md);
+    text-decoration:none;
+    font-size:16px;
+    font-weight:800;
+    color:#0a0b0e;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow:0 6px 18px rgba(0,0,0,.35), 0 0 18px rgba(79,142,247,.35);
+    transition:transform .15s ease, filter .15s ease;
+  }
+  .step-btn:hover{ transform:translateY(-1px); filter:brightness(1.06); }
+  .step-btn:active{ transform:translateY(0); }
+  .step-btn svg{ width:18px; height:18px; }
+  .step-link{
+    color:var(--accent-2);
+    font-weight:700;
+    text-decoration:none;
+    border-bottom:1px solid rgba(142,201,255,.35);
+  }
+  .step-link:hover{ border-bottom-color:var(--accent-2); }
+
+  /* ---------- Competition ---------- */
+  .comp{
+    position:relative;
+    z-index:1;
+    margin-top:22px;
+    padding:18px 18px 20px;
+    background:var(--bg-soft);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+  }
+  .comp h2{
+    margin:0 0 8px;
+    font-family:'Fredoka', sans-serif;
+    font-size:19px;
+    font-weight:700;
+    color:#fff;
+  }
+  .comp p{
+    margin:0;
+    font-size:14px;
+    line-height:1.55;
+    color:var(--text-dim);
+  }
+
+  footer{
+    position:relative;
+    z-index:1;
+    text-align:center;
+    margin-top:26px;
+    font-size:11.5px;
+    color:var(--text-faint);
+  }
+  footer a{ color:var(--text-faint); text-decoration:none; }
+  footer a:hover{ color:var(--text-dim); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+</style>
+<script src="/analytics.js" defer></script>
+</head>
+<body>
+<div class="page">
+  <div class="glow" aria-hidden="true"></div>
+
+  <a class="home-link" href="/" aria-label="The Chubbitz home">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 11L12 4L21 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5.5 9.5V19C5.5 19.5523 5.94772 20 6.5 20H9.5C10.0523 20 10.5 19.5523 10.5 19V15C10.5 14.4477 10.9477 14 11.5 14H12.5C13.0523 14 13.5 14.4477 13.5 15V19C13.5 19.5523 13.9477 20 14.5 20H17.5C18.0523 20 18.5 19.5523 18.5 19V9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
+
+  <header class="top">
+    <span class="kicker">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.3 5.9 6.2.3-4.9 3.9 1.7 6-5.3-3.4L6.7 19l1.7-6-4.9-3.9 6.2-.3z"/></svg>
+      3 easy steps
+    </span>
+    <h1>Make &amp; publish your <em>Chubbitz</em></h1>
+  </header>
+
+  <ol class="steps">
+
+    <li class="step">
+      <span class="step-num">1</span>
+      <div class="step-body">
+        <h2 class="step-title">Get invited to Bash.tv!</h2>
+
+        <ol class="substeps">
+          <li class="substep">
+            <span class="substep-text">
+              <span>
+                <a class="step-link" data-track="chubbolator_click" data-track-label="bash_discord"
+                   href="https://discord.com/invite/kaHSK88e9k" target="_blank" rel="noopener noreferrer">Click here</a>
+                to join the Bash Discord.
+              </span>
+            </span>
+            <!-- Swap this <div> for: <img class="shot" src="/media/chubbolator/step-1a.gif" alt="Joining the Bash Discord"> -->
+            <div class="gif-slot">GIF coming soon</div>
+          </li>
+
+          <li class="substep">
+            <span class="substep-text">
+              <span>Go to <span class="chip">#get-a-bash-invite</span>, tap <b>claim bash.tv invite</b>, and copy the code.</span>
+            </span>
+            <!-- Swap this <div> for: <img class="shot" src="/media/chubbolator/step-1b.gif" alt="Claiming a Bash invite code"> -->
+            <div class="gif-slot">GIF coming soon</div>
+          </li>
+
+          <li class="substep">
+            <span class="substep-text">
+              <span>Go to <a class="step-link" data-track="chubbolator_click" data-track-label="bash_tv" href="https://bash.tv/" target="_blank" rel="noopener noreferrer">bash.tv</a>, click <b>I have an invite code</b>, paste your code in, and create an account.</span>
+            </span>
+            <!-- Swap this <div> for: <img class="shot" src="/media/chubbolator/step-1c.gif" alt="Redeeming the invite code on bash.tv"> -->
+            <div class="gif-slot">GIF coming soon</div>
+          </li>
+        </ol>
+      </div>
+    </li>
+
+    <li class="step">
+      <span class="step-num">2</span>
+      <div class="step-body">
+        <h2 class="step-title">Create a Chubbitz!</h2>
+        <p>
+          <a class="step-btn" data-track="chubbolator_click" data-track-label="chubbolator"
+             href="https://bash.tv/josiah/chubbolator" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.3 5.9 6.2.3-4.9 3.9 1.7 6-5.3-3.4L6.7 19l1.7-6-4.9-3.9 6.2-.3z"/></svg>
+            Click here
+          </a>
+        </p>
+        <!-- Swap this <div> for: <img class="shot" src="/media/chubbolator/step-2.gif" alt="Building a Chubbitz in the Chubbolator"> -->
+        <div class="gif-slot">GIF coming soon</div>
+      </div>
+    </li>
+
+    <li class="step">
+      <span class="step-num">3</span>
+      <div class="step-body">
+        <h2 class="step-title">Submit!</h2>
+        <p>Once you're done with your character, click <span class="chip">Finish!</span> and check <span class="chip">Submit to gallery!</span> if you want your character to be considered for joining Brandlandia.</p>
+        <!-- Swap this <div> for: <img class="shot" src="/media/chubbolator/step-3.gif" alt="Submitting a finished Chubbitz to the gallery"> -->
+        <div class="gif-slot">GIF coming soon</div>
+      </div>
+    </li>
+
+  </ol>
+
+  <!-- Competition details were still blank in the source doc. Replace this
+       paragraph with the rules when they're written. -->
+  <section class="comp">
+    <h2>Competition details</h2>
+    <p>Coming soon.</p>
+  </section>
+
+  <footer>
+    <a href="/">The Chubbitz</a>
+  </footer>
+</div>
+</body>
+</html>
