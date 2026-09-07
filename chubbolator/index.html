@@ -126,15 +126,19 @@
   }
 
   /* ---------- Steps ---------- */
+  /* All three steps share one panel, divided by hairlines, rather than sitting
+     as three separate cards. */
   .steps{
     position:relative;
     z-index:1;
     list-style:none;
     margin:0;
-    padding:0;
     display:flex;
     flex-direction:column;
-    gap:12px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    padding:0 16px;
   }
   .step{
     position:relative;
@@ -142,18 +146,16 @@
     /* number column + content column; the connector thread lives in the number column */
     grid-template-columns:34px 1fr;
     gap:13px;
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:var(--radius-lg);
-    padding:15px 16px 16px;
+    padding:16px 0;
   }
-  /* the thread running from one step's number down into the next */
+  .step + .step{ border-top:1px solid var(--line); }
+  /* the thread running from one step number down to the next */
   .step:not(:last-child)::after{
     content:"";
     position:absolute;
-    left:calc(16px + 17px);   /* padding + half the number circle */
-    top:calc(15px + 34px);    /* padding + circle height */
-    height:calc(100% - 15px - 34px + 12px);  /* down through the 12px gap */
+    left:17px;                 /* half the number circle */
+    top:50px;                  /* padding + circle height */
+    height:calc(100% - 34px);  /* down to where the next circle starts */
     width:2px;
     transform:translateX(-1px);
     background:linear-gradient(to bottom, rgba(79,142,247,.45), rgba(79,142,247,.06));
