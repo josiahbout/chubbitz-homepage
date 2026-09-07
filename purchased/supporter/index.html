@@ -229,6 +229,19 @@
     white-space:nowrap;
   }
 
+  /* Screenshot of the unlocked supporters channels. */
+  .shot{
+    display:block;
+    width:100%;
+    /* never scale past its natural 266px or it goes soft */
+    max-width:266px;
+    height:auto;
+    margin:11px 0 9px;
+    border-radius:var(--radius-sm);
+    border:1px solid var(--line);
+    background:#1a1d23;
+  }
+
   /* Primary action inside a step */
   .step-btn{
     display:inline-flex;
@@ -301,11 +314,11 @@
         <path d="M4 12.5L9.5 18L20 6"/>
       </svg>
     </div>
-    <h1 class="thanks">Thank you</h1>
-    <p class="thanks-sub">For becoming a supporter! It means a lot.</p>
+    <h1 class="thanks">Thank you!</h1>
+    <p class="thanks-sub">A receipt was sent to your email.</p>
   </header>
 
-  <p class="rule">To unlock your privileges in the Discord community</p>
+  <p class="rule">To unlock your privileges in the Discord community:</p>
 
   <ol class="steps">
 
@@ -347,6 +360,8 @@
       <div class="step-body">
         <h2 class="step-title">That's it</h2>
         <p>You should now see the supporters channels unlocked. Make sure you read the rules and go have fun!</p>
+        <img class="shot" src="/media/supporters_screenshot.png" width="266" height="147" loading="lazy" decoding="async"
+             alt="The Discord sidebar showing the unlocked Supporters category: menu, supporters-chat and sneak-peaks.">
         <p>If you have any questions, you can notify me on Discord by typing <span class="chip">@Skyman</span></p>
       </div>
     </li>
