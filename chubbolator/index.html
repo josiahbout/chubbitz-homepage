@@ -267,6 +267,13 @@
     margin-left:auto;
     margin-right:auto;
   }
+  /* All seven frames stacked in one grid cell, so the container is sized by the
+     image and only the current frame is visible. Swapping the src of a single
+     <img> can blank it for a beat mid-change; this cannot. */
+  .flipbook{ display:grid; }
+  .flipbook img{ grid-area:1/1; }
+  .flipbook img:not(.on){ visibility:hidden; }
+
   /* two captures belonging to the same sub-step */
   .media-stack{
     display:flex;
@@ -491,9 +498,15 @@
             Click here
           </a>
         </p>
-        <video class="shot" id="guide-5" src="/media/chubbolator/bash_account_guide_5.mp4" width="1330" height="740"
-             muted playsinline preload="auto"
-             aria-label="Building a Chubbitz in the Chubbolator"></video>
+        <div class="flipbook" id="guide-5">
+          <img class="shot on" src="/media/chubbolator/guide_5_frame_01.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="Building a Chubbitz in the Chubbolator">
+          <img class="shot" src="/media/chubbolator/guide_5_frame_02.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
+          <img class="shot" src="/media/chubbolator/guide_5_frame_03.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
+          <img class="shot" src="/media/chubbolator/guide_5_frame_04.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
+          <img class="shot" src="/media/chubbolator/guide_5_frame_05.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
+          <img class="shot" src="/media/chubbolator/guide_5_frame_06.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
+          <img class="shot" src="/media/chubbolator/guide_5_frame_07.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
+        </div>
       </div>
     </li>
 
@@ -539,42 +552,43 @@
 </div>
 
 <script>
-  /* The step 2 clip runs about a quarter of a second, so at native speed it is
-     gone before you can read it. Two things get it down to roughly one frame
-     per second:
+  /* The step 2 capture is a flipbook, not a video. The original clip was 0.23s
+     long and reported no seekable range, so it could neither be slowed to a
+     readable speed nor rewound to loop. Its seven frames were pulled out as
+     JPEGs; this shows one per second, on repeat. */
+  (function playGuide5(){
+    var box = document.getElementById("guide-5");
+    if(!box) return;
 
-       1. playbackRate 0.0625 - the slowest any browser allows. Anything lower
-          throws. That alone is 16x slower.
-       2. A 50% duty cycle on top: play for half a second, pause for half a
-          second. Pausing holds the current frame, so this halves it again to
-          about 1fps without any visible stutter.
+    var frames = box.querySelectorAll("img");
+    if(frames.length < 2) return;
 
-     Looping is done by reloading rather than by the loop attribute: this file
-     reports no seekable range, so the browser cannot rewind it. load() starts
-     it over, and the canplay handler picks playback back up. */
-  (function slowGuide5(){
-    var v = document.getElementById("guide-5");
-    if(!v) return;
+    var HOLD = 1000;   /* ms per frame */
 
-    var RATE = 0.0625;
-    var PULSE = 500;   /* ms of play, then the same again paused */
-    var playing = false;
-
-    function resume(){
-      v.playbackRate = RATE;
-      var p = v.play();
-      if(p && p.catch) p.catch(function(){});
+    function start(){
+      var n = 0;
+      setInterval(function(){
+        frames[n].classList.remove("on");
+        n = (n + 1) % frames.length;
+        frames[n].classList.add("on");
+      }, HOLD);
     }
 
-    v.addEventListener("canplay", resume);
-    v.addEventListener("ended", function(){ v.load(); });
+    /* The frames load lazily, so wait until every one is in before starting -
+       otherwise a frame that hasn't arrived yet would show as a blank when its
+       turn came round. A side benefit: the flipbook only begins once the reader
+       has actually scrolled down to it. */
+    var pending = frames.length;
+    function ready(){ if(--pending === 0) start(); }
 
-    setInterval(function(){
-      if(v.ended) return;          /* the reload is already in flight */
-      playing = !playing;
-      if(playing) resume();
-      else v.pause();
-    }, PULSE);
+    for(var i = 0; i < frames.length; i++){
+      if(frames[i].complete && frames[i].naturalWidth){
+        ready();
+      } else {
+        frames[i].addEventListener("load", ready, { once: true });
+        frames[i].addEventListener("error", ready, { once: true });   /* never stall */
+      }
+    }
   })();
 </script>
 
