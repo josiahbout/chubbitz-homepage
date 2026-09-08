@@ -258,6 +258,21 @@
     border:1px solid var(--line);
     background:#1a1d23;
   }
+  /* A portrait phone recording would be enormous at full column width, so it is
+     capped by height and centred instead. */
+  .shot-tall{
+    width:auto;
+    max-width:100%;
+    max-height:440px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  /* two captures belonging to the same sub-step */
+  .media-stack{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
   .gif-slot{
     display:grid;
     place-items:center;
@@ -438,24 +453,28 @@
                 to join the Bash Discord.
               </span>
             </span>
-            <!-- Swap this <div> for: <img class="shot" src="/media/chubbolator/step-1a.gif" alt="Joining the Bash Discord"> -->
-            <div class="gif-slot">GIF coming soon</div>
+            <video class="shot shot-tall" src="/media/chubbolator/bash_account_guide_1.mp4" width="1080" height="2400"
+                 autoplay loop muted playsinline preload="metadata"
+                 aria-label="Joining the Bash Discord"></video>
           </li>
 
           <li class="substep">
             <span class="substep-text">
               <span>Go to <span class="chip">#get-a-bash-invite</span>, tap <b>claim bash.tv invite</b>, and copy the code.</span>
             </span>
-            <!-- Swap this <div> for: <img class="shot" src="/media/chubbolator/step-1b.gif" alt="Claiming a Bash invite code"> -->
-            <div class="gif-slot">GIF coming soon</div>
+            <div class="media-stack">
+              <img class="shot" style="max-width:247px" src="/media/chubbolator/bash_account_guide_2.png" width="247" height="144" loading="lazy" decoding="async" alt="The #get-a-bash-invite channel in the Bash Discord">
+              <img class="shot" style="max-width:411px" src="/media/chubbolator/bash_account_guide_3.png" width="411" height="343" loading="lazy" decoding="async" alt="Claiming a bash.tv invite and copying the code">
+            </div>
           </li>
 
           <li class="substep">
             <span class="substep-text">
               <span>Go to <a class="step-link" data-track="chubbolator_click" data-track-label="bash_tv" href="https://bash.tv/" target="_blank" rel="noopener noreferrer">bash.tv</a>, click <b>I have an invite code</b>, paste your code in, and create an account.</span>
             </span>
-            <!-- Swap this <div> for: <img class="shot" src="/media/chubbolator/step-1c.gif" alt="Redeeming the invite code on bash.tv"> -->
-            <div class="gif-slot">GIF coming soon</div>
+            <video class="shot" style="max-width:302px" src="/media/chubbolator/bash_account_guide_4.mp4" width="302" height="372"
+                 autoplay loop muted playsinline preload="metadata"
+                 aria-label="Redeeming the invite code on bash.tv"></video>
           </li>
         </ol>
       </div>
@@ -472,8 +491,9 @@
             Click here
           </a>
         </p>
-        <!-- Swap this <div> for: <img class="shot" src="/media/chubbolator/step-2.gif" alt="Building a Chubbitz in the Chubbolator"> -->
-        <div class="gif-slot">GIF coming soon</div>
+        <video class="shot" id="guide-5" src="/media/chubbolator/bash_account_guide_5.mp4" width="1330" height="740"
+             muted playsinline preload="auto"
+             aria-label="Building a Chubbitz in the Chubbolator"></video>
       </div>
     </li>
 
@@ -482,8 +502,10 @@
       <div class="step-body">
         <h2 class="step-title">Submit!</h2>
         <p>Once you're done with your character, click <span class="chip">Finish!</span> and check <span class="chip">Submit to gallery!</span> if you want your character to be considered for joining Brandlandia.</p>
-        <!-- Swap this <div> for: <img class="shot" src="/media/chubbolator/step-3.gif" alt="Submitting a finished Chubbitz to the gallery"> -->
-        <div class="gif-slot">GIF coming soon</div>
+        <div class="media-stack">
+          <img class="shot" style="max-width:150px" src="/media/chubbolator/bash_account_guide_6.png" width="150" height="80" loading="lazy" decoding="async" alt="The Finish! button">
+          <img class="shot" style="max-width:499px" src="/media/chubbolator/bash_account_guide_7.png" width="499" height="213" loading="lazy" decoding="async" alt="The Submit to gallery! checkbox">
+        </div>
       </div>
     </li>
 
@@ -515,5 +537,46 @@
     <a href="/">The Chubbitz</a>
   </footer>
 </div>
+
+<script>
+  /* The step 2 clip runs about a quarter of a second, so at native speed it is
+     gone before you can read it. Two things get it down to roughly one frame
+     per second:
+
+       1. playbackRate 0.0625 - the slowest any browser allows. Anything lower
+          throws. That alone is 16x slower.
+       2. A 50% duty cycle on top: play for half a second, pause for half a
+          second. Pausing holds the current frame, so this halves it again to
+          about 1fps without any visible stutter.
+
+     Looping is done by reloading rather than by the loop attribute: this file
+     reports no seekable range, so the browser cannot rewind it. load() starts
+     it over, and the canplay handler picks playback back up. */
+  (function slowGuide5(){
+    var v = document.getElementById("guide-5");
+    if(!v) return;
+
+    var RATE = 0.0625;
+    var PULSE = 500;   /* ms of play, then the same again paused */
+    var playing = false;
+
+    function resume(){
+      v.playbackRate = RATE;
+      var p = v.play();
+      if(p && p.catch) p.catch(function(){});
+    }
+
+    v.addEventListener("canplay", resume);
+    v.addEventListener("ended", function(){ v.load(); });
+
+    setInterval(function(){
+      if(v.ended) return;          /* the reload is already in flight */
+      playing = !playing;
+      if(playing) resume();
+      else v.pause();
+    }, PULSE);
+  })();
+</script>
+
 </body>
 </html>
