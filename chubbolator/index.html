@@ -12,14 +12,14 @@
 <meta property="og:url" content="https://thechubbitz.com/chubbolator">
 <meta property="og:title" content="Create your Chubbitz">
 <meta property="og:description" content="Create your own Chubbitz in 3 easy steps.">
-<meta property="og:image" content="https://thechubbitz.com/media/embed_banner.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The Chubbitz">
+<meta property="og:image" content="https://thechubbitz.com/media/chubbolator/chubbolator_embed.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="720">
+<meta property="og:image:alt" content="The Chubbolator">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Create your Chubbitz">
 <meta name="twitter:description" content="Create your own Chubbitz in 3 easy steps.">
-<meta name="twitter:image" content="https://thechubbitz.com/media/embed_banner.png">
+<meta name="twitter:image" content="https://thechubbitz.com/media/chubbolator/chubbolator_embed.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -115,11 +115,22 @@
     margin:0;
     font-family:'Fredoka', sans-serif;
     font-weight:700;
-    font-size:clamp(26px, 8vw, 36px);
-    line-height:1.1;
-    letter-spacing:.01em;
+    font-size:clamp(28px, 8.8vw, 44px);   /* one line down to a 320px phone */
+    line-height:1.05;
+    letter-spacing:.02em;
     color:#fff;
+    white-space:nowrap;
   }
+  /* The old headline, now a step down under the title */
+  .subtitle{
+    margin:10px 0 0;
+    font-family:"Fredoka", sans-serif;
+    font-weight:600;
+    font-size:clamp(18px, 5.4vw, 22px);
+    line-height:1.2;
+    color:var(--text);
+  }
+  .subtitle em,
   h1 em{
     font-style:normal;
     background:linear-gradient(135deg,var(--accent),var(--accent-2));
@@ -441,7 +452,8 @@
   </a>
 
   <header class="top">
-    <h1>Create your <em>Chubbitz</em><br>In 3 easy steps!</h1>
+    <h1>THE CHUBBOLATOR</h1>
+    <p class="subtitle">Create your <em>Chubbitz</em><br>In 3 easy steps!</p>
     <span class="kicker">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
       60 second guide
