@@ -14,7 +14,8 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: write   # commit the new numbers
+  pages: write      # ask GitHub Pages to rebuild the live site
 
 concurrency:
   group: update-metrics
@@ -41,6 +42,7 @@ jobs:
         run: perl scripts/update-metrics.pl "$RUNNER_TEMP/linkme.html"
 
       - name: Commit and push if anything changed
+        id: commit
         run: |
           if [ -z "$(git status --porcelain -- metrics.js data/followers.json)" ]; then
             echo "Nothing changed - no commit needed."
@@ -51,3 +53,16 @@ jobs:
           git add metrics.js data/followers.json
           git commit -m "Update follower count ($(date -u +%Y-%m-%d))"
           git push
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      # A push made with the workflow's own token doesn't reliably kick off a
+      # Pages build, so ask for one explicitly. Scheduled runs only do this when
+      # they pushed new numbers; a manual "Run workflow" always does, so it
+      # doubles as a "refresh the live site" button.
+      - name: Rebuild the live site
+        if: steps.commit.outputs.pushed == 'true' || github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api --method POST "repos/${{ github.repository }}/pages/builds" --silent
+          echo "GitHub Pages rebuild requested."
