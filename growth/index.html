@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0b0e">
+<meta name="robots" content="noindex">
+<title>Follower growth — The Chubbitz</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  /* Same tokens as the homepage and the other sub-pages. */
+  :root{
+    --bg:#0a0b0e;
+    --bg-soft:#121419;
+    --text:#f4f5f7;
+    --text-dim:#a3a9b4;
+    --text-faint:#6b7280;
+    --line:rgba(255,255,255,.09);
+    --line-hover:rgba(255,255,255,.2);
+    --card:rgba(255,255,255,.045);
+    --accent:#4f8ef7;
+    --accent-2:#8ec9ff;
+    --up:#4ade80;
+    --down:#f87171;
+    --radius-lg:20px;
+    --radius-md:16px;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  a{color:inherit;}
+
+  /* Positioned against the page, not the column, so it reaches the screen edges.
+     Absolute against the viewport box, so width:100% can't cause a sideways scroll. */
+  .glow{
+    position:absolute;
+    top:-130px;
+    left:0;
+    width:100%;
+    height:480px;
+    pointer-events:none;
+    background:radial-gradient(ellipse 80% 55% at 50% 30%, rgba(79,142,247,.24), transparent 70%);
+  }
+  .page{
+    position:relative;
+    z-index:1;
+    max-width:760px;
+    margin:0 auto;
+    padding:0 18px 48px;
+  }
+
+  .home-link{
+    display:inline-flex;
+    margin-top:20px;
+    color:var(--text-dim);
+    transition:color .15s ease, transform .15s ease;
+  }
+  .home-link:hover{ color:var(--text); transform:translateY(-1px); }
+  .home-link svg{ width:22px; height:22px; display:block; }
+
+  /* ---------- Header ---------- */
+  header.top{
+    text-align:center;
+    padding:10px 0 22px;
+  }
+  h1{
+    margin:0;
+    font-family:"Fredoka", sans-serif;
+    font-weight:700;
+    font-size:clamp(30px, 8.5vw, 42px);
+    line-height:1.05;
+    letter-spacing:.01em;
+    color:#fff;
+  }
+  h1 em{
+    font-style:normal;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .kicker{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    margin-top:12px;
+    padding:5px 12px;
+    border-radius:999px;
+    background:rgba(79,142,247,.12);
+    border:1px solid rgba(79,142,247,.28);
+    color:var(--accent-2);
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+  }
+  .live-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--accent-2);
+    box-shadow:0 0 0 0 rgba(142,201,255,.6);
+    animation:live 2s ease-out infinite;
+  }
+  @keyframes live{
+    0%  { box-shadow:0 0 0 0 rgba(142,201,255,.55); }
+    70% { box-shadow:0 0 0 7px rgba(142,201,255,0); }
+    100%{ box-shadow:0 0 0 0 rgba(142,201,255,0); }
+  }
+
+  /* shown only while the graph is still on made-up numbers */
+  .sample-note{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    margin:0 0 12px;
+    padding:11px 14px;
+    border-radius:var(--radius-md);
+    background:rgba(250,204,21,.07);
+    border:1px solid rgba(250,204,21,.28);
+    color:#fde68a;
+    font-size:13px;
+    line-height:1.45;
+  }
+  .sample-note svg{ flex:none; width:16px; height:16px; margin-top:1px; }
+  .sample-note b{ color:#fef3c7; }
+
+  /* ---------- Stat cards ---------- */
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:10px;
+    margin-bottom:12px;
+  }
+  .stat{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius-md);
+    padding:13px 14px 14px;
+    min-width:0;
+  }
+  .stat-label{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.07em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+  }
+  .stat-value{
+    margin-top:6px;
+    font-family:"Fredoka", sans-serif;
+    font-size:clamp(22px, 5.4vw, 28px);
+    font-weight:700;
+    line-height:1;
+    color:#fff;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .stat-sub{
+    margin-top:6px;
+    font-size:12px;
+    font-weight:700;
+    color:var(--text-faint);
+  }
+  .is-up{ color:var(--up); }
+  .is-down{ color:var(--down); }
+  @media (max-width:560px){
+    .stats{ grid-template-columns:1fr 1fr; }
+    .stat-total{ grid-column:1 / -1; }
+  }
+
+  /* ---------- Chart ---------- */
+  .chart-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    padding:14px 12px 10px;
+  }
+  .chart-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin:0 4px 8px;
+  }
+  .chart-title{
+    font-family:"Fredoka", sans-serif;
+    font-size:17px;
+    font-weight:700;
+    color:#fff;
+  }
+  .range{
+    display:inline-flex;
+    padding:3px;
+    border-radius:999px;
+    background:rgba(255,255,255,.04);
+    border:1px solid var(--line);
+  }
+  .range button{
+    border:0;
+    background:transparent;
+    color:var(--text-dim);
+    font:inherit;
+    font-size:12px;
+    font-weight:700;
+    padding:5px 11px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:color .15s ease, background .15s ease;
+  }
+  .range button:hover{ color:var(--text); }
+  .range button[aria-pressed="true"]{
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    color:#0a0b0e;
+  }
+  .range button:disabled{ opacity:.35; cursor:default; }
+
+  .chart{
+    position:relative;
+    height:280px;
+    touch-action:pan-y;
+  }
+  @media (max-width:560px){ .chart{ height:230px; } }
+  .chart svg{
+    display:block;
+    width:100%;
+    height:100%;
+    overflow:visible;
+  }
+  .grid{ stroke:rgba(255,255,255,.07); stroke-width:1; }
+  .ylab, .xlab{
+    fill:var(--text-faint);
+    font-size:11px;
+    font-weight:600;
+    font-family:"Inter",system-ui,sans-serif;
+  }
+  .line{ fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
+  .line-glow{ fill:none; stroke-width:7; opacity:.45; }
+  .end-dot{ fill:#fff; stroke:var(--accent); stroke-width:2.5; }
+  .end-halo{
+    fill:var(--accent-2);
+    opacity:.35;
+    transform-box:fill-box;
+    transform-origin:center;
+    animation:halo 2.2s ease-out infinite;
+  }
+  @keyframes halo{
+    0%  { transform:scale(.6); opacity:.5; }
+    100%{ transform:scale(2.2); opacity:0; }
+  }
+  .hover-line{ stroke:rgba(255,255,255,.28); stroke-width:1; stroke-dasharray:3 3; }
+  .hover-dot{ fill:#0a0b0e; stroke:var(--accent-2); stroke-width:2.5; }
+
+  /* first draw: the line traces itself in, then the fill fades up */
+  .intro .line, .intro .line-glow{
+    stroke-dasharray:var(--len);
+    stroke-dashoffset:var(--len);
+    animation:trace 1.2s cubic-bezier(.4,0,.2,1) forwards;
+  }
+  .intro .area{ animation:rise .9s .35s ease both; }
+  .intro .end-dot, .intro .end-halo{ animation-delay:1.1s; }
+  .intro .end-dot{ opacity:0; animation:pop .3s 1.1s ease forwards; }
+  @keyframes trace{ to{ stroke-dashoffset:0; } }
+  @keyframes rise { from{ opacity:0; } to{ opacity:1; } }
+  @keyframes pop  { to{ opacity:1; } }
+
+  .tip{
+    position:absolute;
+    left:0;
+    top:0;
+    pointer-events:none;
+    padding:7px 10px;
+    border-radius:10px;
+    background:rgba(10,11,14,.92);
+    border:1px solid rgba(255,255,255,.16);
+    box-shadow:0 6px 18px rgba(0,0,0,.4);
+    backdrop-filter:blur(4px);
+    -webkit-backdrop-filter:blur(4px);
+    white-space:nowrap;
+    opacity:0;
+    transition:opacity .12s ease;
+  }
+  .tip.on{ opacity:1; }
+  .tip-date{ font-size:11px; font-weight:600; color:var(--text-faint); }
+  .tip-value{ margin-top:2px; font-family:"Fredoka", sans-serif; font-size:17px; font-weight:700; color:#fff; }
+  .tip-delta{ margin-top:1px; font-size:11.5px; font-weight:700; }
+
+  .empty{
+    display:grid;
+    place-items:center;
+    height:100%;
+    color:var(--text-faint);
+    font-size:13px;
+  }
+
+  footer{
+    margin-top:22px;
+    text-align:center;
+    font-size:11.5px;
+    line-height:1.7;
+    color:var(--text-faint);
+  }
+  footer a{ color:var(--text-faint); text-decoration:none; border-bottom:1px solid var(--line); }
+  footer a:hover{ color:var(--text-dim); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+    .intro .line, .intro .line-glow{ stroke-dashoffset:0; }
+    .intro .end-dot{ opacity:1; }
+  }
+</style>
+<script src="/analytics.js" defer></script>
+</head>
+<body>
+<div class="glow" aria-hidden="true"></div>
+
+<div class="page">
+  <a class="home-link" href="/" aria-label="The Chubbitz home">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 11L12 4L21 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5.5 9.5V19C5.5 19.5523 5.94772 20 6.5 20H9.5C10.0523 20 10.5 19.5523 10.5 19V15C10.5 14.4477 10.9477 14 11.5 14H12.5C13.0523 14 13.5 14.4477 13.5 15V19C13.5 19.5523 13.9477 20 14.5 20H17.5C18.0523 20 18.5 19.5523 18.5 19V9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
+
+  <header class="top">
+    <h1>Follower <em>growth</em></h1>
+    <span class="kicker"><span class="live-dot" aria-hidden="true"></span><span id="updated">Updated daily</span></span>
+  </header>
+
+  <p class="sample-note" id="sample-note" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16.5h.01"/></svg>
+    <span id="sample-text"><b>Sample data.</b> The graph is showing made-up numbers until real daily tracking has a couple of days to plot.</span>
+  </p>
+
+  <section class="stats" aria-label="Summary">
+    <div class="stat stat-total">
+      <div class="stat-label">Total followers</div>
+      <div class="stat-value" id="stat-total">&ndash;</div>
+      <div class="stat-sub">Instagram, YouTube &amp; TikTok</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label" id="stat-change-label">30-day change</div>
+      <div class="stat-value" id="stat-change">&ndash;</div>
+      <div class="stat-sub" id="stat-change-pct">&nbsp;</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Avg per day</div>
+      <div class="stat-value" id="stat-avg">&ndash;</div>
+      <div class="stat-sub" id="stat-avg-sub">&nbsp;</div>
+    </div>
+  </section>
+
+  <section class="chart-card" aria-label="Follower growth chart">
+    <div class="chart-head">
+      <span class="chart-title">Followers over time</span>
+      <div class="range" role="group" aria-label="Time range">
+        <button type="button" data-days="7">7D</button>
+        <button type="button" data-days="30" aria-pressed="true">30D</button>
+        <button type="button" data-days="0">All</button>
+      </div>
+    </div>
+    <div class="chart" id="chart">
+      <svg id="chart-svg" role="img" aria-label="Line chart of total followers over time"></svg>
+      <div class="tip" id="tip" aria-hidden="true">
+        <div class="tip-date" id="tip-date"></div>
+        <div class="tip-value" id="tip-value"></div>
+        <div class="tip-delta" id="tip-delta"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Follower totals from <a href="https://link.me/thechubbitz" target="_blank" rel="noopener noreferrer">link.me</a>, checked once a day.
+    <br><a href="/">The Chubbitz</a>
+  </footer>
+</div>
+
+<script>
+(function () {
+  /* The daily GitHub job appends one {date, followers} entry per day. */
+  var DATA_URL = "/data/followers.json";
+
+  /* Until the real history has this many days, the graph shows sample data
+     instead, so there's something to look at from day one. */
+  var MIN_REAL_DAYS = 2;
+
+  var DAY = 864e5;
+  var full = new Intl.NumberFormat("en-US");
+
+  function el(id){ return document.getElementById(id); }
+
+  /* 60994 -> "61K", 61234 -> "61.2K", 1450000 -> "1.5M" - same rounding the
+     updater uses. Rounds whole tenths, since toFixed(1) rounds the binary float
+     and can turn 1.45 into "1.4". */
+  function compact(n){
+    var a = Math.abs(n), sign = n < 0 ? "-" : "";
+    if (a < 1000) return sign + String(Math.round(a));
+    var div = a >= 1e6 ? 1e6 : 1e3, suf = a >= 1e6 ? "M" : "K";
+    var tenths = Math.round(a / (div / 10));
+    if (suf === "K" && tenths >= 10000){ div = 1e6; suf = "M"; tenths = Math.round(a / (div / 10)); }
+    var whole = Math.floor(tenths / 10), frac = tenths % 10;
+    return sign + whole + (frac ? "." + frac : "") + suf;
+  }
+  function signed(n){ return (n > 0 ? "+" : n < 0 ? "−" : "") + full.format(Math.abs(n)); }
+  function toUTC(dateStr){ var p = dateStr.split("-"); return Date.UTC(+p[0], +p[1] - 1, +p[2]); }
+  function label(ms, opts){
+    return new Date(ms).toLocaleDateString("en-US", Object.assign({ month:"short", day:"numeric", timeZone:"UTC" }, opts || {}));
+  }
+
+  /* 30 believable made-up days ending at the real current count. Seeded, so it
+     looks the same on every visit instead of reshuffling. */
+  function sampleSeries(endValue){
+    var seed = 20260911;
+    function rand(){ seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
+    var days = 30;
+    var now = new Date();
+    var end = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+    var start = Math.round(endValue * 0.9);
+    var steps = [0];
+    for (var i = 1; i < days; i++){
+      var step = 0.6 + rand() * 1.4;
+      if (i === 17) step += 7;          /* a video takes off */
+      if (i === 18) step += 3.5;
+      if (i === 23) step -= 0.5;
+      steps.push(steps[i - 1] + Math.max(0.05, step));
+    }
+    var scale = (endValue - start) / steps[days - 1];
+    var out = [];
+    for (var j = 0; j < days; j++){
+      out.push({ t: end - (days - 1 - j) * DAY, v: Math.round(start + steps[j] * scale) });
+    }
+    out[days - 1].v = endValue;
+    return out;
+  }
+
+  /* Smooth line that never overshoots the data (Fritsch-Carlson monotone cubic). */
+  function smoothPath(p){
+    var n = p.length;
+    if (n < 2) return "";
+    var f = function (v){ return v.toFixed(1); };
+    if (n === 2) return "M" + f(p[0].x) + "," + f(p[0].y) + "L" + f(p[1].x) + "," + f(p[1].y);
+    var dx = [], m = [], t = [], i;
+    for (i = 0; i < n - 1; i++){ dx[i] = p[i + 1].x - p[i].x; m[i] = (p[i + 1].y - p[i].y) / dx[i]; }
+    t[0] = m[0]; t[n - 1] = m[n - 2];
+    for (i = 1; i < n - 1; i++) t[i] = m[i - 1] * m[i] <= 0 ? 0 : (m[i - 1] + m[i]) / 2;
+    for (i = 0; i < n - 1; i++){
+      if (m[i] === 0){ t[i] = 0; t[i + 1] = 0; continue; }
+      var a = t[i] / m[i], b = t[i + 1] / m[i], s = a * a + b * b;
+      if (s > 9){ var k = 3 / Math.sqrt(s); t[i] = k * a * m[i]; t[i + 1] = k * b * m[i]; }
+    }
+    var d = "M" + f(p[0].x) + "," + f(p[0].y);
+    for (i = 0; i < n - 1; i++){
+      var h = dx[i] / 3;
+      d += "C" + f(p[i].x + h) + "," + f(p[i].y + t[i] * h) + " " +
+                 f(p[i + 1].x - h) + "," + f(p[i + 1].y - t[i + 1] * h) + " " +
+                 f(p[i + 1].x) + "," + f(p[i + 1].y);
+    }
+    return d;
+  }
+
+  /* Round axis steps (1, 2, 5 x 10^n) so labels read 58K, 60K, 62K not 58,341. */
+  function niceTicks(min, max, count){
+    var span = max - min || 1;
+    var step = Math.pow(10, Math.floor(Math.log10(span / count)));
+    var err = span / count / step;
+    if (err >= 7.5) step *= 10; else if (err >= 3) step *= 5; else if (err >= 1.5) step *= 2;
+    var lo = Math.floor(min / step) * step, hi = Math.ceil(max / step) * step, ticks = [];
+    for (var v = lo; v <= hi + step / 2; v += step) ticks.push(v);
+    return ticks;
+  }
+
+  var svg = el("chart-svg"), chart = el("chart"), tip = el("tip");
+  var all = [], shown = [], pts = [], rangeDays = 30, introDone = false;
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function draw(){
+    var W = chart.clientWidth, H = chart.clientHeight;
+    if (!W || !H) return;
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    hideTip();
+
+    if (!shown.length){
+      svg.innerHTML = "";
+      pts = [];
+      return;
+    }
+
+    var pad = { l: 46, r: 14, t: 14, b: 28 };
+    var t0 = shown[0].t, t1 = shown[shown.length - 1].t;
+    if (t1 === t0){ t0 -= DAY; t1 += DAY; }
+    var values = shown.map(function (p){ return p.v; });
+    var vmin = Math.min.apply(null, values), vmax = Math.max.apply(null, values);
+    var room = (vmax - vmin) * 0.18 || Math.max(1, vmax * 0.01);
+    var ticks = niceTicks(vmin - room, vmax + room, 4);
+    var ylo = ticks[0], yhi = ticks[ticks.length - 1];
+
+    function X(t){ return pad.l + (t - t0) / (t1 - t0) * (W - pad.l - pad.r); }
+    function Y(v){ return pad.t + (1 - (v - ylo) / (yhi - ylo)) * (H - pad.t - pad.b); }
+
+    pts = shown.map(function (p){ return { x: X(p.t), y: Y(p.v), t: p.t, v: p.v }; });
+    var base = Y(ylo);
+    var line = smoothPath(pts);
+    var first = pts[0], last = pts[pts.length - 1];
+
+    var out = [
+      '<defs>',
+        '<linearGradient id="g-area" x1="0" y1="0" x2="0" y2="1">',
+          '<stop offset="0" stop-color="#4f8ef7" stop-opacity=".42"/>',
+          '<stop offset="1" stop-color="#4f8ef7" stop-opacity="0"/>',
+        '</linearGradient>',
+        '<linearGradient id="g-line" x1="0" y1="0" x2="1" y2="0">',
+          '<stop offset="0" stop-color="#4f8ef7"/>',
+          '<stop offset="1" stop-color="#8ec9ff"/>',
+        '</linearGradient>',
+        '<filter id="f-glow" x="-10%" y="-50%" width="120%" height="200%"><feGaussianBlur stdDeviation="4"/></filter>',
+      '</defs>'
+    ];
+
+    ticks.forEach(function (v){
+      var y = Y(v).toFixed(1);
+      out.push('<line class="grid" x1="' + pad.l + '" x2="' + (W - pad.r) + '" y1="' + y + '" y2="' + y + '"/>');
+      out.push('<text class="ylab" x="' + (pad.l - 9) + '" y="' + y + '" dy="0.32em" text-anchor="end">' + compact(v) + '</text>');
+    });
+
+    var labelCount = Math.min(pts.length, W < 440 ? 3 : 5);
+    for (var i = 0; i < labelCount; i++){
+      var idx = labelCount === 1 ? 0 : Math.round(i * (pts.length - 1) / (labelCount - 1));
+      var anchor = labelCount === 1 ? "middle" : i === 0 ? "start" : i === labelCount - 1 ? "end" : "middle";
+      out.push('<text class="xlab" x="' + pts[idx].x.toFixed(1) + '" y="' + (H - 7) + '" text-anchor="' + anchor + '">' + label(pts[idx].t) + '</text>');
+    }
+
+    if (pts.length > 1){
+      out.push('<path class="area" d="' + line + 'L' + last.x.toFixed(1) + ',' + base.toFixed(1) + 'L' + first.x.toFixed(1) + ',' + base.toFixed(1) + 'Z" fill="url(#g-area)"/>');
+      out.push('<path class="line-glow" d="' + line + '" stroke="url(#g-line)" filter="url(#f-glow)"/>');
+      out.push('<path class="line" d="' + line + '" stroke="url(#g-line)"/>');
+    }
+    out.push('<circle class="end-halo" cx="' + last.x.toFixed(1) + '" cy="' + last.y.toFixed(1) + '" r="7"/>');
+    out.push('<circle class="end-dot" cx="' + last.x.toFixed(1) + '" cy="' + last.y.toFixed(1) + '" r="4.5"/>');
+    out.push('<g id="hover" style="display:none"><line class="hover-line" id="hover-line" y1="' + pad.t + '" y2="' + base.toFixed(1) + '"/><circle class="hover-dot" id="hover-dot" r="5"/></g>');
+
+    svg.innerHTML = out.join("");
+
+    /* Trace the line in the first time only - not on every resize or range change. */
+    if (!introDone && !reduceMotion && pts.length > 1){
+      var path = svg.querySelector(".line");
+      var len = path.getTotalLength();
+      svg.style.setProperty("--len", len.toFixed(0));
+      svg.classList.add("intro");
+    } else {
+      svg.classList.remove("intro");
+    }
+    introDone = true;
+  }
+
+  function hideTip(){
+    tip.classList.remove("on");
+    var g = svg.querySelector("#hover");
+    if (g) g.style.display = "none";
+  }
+
+  function showTipAt(clientX){
+    if (!pts.length) return;
+    var box = svg.getBoundingClientRect();
+    var x = clientX - box.left;
+    var k = 0;
+    for (var i = 1; i < pts.length; i++) if (Math.abs(pts[i].x - x) < Math.abs(pts[k].x - x)) k = i;
+    var p = pts[k];
+
+    var g = svg.querySelector("#hover");
+    g.style.display = "";
+    var hl = svg.querySelector("#hover-line"), hd = svg.querySelector("#hover-dot");
+    hl.setAttribute("x1", p.x); hl.setAttribute("x2", p.x);
+    hd.setAttribute("cx", p.x); hd.setAttribute("cy", p.y);
+
+    el("tip-date").textContent = label(p.t, { weekday: "short", year: "numeric" });
+    el("tip-value").textContent = full.format(p.v) + " followers";
+    var delta = el("tip-delta");
+    if (k > 0){
+      var d = p.v - pts[k - 1].v;
+      delta.textContent = signed(d) + " vs day before";
+      delta.className = "tip-delta " + (d > 0 ? "is-up" : d < 0 ? "is-down" : "");
+    } else {
+      delta.textContent = "";
+    }
+
+    tip.classList.add("on");
+    var tw = tip.offsetWidth, th = tip.offsetHeight, W = chart.clientWidth;
+    var left = Math.max(0, Math.min(W - tw, p.x - tw / 2));
+    var top = p.y - th - 14;
+    if (top < 0) top = p.y + 14;
+    tip.style.transform = "translate(" + left.toFixed(0) + "px," + top.toFixed(0) + "px)";
+  }
+
+  svg.addEventListener("pointermove", function (e){ showTipAt(e.clientX); });
+  svg.addEventListener("pointerdown", function (e){ showTipAt(e.clientX); });
+  svg.addEventListener("pointerleave", hideTip);
+
+  function setRange(days){
+    rangeDays = days;
+    [].forEach.call(document.querySelectorAll(".range button"), function (b){
+      b.setAttribute("aria-pressed", String(+b.dataset.days === days));
+    });
+    if (!all.length){ shown = []; draw(); return; }
+    var lastT = all[all.length - 1].t;
+    shown = days ? all.filter(function (p){ return p.t > lastT - days * DAY; }) : all.slice();
+    if (shown.length < 2 && all.length >= 2) shown = all.slice(-2);
+    updateStats();
+    draw();
+  }
+
+  function updateStats(){
+    var last = all[all.length - 1];
+    el("stat-total").textContent = full.format(last.v);
+
+    var first = shown[0];
+    var diff = last.v - first.v;
+    var span = Math.max(1, Math.round((last.t - first.t) / DAY));
+    var name = rangeDays === 7 ? "7-day" : rangeDays === 30 ? "30-day" : "All-time";
+    el("stat-change-label").textContent = name + " change";
+
+    var change = el("stat-change");
+    change.textContent = signed(diff);
+    change.className = "stat-value " + (diff > 0 ? "is-up" : diff < 0 ? "is-down" : "");
+
+    var pct = el("stat-change-pct");
+    pct.textContent = first.v ? (diff >= 0 ? "+" : "−") + Math.abs(diff / first.v * 100).toFixed(1) + "%" : " ";
+    pct.className = "stat-sub " + (diff > 0 ? "is-up" : diff < 0 ? "is-down" : "");
+
+    el("stat-avg").textContent = signed(Math.round(diff / span));
+    el("stat-avg-sub").textContent = "over " + span + " day" + (span === 1 ? "" : "s");
+  }
+
+  [].forEach.call(document.querySelectorAll(".range button"), function (b){
+    b.addEventListener("click", function (){ setRange(+b.dataset.days); });
+  });
+
+  if ("ResizeObserver" in window){
+    var lastW = 0;
+    new ResizeObserver(function (){
+      if (chart.clientWidth !== lastW){ lastW = chart.clientWidth; draw(); }
+    }).observe(chart);
+  } else {
+    window.addEventListener("resize", draw);
+  }
+
+  fetch(DATA_URL, { cache: "no-cache" })
+    .then(function (r){ return r.ok ? r.json() : []; })
+    .catch(function (){ return []; })
+    .then(function (rows){
+      var real = (Array.isArray(rows) ? rows : [])
+        .filter(function (r){ return r && /^\d{4}-\d{2}-\d{2}$/.test(r.date) && isFinite(r.followers); })
+        .map(function (r){ return { t: toUTC(r.date), v: +r.followers }; })
+        .sort(function (a, b){ return a.t - b.t; });
+
+      var isSample = real.length < MIN_REAL_DAYS;
+      if (isSample){
+        all = real.length ? sampleSeries(real[real.length - 1].v) : [];
+        var note = el("sample-note");
+        note.hidden = false;
+        if (real.length){
+          el("sample-text").innerHTML = "<b>Sample data.</b> Only the latest total (" + full.format(real[real.length - 1].v) +
+            ") is real. Real daily tracking started " + label(real[0].t, { year: "numeric" }) +
+            " and replaces this graph once it has " + MIN_REAL_DAYS + " days to plot.";
+        }
+      } else {
+        all = real;
+      }
+
+      if (!all.length){
+        chart.innerHTML = '<div class="empty">No follower data yet - check back after the first daily update.</div>';
+        el("updated").textContent = "Waiting for first update";
+        return;
+      }
+
+      if (real.length){
+        el("updated").textContent = "Updated " + label(real[real.length - 1].t, { year: "numeric" });
+      }
+
+      /* the All button is pointless until there's more than 30 days of history */
+      var allBtn = document.querySelector('.range button[data-days="0"]');
+      var spanDays = Math.round((all[all.length - 1].t - all[0].t) / DAY) + 1;
+      allBtn.disabled = spanDays <= 30;
+
+      setRange(30);
+    });
+})();
+</script>
+</body>
+</html>

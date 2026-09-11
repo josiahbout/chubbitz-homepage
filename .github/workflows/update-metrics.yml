@@ -1,0 +1,53 @@
+# Once a day, reads the Total Followers count from link.me/thechubbitz and
+# updates the homepage stat (metrics.js) and the /growth history
+# (data/followers.json). Runs on GitHub's servers - no computer needs to be on.
+#
+# To run it right now: GitHub > Actions > "Update follower metrics" > Run workflow.
+
+name: Update follower metrics
+
+on:
+  schedule:
+    # 13:17 UTC daily. An odd minute on purpose: the top of the hour is when
+    # GitHub is busiest and scheduled runs get delayed most.
+    - cron: "17 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-metrics
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out the site
+        uses: actions/checkout@v4
+
+      - name: Download the link.me profile
+        run: |
+          curl --fail --silent --show-error --location \
+               --retry 3 --retry-delay 10 --max-time 30 \
+               --user-agent "thechubbitz.com follower updater (+https://thechubbitz.com)" \
+               --output "$RUNNER_TEMP/linkme.html" \
+               "https://link.me/thechubbitz"
+
+      - name: Update metrics.js and the follower history
+        run: perl scripts/update-metrics.pl "$RUNNER_TEMP/linkme.html"
+
+      - name: Commit and push if anything changed
+        run: |
+          if [ -z "$(git status --porcelain -- metrics.js data/followers.json)" ]; then
+            echo "Nothing changed - no commit needed."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add metrics.js data/followers.json
+          git commit -m "Update follower count ($(date -u +%Y-%m-%d))"
+          git push
