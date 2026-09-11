@@ -1,0 +1,7 @@
+# Every page is open to search engines. Pages that shouldn't show up in search
+# results say so themselves with <meta name="robots" content="noindex">, and
+# are left out of the sitemap automatically.
+User-agent: *
+Allow: /
+
+Sitemap: https://thechubbitz.com/sitemap.xml
