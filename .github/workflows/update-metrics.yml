@@ -1,6 +1,7 @@
-# Once a day, reads the Total Followers count from link.me/thechubbitz and
-# updates the homepage stat (metrics.js) and the /growth history
-# (data/followers.json). Runs on GitHub's servers - no computer needs to be on.
+# Once a day, reads the Total Followers count from link.me/thechubbitz plus the
+# Discord server's member count, and updates the homepage stat (metrics.js) and
+# the /growth history (data/followers.json). Runs on GitHub's servers - no
+# computer needs to be on.
 #
 # To run it right now: GitHub > Actions > "Update follower metrics" > Run workflow.
 
@@ -21,6 +22,13 @@ concurrency:
   group: update-metrics
   cancel-in-progress: false
 
+env:
+  LINKME_URL: https://link.me/thechubbitz
+  # The Chub Club's permanent invite. The member count comes from Discord's
+  # public invite API, which needs no login.
+  DISCORD_INVITE: G9R9sPUDy8
+  USER_AGENT: thechubbitz.com follower updater (+https://thechubbitz.com)
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -34,12 +42,23 @@ jobs:
         run: |
           curl --fail --silent --show-error --location \
                --retry 3 --retry-delay 10 --max-time 30 \
-               --user-agent "thechubbitz.com follower updater (+https://thechubbitz.com)" \
+               --user-agent "$USER_AGENT" \
                --output "$RUNNER_TEMP/linkme.html" \
-               "https://link.me/thechubbitz"
+               "$LINKME_URL"
+
+      # Optional: if Discord is down, the job still updates everything else and
+      # the updater leaves Discord out for the day with a warning.
+      - name: Download the Discord member count
+        continue-on-error: true
+        run: |
+          curl --fail --silent --show-error --location \
+               --retry 3 --retry-delay 10 --max-time 30 \
+               --user-agent "$USER_AGENT" \
+               --output "$RUNNER_TEMP/discord.json" \
+               "https://discord.com/api/v10/invites/$DISCORD_INVITE?with_counts=true"
 
       - name: Update metrics.js and the follower history
-        run: perl scripts/update-metrics.pl "$RUNNER_TEMP/linkme.html"
+        run: perl scripts/update-metrics.pl "$RUNNER_TEMP/linkme.html" "discord=$RUNNER_TEMP/discord.json"
 
       - name: Commit and push if anything changed
         id: commit
