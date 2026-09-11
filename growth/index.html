@@ -239,7 +239,31 @@
     width:3px;
     background:var(--c);
   }
-  .platform:hover{ border-color:var(--line-hover); transform:translateY(-1px); }
+  /* Each card is a button (it switches the graph) with its link icon as a
+     sibling, since a link can't sit inside a button. The wrapper holds both,
+     so the hover lift moves the card and its icon together. */
+  .platform-wrap{
+    position:relative;
+    transition:transform .15s ease;
+  }
+  .platform-wrap:hover{ transform:translateY(-1px); }
+  .platform-wrap:hover .platform{ border-color:var(--line-hover); }
+  .platform{ height:100%; }
+  .platform-link{
+    position:absolute;
+    top:6px;
+    right:6px;
+    width:28px;
+    height:28px;
+    display:grid;
+    place-items:center;
+    border-radius:8px;
+    color:var(--text-faint);
+    transition:color .15s ease, background .15s ease;
+  }
+  .platform-link:hover,
+  .platform-link:focus-visible{ color:#fff; background:rgba(255,255,255,.08); }
+  .platform-link svg{ width:14px; height:14px; display:block; }
   .platform[aria-pressed="true"]{
     border-color:var(--c);
     background:rgba(255,255,255,.07);
@@ -248,6 +272,7 @@
     display:flex;
     align-items:center;
     gap:7px;
+    padding-right:24px;          /* clear of the link icon */
     font-size:12px;
     font-weight:700;
     color:var(--text-dim);
@@ -559,13 +584,14 @@
      Every platform link.me gives a follower count for shows up on this page by
      itself - one missing from this list still appears, just named after its
      website with a spare colour. To tidy up a new one, add a line here. */
-  /* unit: what the count is called on that platform (default "followers") */
+  /* unit: what the count is called on that platform (default "followers")
+     url:  where the card's link icon goes - leave it out and there's no icon */
   var PLATFORMS = {
-    instagram: { name: "Instagram", color: "#ec4899" },
-    youtube:   { name: "YouTube",   color: "#ef4444" },
-    tiktok:    { name: "TikTok",    color: "#2dd4bf" },
-    discord:   { name: "Discord",   color: "#7c86ff", unit: "members" },
-    x:         { name: "X",         color: "#e5e7eb" },
+    instagram: { name: "Instagram", color: "#ec4899", url: "https://www.instagram.com/thechubbitz" },
+    youtube:   { name: "YouTube",   color: "#ef4444", url: "https://www.youtube.com/@TheChubbitz" },
+    tiktok:    { name: "TikTok",    color: "#2dd4bf", url: "https://www.tiktok.com/@thechubbitz" },
+    discord:   { name: "Discord",   color: "#7c86ff", unit: "members", url: "/discord" },
+    x:         { name: "X",         color: "#e5e7eb" },   /* add url once X is connected */
     threads:   { name: "Threads",   color: "#a78bfa" },
     facebook:  { name: "Facebook",  color: "#60a5fa" },
     twitch:    { name: "Twitch",    color: "#a970ff" },
@@ -1007,7 +1033,26 @@
         '<span class="platform-meta"><span class="' + trend(diff) + '">' + (s.length > 1 ? signed(diff) : "new") + '</span>' +
         '<span>' + share + '</span></span>';
       b.addEventListener("click", function (){ select(selected === key ? "total" : key); });
-      wrap.appendChild(b);
+
+      var card = document.createElement("div");
+      card.className = "platform-wrap";
+      card.appendChild(b);
+
+      if (m.url){
+        var a = document.createElement("a");
+        a.className = "platform-link";
+        a.href = m.url;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.title = "Open " + m.name;
+        a.setAttribute("aria-label", "Open " + m.name + " in a new tab");
+        a.dataset.track = "growth_link";
+        a.dataset.trackLabel = key;
+        a.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+          '<path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>';
+        card.appendChild(a);
+      }
+      wrap.appendChild(card);
     });
   }
 
