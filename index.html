@@ -166,7 +166,7 @@
     bottom:-25px;
     left:50%;
     transform:translateX(-50%);
-    /* all three stats share one grid cell, so the pill sizes to the widest of them */
+    /* all the stats share one grid cell, so the pill sizes to the widest of them */
     display:grid;
     place-items:center;
     padding:3px 10px;
@@ -178,6 +178,8 @@
     box-shadow:0 3px 10px rgba(0,0,0,.35);
     pointer-events:none;
   }
+  /* The stats themselves, their rotation timing and the reduced-motion fallback
+     all come from /metrics.js, which builds these spans at load. */
   .stat-item{
     grid-area:1/1;
     white-space:nowrap;
@@ -185,21 +187,10 @@
     font-weight:700;
     color:var(--accent-2);
     opacity:0;
-    animation:stat-cycle 9s ease-in-out infinite;
   }
-  .stat-item:nth-child(2){ animation-delay:3s; }
-  .stat-item:nth-child(3){ animation-delay:6s; }
-  /* Each stat holds for its full 1/3 of the cycle and hands off exactly as the next
-     fades in, so the pill is never sitting there empty. */
-  @keyframes stat-cycle{
-    0%{ opacity:0; }
-    1.5%, 31.8%{ opacity:1; }
-    33.3%, 100%{ opacity:0; }
-  }
-  @media (prefers-reduced-motion: reduce){
-    .stat-item{ animation:none; opacity:0; }
-    .stat-item:first-child{ opacity:1; }
-  }
+  /* If metrics.js is missing or lists no stats, hide the pill instead of showing
+     an empty dark capsule. */
+  .stat-rotator:empty{ display:none; }
   .hero-overlay .cta-row{
     margin-top:0;
     width:auto;
@@ -681,6 +672,7 @@
   }
 </style>
 <script src="/analytics.js" defer></script>
+<script src="/metrics.js" defer></script>
 </head>
 <body>
 <div class="page">
@@ -704,11 +696,8 @@
 
           <div class="cta-row">
             <button type="button" class="cta cta-combo" id="sponsor-btn" data-track="sponsor_open">
-              <span class="stat-rotator" aria-hidden="true">
-                <span class="stat-item">52.6K followers</span>
-                <span class="stat-item">4.7M+ views</span>
-                <span class="stat-item">5 sponsors</span>
-              </span>
+              <!-- Filled from /metrics.js - edit the numbers there, not here -->
+              <span class="stat-rotator" id="stat-rotator" aria-hidden="true"></span>
               <span class="cta-action">Sponsor!</span>
             </button>
           </div>
