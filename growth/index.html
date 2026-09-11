@@ -375,17 +375,15 @@
     overflow:visible;
   }
   .grid{ stroke:rgba(255,255,255,.07); stroke-width:1; }
-  .ylab, .xlab, .split-label{
+  .ylab, .xlab{
     fill:var(--text-faint);
     font-size:11px;
     font-weight:600;
     font-family:"Inter",system-ui,sans-serif;
   }
-  .split-line{ stroke:rgba(255,255,255,.3); stroke-width:1; stroke-dasharray:2 4; }
-  .line{ fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
-  .line.est{ stroke-dasharray:6 5; stroke-linecap:butt; opacity:.85; }
-  .line-glow{ fill:none; stroke-width:7; opacity:.4; }
-  .area-est{ opacity:.5; }
+  /* every line is drawn dotted */
+  .line{ fill:none; stroke-width:2.5; stroke-linejoin:round; stroke-dasharray:6 5; opacity:.9; }
+  .line-glow{ fill:none; stroke-width:7; opacity:.35; stroke-dasharray:6 5; }
   .end-dot{ fill:#fff; stroke:var(--c); stroke-width:2.5; }
   .end-halo{
     fill:var(--c);
@@ -401,33 +399,15 @@
   .hover-line{ stroke:rgba(255,255,255,.28); stroke-width:1; stroke-dasharray:3 3; }
   .hover-dot{ fill:#0a0b0e; stroke:var(--c); stroke-width:2.5; }
 
-  /* the solid line traces itself in; dashed estimates and fills fade up */
-  .intro .line:not(.est), .intro .line-glow{
-    stroke-dasharray:var(--len);
-    stroke-dashoffset:var(--len);
-    animation:trace 1.1s cubic-bezier(.4,0,.2,1) forwards;
-  }
-  .intro .line.est{ animation:rise .8s ease both; }
+  /* lines wipe in from the left, then the fill fades up. No fill-mode, so the
+     clip is gone once the wipe finishes and never trims the glow. */
+  .intro .line, .intro .line-glow{ animation:wipe 1.1s cubic-bezier(.4,0,.2,1); }
   .intro .area{ animation:rise .8s .3s ease both; }
   .intro .end-dot{ opacity:0; animation:pop .3s 1s ease forwards; }
   .intro .end-halo{ animation-delay:1s; }
-  @keyframes trace{ to{ stroke-dashoffset:0; } }
+  @keyframes wipe{ from{ clip-path:inset(0 100% 0 0); } to{ clip-path:inset(0 0 0 0); } }
   @keyframes rise { from{ opacity:0; } to{ opacity:1; } }
   @keyframes pop  { to{ opacity:1; } }
-
-  .chart-legend{
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    gap:6px 16px;
-    margin:8px 4px 2px;
-    font-size:11.5px;
-    font-weight:600;
-    color:var(--text-faint);
-  }
-  .chart-legend span{ display:inline-flex; align-items:center; gap:7px; }
-  .swatch{ width:22px; height:0; border-top:2.5px solid var(--text-dim); }
-  .swatch.est{ border-top-style:dashed; }
 
   .tip{
     position:absolute;
@@ -447,7 +427,6 @@
   }
   .tip.on{ opacity:1; }
   .tip-date{ font-size:11px; font-weight:600; color:var(--text-faint); }
-  .tip-est{ margin-left:6px; padding:0 5px; border-radius:4px; background:rgba(250,204,21,.14); color:#fde68a; font-weight:700; }
   .tip-value{ margin-top:2px; font-family:"Inter", system-ui, sans-serif; font-variant-numeric:tabular-nums; letter-spacing:-.01em; font-size:16px; font-weight:800; color:#fff; }
   .tip-delta{ margin-top:1px; font-size:11.5px; font-weight:700; }
   .tip-rows{ display:grid; gap:3px; margin-top:4px; }
@@ -476,7 +455,6 @@
 
   @media (prefers-reduced-motion: reduce){
     *{ animation:none !important; transition:none !important; }
-    .intro .line:not(.est), .intro .line-glow{ stroke-dashoffset:0; stroke-dasharray:none; }
     .intro .end-dot{ opacity:1; }
   }
 </style>
@@ -486,7 +464,7 @@
 <div class="glow" aria-hidden="true"></div>
 
 <div class="page">
-  <a class="home-link" href="/" aria-label="The Chubbitz home">
+  <a class="home-link" href="/" aria-label="The Chubbitz home" data-track="growth_home">
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M3 11L12 4L21 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M5.5 9.5V19C5.5 19.5523 5.94772 20 6.5 20H9.5C10.0523 20 10.5 19.5523 10.5 19V15C10.5 14.4477 10.9477 14 11.5 14H12.5C13.0523 14 13.5 14.4477 13.5 15V19C13.5 19.5523 13.9477 20 14.5 20H17.5C18.0523 20 18.5 19.5523 18.5 19V9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -525,9 +503,9 @@
     <div class="chart-head">
       <span class="chart-title" id="chart-title">Followers over time</span>
       <div class="range" role="group" aria-label="Time range">
-        <button type="button" data-days="7">7D</button>
-        <button type="button" data-days="30" aria-pressed="true">30D</button>
-        <button type="button" data-days="0">All</button>
+        <button type="button" data-days="7" data-track="growth_range" data-track-label="7d">7D</button>
+        <button type="button" data-days="30" data-track="growth_range" data-track-label="30d" aria-pressed="true">30D</button>
+        <button type="button" data-days="0" data-track="growth_range" data-track-label="all">All</button>
       </div>
     </div>
     <div class="series" id="series" role="group" aria-label="Which followers to show" hidden></div>
@@ -539,10 +517,6 @@
         <div class="tip-delta" id="tip-delta"></div>
         <div class="tip-rows" id="tip-rows"></div>
       </div>
-    </div>
-    <div class="chart-legend" id="chart-legend" hidden>
-      <span><i class="swatch est"></i>Estimated, before daily tracking began</span>
-      <span><i class="swatch"></i>Tracked daily</span>
     </div>
   </section>
 
@@ -808,10 +782,8 @@
       }] : [];
     }
 
-    var legend = el("chart-legend");
     if (!plots.length){
       svg.innerHTML = "";
-      legend.hidden = true;
       drawn = null;
       return;
     }
@@ -850,20 +822,6 @@
       pl.pts = pl.data.map(function (p){ return { x: X(p.t), y: Y(p.v), t: p.t, v: p.v, raw: p.raw }; });
     });
 
-    /* Where estimated days end and daily tracking takes over. Everything left of
-       xSplit is drawn dashed and dimmer. */
-    var firstTracked = -1;
-    for (var q = 0; q < shownDays.length; q++){ if (!shownDays[q].est){ firstTracked = q; break; } }
-    var anyEst = shownDays.some(function (d){ return d.est; });
-    var xSplit = null;
-    if (anyEst){
-      xSplit = firstTracked === -1 ? W + 20
-             : firstTracked === 0 ? null
-             : X(shownDays[firstTracked - 1].t);
-      if (xSplit === null) anyEst = false;
-    }
-    legend.hidden = !anyEst;
-
     var out = ['<defs>'];
     plots.forEach(function (pl, i){
       out.push('<linearGradient id="ga' + i + '" x1="0" y1="0" x2="0" y2="1">' +
@@ -872,10 +830,6 @@
     });
     out.push('<linearGradient id="gl-total" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4f8ef7"/><stop offset="1" stop-color="#8ec9ff"/></linearGradient>');
     out.push('<filter id="f-glow" x="-10%" y="-50%" width="120%" height="200%"><feGaussianBlur stdDeviation="4"/></filter>');
-    if (anyEst){
-      out.push('<clipPath id="clip-est"><rect x="-20" y="-20" width="' + (xSplit + 20).toFixed(1) + '" height="' + (H + 40) + '"/></clipPath>');
-      out.push('<clipPath id="clip-real"><rect x="' + xSplit.toFixed(1) + '" y="-20" width="' + (W - xSplit + 40).toFixed(1) + '" height="' + (H + 40) + '"/></clipPath>');
-    }
     out.push('</defs>');
 
     ticks.forEach(function (v){
@@ -891,13 +845,6 @@
       out.push('<text class="xlab" x="' + X(shownDays[idx].t).toFixed(1) + '" y="' + (H - 7) + '" text-anchor="' + anchor + '">' + label(shownDays[idx].t) + '</text>');
     }
 
-    if (anyEst && xSplit <= W - pad.r){
-      out.push('<line class="split-line" x1="' + xSplit.toFixed(1) + '" x2="' + xSplit.toFixed(1) + '" y1="' + pad.t + '" y2="' + base.toFixed(1) + '"/>');
-      var roomRight = W - pad.r - xSplit > 120;
-      out.push('<text class="split-label" x="' + (roomRight ? xSplit + 6 : xSplit - 6).toFixed(1) + '" y="' + (pad.t + 11) +
-               '" text-anchor="' + (roomRight ? "start" : "end") + '">Daily tracking starts</text>');
-    }
-
     plots.forEach(function (pl, i){
       var line = smoothPath(pl.pts);
       var stroke = pl.key === "total" ? "url(#gl-total)" : pl.color;
@@ -905,21 +852,10 @@
       if (line){
         if (!compare){
           var areaD = line + 'L' + last.x.toFixed(1) + ',' + base.toFixed(1) + 'L' + first.x.toFixed(1) + ',' + base.toFixed(1) + 'Z';
-          if (anyEst){
-            out.push('<path class="area area-est" clip-path="url(#clip-est)" d="' + areaD + '" fill="url(#ga' + i + ')"/>');
-            out.push('<path class="area" clip-path="url(#clip-real)" d="' + areaD + '" fill="url(#ga' + i + ')"/>');
-          } else {
-            out.push('<path class="area" d="' + areaD + '" fill="url(#ga' + i + ')"/>');
-          }
+          out.push('<path class="area" d="' + areaD + '" fill="url(#ga' + i + ')"/>');
         }
-        if (anyEst){
-          out.push('<path class="line est" clip-path="url(#clip-est)" d="' + line + '" stroke="' + stroke + '"/>');
-          out.push('<path class="line-glow" clip-path="url(#clip-real)" d="' + line + '" stroke="' + stroke + '" filter="url(#f-glow)"/>');
-          out.push('<path class="line" clip-path="url(#clip-real)" d="' + line + '" stroke="' + stroke + '"/>');
-        } else {
-          out.push('<path class="line-glow" d="' + line + '" stroke="' + stroke + '" filter="url(#f-glow)"/>');
-          out.push('<path class="line" d="' + line + '" stroke="' + stroke + '"/>');
-        }
+        out.push('<path class="line-glow" d="' + line + '" stroke="' + stroke + '" filter="url(#f-glow)"/>');
+        out.push('<path class="line" d="' + line + '" stroke="' + stroke + '"/>');
       }
       out.push('<circle class="end-halo" style="--c:' + pl.color + '" cx="' + last.x.toFixed(1) + '" cy="' + last.y.toFixed(1) + '" r="7"/>');
       out.push('<circle class="end-dot" style="--c:' + pl.color + '" cx="' + last.x.toFixed(1) + '" cy="' + last.y.toFixed(1) + '" r="4.5"/>');
@@ -941,9 +877,6 @@
     };
 
     if (playIntro && !reduceMotion){
-      [].forEach.call(svg.querySelectorAll(".line:not(.est), .line-glow"), function (p){
-        p.style.setProperty("--len", Math.ceil(p.getTotalLength()));
-      });
       svg.classList.remove("intro");
       void svg.getBoundingClientRect();       /* restart the animation */
       svg.classList.add("intro");
@@ -988,8 +921,7 @@
     });
     if (!rows.length){ tip.classList.remove("on"); return; }
 
-    el("tip-date").innerHTML = esc(label(t, { weekday: "short", year: "numeric" })) +
-      (day.est ? '<span class="tip-est">estimated</span>' : "");
+    el("tip-date").textContent = label(t, { weekday: "short", year: "numeric" });
     var value = el("tip-value"), delta = el("tip-delta"), list = el("tip-rows");
 
     if (drawn.compare){
@@ -1050,6 +982,8 @@
       var b = document.createElement("button");
       b.type = "button";
       b.className = "platform";
+      b.dataset.track = "growth_platform";
+      b.dataset.trackLabel = key;
       b.style.setProperty("--c", m.color);
       b.setAttribute("aria-pressed", String(selected === key));
       b.setAttribute("aria-label", "Show " + m.name + " on the graph");
@@ -1076,6 +1010,8 @@
       var b = document.createElement("button");
       b.type = "button";
       b.className = "chip";
+      b.dataset.track = "growth_view";
+      b.dataset.trackLabel = key;
       b.setAttribute("aria-pressed", String(selected === key));
       if (key === "compare"){
         b.innerHTML = '<span class="dots">' + platformKeys.slice(0, 4).map(function (k){
