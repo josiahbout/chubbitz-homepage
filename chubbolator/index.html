@@ -412,57 +412,86 @@
     color:var(--text-dim);
   }
 
-  /* Countdown to the end of the competition - D:HH:MM, filled in by the script
-     at the bottom of the page. */
-  .countdown{
+  /* When the winner is announced - the countdown itself lives in the banner */
+  .comp .comp-winner{
     margin:6px 0 18px;
-    padding:14px 14px 13px;
+    padding:11px 14px;
     border-radius:var(--radius-md);
     background:rgba(79,142,247,.08);
     border:1px solid rgba(79,142,247,.24);
     text-align:center;
-  }
-  .countdown .comp-label{ margin:0 0 8px; }
-  .countdown-clock{
-    display:inline-flex;
-    align-items:flex-start;
-    gap:6px;
-    font-family:'Fredoka', sans-serif;
-    font-weight:700;
-    color:#fff;
-    font-variant-numeric:tabular-nums;
-  }
-  .countdown-unit{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    min-width:2ch;
-  }
-  .countdown-num{
-    font-size:38px;
-    line-height:1;
-  }
-  .countdown-name{
-    margin-top:5px;
-    font-family:"Inter",system-ui,sans-serif;
-    font-size:10px;
-    font-weight:700;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    color:var(--text-faint);
-  }
-  .countdown-sep{
-    font-size:32px;
-    line-height:1.1;
-    color:var(--accent-2);
-    opacity:.6;
-  }
-  .comp .countdown-winner{
-    margin:10px 0 0;
     text-wrap:balance;
     font-size:14px;
     font-weight:700;
     color:var(--accent-2);
+  }
+  /* the sticky banner covers the top of the viewport, so land below it */
+  .comp{ scroll-margin-top:76px; }
+
+  /* ---------- Competition banner ---------- */
+  /* Pinned to the top of the column while scrolling; tapping it jumps to the
+     competition details. The script at the bottom of the page fills in the time. */
+  .comp-banner{
+    position:sticky;
+    top:10px;
+    z-index:5;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:12px;
+    padding:8px 12px 8px 8px;
+    border-radius:var(--radius-md);
+    background:rgba(18,20,25,.84);
+    -webkit-backdrop-filter:blur(12px);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(79,142,247,.35);
+    box-shadow:0 8px 24px rgba(0,0,0,.35), 0 0 18px rgba(79,142,247,.14);
+    color:var(--text-dim);
+    text-decoration:none;
+    font-size:13.5px;
+    font-weight:600;
+    transition:border-color .15s ease;
+  }
+  .comp-banner:hover,
+  .comp-banner:focus-visible{ border-color:rgba(142,201,255,.6); }
+  .comp-banner-icon{
+    flex:none;
+    width:30px;
+    height:30px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    color:#0a0b0e;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  }
+  .comp-banner-icon svg{ width:16px; height:16px; display:block; }
+  .comp-banner-text{ flex:1; min-width:0; white-space:nowrap; }
+  .comp-banner-time{
+    margin-left:6px;
+    font-family:'Fredoka', sans-serif;
+    font-size:17px;
+    font-weight:700;
+    color:#fff;
+    font-variant-numeric:tabular-nums;
+  }
+  .comp-banner-cta{
+    flex:none;
+    display:inline-flex;
+    align-items:center;
+    gap:2px;
+    color:var(--accent-2);
+    font-size:13px;
+    font-weight:700;
+  }
+  .comp-banner-cta svg{ width:15px; height:15px; display:block; }
+  .comp-banner-short{ display:none; }
+  @media (max-width:360px){
+    /* "Ends in" on the narrowest phones */
+    .comp-banner-long{ display:none; }
+    .comp-banner-short{ display:inline; }
+  }
+  @media (prefers-reduced-motion: no-preference){
+    html{ scroll-behavior:smooth; }
   }
 
   footer{
@@ -486,6 +515,16 @@
 <div class="glow" aria-hidden="true"></div>
 
 <div class="page">
+
+  <a class="comp-banner" href="#competition" data-track="chubbolator_click" data-track-label="competition_banner">
+    <span class="comp-banner-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>
+    </span>
+    <span class="comp-banner-text"><span id="comp-banner-label"><span class="comp-banner-long">Competition e</span><span class="comp-banner-short">E</span>nds in</span><span class="comp-banner-time" id="comp-banner-time"></span></span>
+    <span class="comp-banner-cta">Details
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+    </span>
+  </a>
 
   <a class="home-link" href="/" aria-label="The Chubbitz home">
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -582,20 +621,10 @@
 
   </ol>
 
-  <section class="comp">
+  <section class="comp" id="competition">
     <h2>Competition details</h2>
 
-    <div class="countdown" id="countdown">
-      <span class="comp-label" id="countdown-label">Competition Ends In:</span>
-      <div class="countdown-clock" role="timer" id="countdown-clock" aria-label="Competition ends at 12am Eastern on September 17th">
-        <span class="countdown-unit"><span class="countdown-num" data-part="d">&ndash;</span><span class="countdown-name">Days</span></span>
-        <span class="countdown-sep" aria-hidden="true">:</span>
-        <span class="countdown-unit"><span class="countdown-num" data-part="h">&ndash;&ndash;</span><span class="countdown-name">Hrs</span></span>
-        <span class="countdown-sep" aria-hidden="true">:</span>
-        <span class="countdown-unit"><span class="countdown-num" data-part="m">&ndash;&ndash;</span><span class="countdown-name">Min</span></span>
-      </div>
-      <p class="countdown-winner">Winner is announced on September 17th!</p>
-    </div>
+    <p class="comp-winner">Winner is announced on September 17th!</p>
 
     <span class="comp-label">Selection</span>
     <p>Skyman and the Bash team will choose the Chubbitz to sponsor based on these criteria&hellip;</p>
@@ -624,33 +653,26 @@
   (function countdown(){
     var END = new Date("2026-09-17T00:00:00-04:00").getTime();
 
-    var clock = document.getElementById("countdown-clock");
-    if(!clock) return;
-    var label = document.getElementById("countdown-label");
-    var d = clock.querySelector('[data-part="d"]');
-    var h = clock.querySelector('[data-part="h"]');
-    var m = clock.querySelector('[data-part="m"]');
+    var label = document.getElementById("comp-banner-label");
+    var time = document.getElementById("comp-banner-time");
+    if(!label || !time) return;
     var timer;
 
     function pad(n){ return n < 10 ? "0" + n : String(n); }
 
     function tick(){
-      /* round up to the minute, so the clock only reads 0:00:00 once it's over */
+      /* round up to the minute, so the clock never reads 0:00:00 while there's time left */
       var left = Math.max(0, Math.ceil((END - Date.now()) / 60000));
       var days = Math.floor(left / 1440);
       var hrs = Math.floor(left % 1440 / 60);
       var mins = left % 60;
 
-      d.textContent = days;
-      h.textContent = pad(hrs);
-      m.textContent = pad(mins);
-
       if(left === 0){
         label.textContent = "Competition has ended";
-        clock.setAttribute("aria-label", "The competition has ended");
+        time.textContent = "";
         clearInterval(timer);
       } else {
-        clock.setAttribute("aria-label", "Competition ends in " + days + " days, " + hrs + " hours and " + mins + " minutes");
+        time.textContent = days + ":" + pad(hrs) + ":" + pad(mins);
       }
     }
 
