@@ -349,16 +349,6 @@
     color:var(--text-faint);
   }
   .comp-label:first-of-type{ margin-top:0; }
-  .comp-length{
-    display:inline-block;
-    padding:4px 12px;
-    border-radius:999px;
-    background:rgba(79,142,247,.14);
-    border:1px solid rgba(79,142,247,.3);
-    color:var(--accent-2);
-    font-size:13px;
-    font-weight:800;
-  }
   /* Shared by the criteria and the prize list - a numbered badge, then the text. */
   .comp-list{
     list-style:none;
@@ -420,6 +410,59 @@
     font-size:14px;
     line-height:1.55;
     color:var(--text-dim);
+  }
+
+  /* Countdown to the end of the competition - D:HH:MM, filled in by the script
+     at the bottom of the page. */
+  .countdown{
+    margin:6px 0 18px;
+    padding:14px 14px 13px;
+    border-radius:var(--radius-md);
+    background:rgba(79,142,247,.08);
+    border:1px solid rgba(79,142,247,.24);
+    text-align:center;
+  }
+  .countdown .comp-label{ margin:0 0 8px; }
+  .countdown-clock{
+    display:inline-flex;
+    align-items:flex-start;
+    gap:6px;
+    font-family:'Fredoka', sans-serif;
+    font-weight:700;
+    color:#fff;
+    font-variant-numeric:tabular-nums;
+  }
+  .countdown-unit{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-width:2ch;
+  }
+  .countdown-num{
+    font-size:38px;
+    line-height:1;
+  }
+  .countdown-name{
+    margin-top:5px;
+    font-family:"Inter",system-ui,sans-serif;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+  }
+  .countdown-sep{
+    font-size:32px;
+    line-height:1.1;
+    color:var(--accent-2);
+    opacity:.6;
+  }
+  .comp .countdown-winner{
+    margin:10px 0 0;
+    text-wrap:balance;
+    font-size:14px;
+    font-weight:700;
+    color:var(--accent-2);
   }
 
   footer{
@@ -542,8 +585,17 @@
   <section class="comp">
     <h2>Competition details</h2>
 
-    <span class="comp-label">Length</span>
-    <span class="comp-length">1 week</span>
+    <div class="countdown" id="countdown">
+      <span class="comp-label" id="countdown-label">Competition Ends In:</span>
+      <div class="countdown-clock" role="timer" id="countdown-clock" aria-label="Competition ends at 12am Eastern on September 17th">
+        <span class="countdown-unit"><span class="countdown-num" data-part="d">&ndash;</span><span class="countdown-name">Days</span></span>
+        <span class="countdown-sep" aria-hidden="true">:</span>
+        <span class="countdown-unit"><span class="countdown-num" data-part="h">&ndash;&ndash;</span><span class="countdown-name">Hrs</span></span>
+        <span class="countdown-sep" aria-hidden="true">:</span>
+        <span class="countdown-unit"><span class="countdown-num" data-part="m">&ndash;&ndash;</span><span class="countdown-name">Min</span></span>
+      </div>
+      <p class="countdown-winner">Winner is announced on September 17th!</p>
+    </div>
 
     <span class="comp-label">Selection</span>
     <p>Skyman and the Bash team will choose the Chubbitz to sponsor based on these criteria&hellip;</p>
@@ -567,6 +619,45 @@
 </div>
 
 <script>
+  /* Competition countdown: D:HH:MM until 12am Eastern on Sep 17, 2026.
+     Eastern is on daylight time (UTC-4) in September, hence the -04:00. */
+  (function countdown(){
+    var END = new Date("2026-09-17T00:00:00-04:00").getTime();
+
+    var clock = document.getElementById("countdown-clock");
+    if(!clock) return;
+    var label = document.getElementById("countdown-label");
+    var d = clock.querySelector('[data-part="d"]');
+    var h = clock.querySelector('[data-part="h"]');
+    var m = clock.querySelector('[data-part="m"]');
+    var timer;
+
+    function pad(n){ return n < 10 ? "0" + n : String(n); }
+
+    function tick(){
+      /* round up to the minute, so the clock only reads 0:00:00 once it's over */
+      var left = Math.max(0, Math.ceil((END - Date.now()) / 60000));
+      var days = Math.floor(left / 1440);
+      var hrs = Math.floor(left % 1440 / 60);
+      var mins = left % 60;
+
+      d.textContent = days;
+      h.textContent = pad(hrs);
+      m.textContent = pad(mins);
+
+      if(left === 0){
+        label.textContent = "Competition has ended";
+        clock.setAttribute("aria-label", "The competition has ended");
+        clearInterval(timer);
+      } else {
+        clock.setAttribute("aria-label", "Competition ends in " + days + " days, " + hrs + " hours and " + mins + " minutes");
+      }
+    }
+
+    tick();
+    timer = setInterval(tick, 1000);
+  })();
+
   /* The step 2 capture is a flipbook, not a video. The original clip was 0.23s
      long and reported no seekable range, so it could neither be slowed to a
      readable speed nor rewound to loop. Its seven frames were pulled out as
