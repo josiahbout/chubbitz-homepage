@@ -474,6 +474,12 @@
     color:#fff;
     font-variant-numeric:tabular-nums;
   }
+  .cd-unit{
+    margin-left:1px;
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--accent-2);
+  }
   .comp-banner-cta{
     flex:none;
     display:inline-flex;
@@ -485,8 +491,8 @@
   }
   .comp-banner-cta svg{ width:15px; height:15px; display:block; }
   .comp-banner-short{ display:none; }
-  @media (max-width:360px){
-    /* "Ends in" on the narrowest phones */
+  @media (max-width:420px){
+    /* "Ends in" on phones */
     .comp-banner-long{ display:none; }
     .comp-banner-short{ display:inline; }
   }
@@ -660,20 +666,26 @@
 
     function pad(n){ return n < 10 ? "0" + n : String(n); }
 
+    /* "2d 05h 09m 12s" - the days drop off once there is less than a day left */
+    function part(n, unit){ return pad(n) + '<span class="cd-unit">' + unit + "</span>"; }
+
     function tick(){
-      /* round up to the minute, so the clock never reads 0:00:00 while there's time left */
-      var left = Math.max(0, Math.ceil((END - Date.now()) / 60000));
-      var days = Math.floor(left / 1440);
-      var hrs = Math.floor(left % 1440 / 60);
-      var mins = left % 60;
+      var left = Math.max(0, Math.floor((END - Date.now()) / 1000));
+      var days = Math.floor(left / 86400);
+      var hrs = Math.floor(left % 86400 / 3600);
+      var mins = Math.floor(left % 3600 / 60);
+      var secs = left % 60;
 
       if(left === 0){
         label.textContent = "Competition has ended";
         time.textContent = "";
         clearInterval(timer);
-      } else {
-        time.textContent = days + ":" + pad(hrs) + ":" + pad(mins);
+        return;
       }
+
+      var out = days ? [part(days, "d"), part(hrs, "h"), part(mins, "m")]
+                     : [part(hrs, "h"), part(mins, "m"), part(secs, "s")];
+      time.innerHTML = out.join(" ");
     }
 
     tick();
