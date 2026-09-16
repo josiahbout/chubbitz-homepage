@@ -200,10 +200,20 @@
 
   /* The lead-in above the sub-steps */
   .intro{
-    margin:0 0 16px;
+    margin:0 0 8px;
     font-size:14px;
     line-height:1.5;
     color:var(--text-dim);
+  }
+  /* the aside for people who already have an account */
+  .intro-note{
+    margin:0 0 24px;
+    font-style:italic;
+  }
+  /* the game button, centred on its own */
+  .btn-row{
+    margin:0 0 12px;
+    text-align:center;
   }
 
   /* The lettered sub-steps inside step 1 */
@@ -382,7 +392,8 @@
 
   <section class="steps solo">
     <div class="step-body">
-        <p class="intro">The Bash.tv website is still in alpha so they're limiting who can join, but you can get a free invite code by following the steps below. (If you already have an account, <a class="step-link" data-track="bashtv_click" data-track-label="existing_account" href="/sponsors/bashtv" target="_blank" rel="noopener noreferrer">click here</a>)</p>
+        <p class="intro">The Bash.tv website is still in alpha so they're limiting who can join, but you can get a free invite code by following the steps below.</p>
+        <p class="intro intro-note">(If you already have an account, <a class="step-link" data-track="bashtv_click" data-track-label="existing_account" href="/sponsors/bashtv" target="_blank" rel="noopener noreferrer">click here</a>)</p>
 
         <ol class="substeps">
           <li class="substep">
@@ -421,11 +432,11 @@
   <section class="steps solo">
     <div class="step-body">
       <h2 class="step-title">Try out a game I made on Bash.tv!</h2>
-      <p>
+      <p class="btn-row">
         <a class="step-btn" data-track="bashtv_click" data-track-label="chubbolator"
            href="https://bash.tv/skyman/chubbolator" target="_blank" rel="noopener noreferrer">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.3 5.9 6.2.3-4.9 3.9 1.7 6-5.3-3.4L6.7 19l1.7-6-4.9-3.9 6.2-.3z"/></svg>
-          Click here
+          Play
         </a>
       </p>
       <div class="flipbook" id="guide-5">
