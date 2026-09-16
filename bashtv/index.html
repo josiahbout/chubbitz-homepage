@@ -207,14 +207,21 @@
   }
   /* the aside for people who already have an account */
   .intro-note{
-    margin:0 0 24px;
+    margin:0 0 36px;
     font-style:italic;
   }
-  /* the game button, centred on its own */
+  /* a panel that stands alone centres its heading */
+  .steps.solo .step-title{ text-align:center; }
+  /* the game button, centred and a size up from the page's other buttons */
   .btn-row{
-    margin:0 0 12px;
+    margin:0 0 14px;
     text-align:center;
   }
+  .btn-row .step-btn{
+    padding:14px 24px;
+    font-size:19px;
+  }
+  .btn-row .step-btn svg{ width:22px; height:22px; }
 
   /* The lettered sub-steps inside step 1 */
   .substeps{
