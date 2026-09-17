@@ -200,15 +200,10 @@
 
   /* The lead-in above the sub-steps */
   .step-body .intro{
-    margin:0 0 10px;
+    margin:0 0 30px;
     font-size:14px;
     line-height:1.5;
     color:var(--text-dim);
-  }
-  /* the aside for people who already have an account */
-  .step-body .intro-note{
-    margin:0 0 38px;
-    font-style:italic;
   }
   /* A YouTube embed that keeps its 16:9 shape at any width */
   .embed{
@@ -234,16 +229,43 @@
 
   /* a panel that stands alone centres its heading */
   .steps.solo .step-title{ text-align:center; }
-  /* the game button, centred and a size up from the page's other buttons */
-  .step-body .btn-row{
-    margin:0 0 14px;
-    text-align:center;
+  /* The animation is the link into the game, with a play badge over it. */
+  .play-wrap{
+    position:relative;
+    display:block;
+    border-radius:var(--radius-sm);
+    transition:transform .15s ease;
   }
-  .btn-row .step-btn{
-    padding:14px 24px;
-    font-size:19px;
+  .play-wrap:hover{ transform:translateY(-1px); }
+  .play-badge{
+    position:absolute;
+    inset:0;
+    display:grid;
+    place-items:center;
+    border-radius:var(--radius-sm);
+    background:rgba(10,11,14,.28);
+    transition:background .15s ease;
   }
-  .btn-row .step-btn svg{ width:22px; height:22px; }
+  .play-wrap:hover .play-badge,
+  .play-wrap:focus-visible .play-badge{ background:rgba(10,11,14,.14); }
+  .play-badge span{
+    display:grid;
+    place-items:center;
+    width:68px;
+    height:68px;
+    border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow:0 6px 20px rgba(0,0,0,.45), 0 0 22px rgba(79,142,247,.45);
+    transition:transform .15s ease, filter .15s ease;
+  }
+  .play-wrap:hover .play-badge span{ transform:scale(1.06); filter:brightness(1.06); }
+  .play-badge svg{
+    width:30px;
+    height:30px;
+    margin-left:4px;      /* the triangle looks centred rather than measuring centred */
+    fill:#0a0b0e;
+    display:block;
+  }
 
   /* The lettered sub-steps inside step 1 */
   .substeps{
@@ -422,8 +444,6 @@
   <section class="steps solo">
     <div class="step-body">
         <p class="intro">The Bash.tv website is still in alpha so they're limiting who can join, but you can get a free invite code by following the steps below.</p>
-        <p class="intro intro-note">(If you already have an account, <a class="step-link" data-track="bashtv_click" data-track-label="existing_account" href="/sponsors/bashtv" target="_blank" rel="noopener noreferrer">click here</a>)</p>
-
         <ol class="substeps">
           <li class="substep">
             <span class="substep-text">
@@ -478,13 +498,9 @@
   <section class="steps solo">
     <div class="step-body">
       <h2 class="step-title">Try out a game I made on Bash.tv!</h2>
-      <p class="btn-row">
-        <a class="step-btn" data-track="bashtv_click" data-track-label="chubbolator"
-           href="https://bash.tv/skyman/chubbolator" target="_blank" rel="noopener noreferrer">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.3 5.9 6.2.3-4.9 3.9 1.7 6-5.3-3.4L6.7 19l1.7-6-4.9-3.9 6.2-.3z"/></svg>
-          Play
-        </a>
-      </p>
+      <a class="play-wrap" data-track="bashtv_click" data-track-label="chubbolator"
+         href="https://bash.tv/skyman/chubbolator" target="_blank" rel="noopener noreferrer"
+         aria-label="Play the Chubbolator on Bash.tv">
       <div class="flipbook" id="guide-5">
         <img class="shot on" src="/media/chubbolator/guide_5_frame_01.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="Building a Chubbitz in the Chubbolator">
         <img class="shot" src="/media/chubbolator/guide_5_frame_02.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
@@ -494,6 +510,10 @@
         <img class="shot" src="/media/chubbolator/guide_5_frame_06.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
         <img class="shot" src="/media/chubbolator/guide_5_frame_07.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
       </div>
+        <span class="play-badge" aria-hidden="true">
+          <span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        </span>
+      </a>
     </div>
   </section>
 
