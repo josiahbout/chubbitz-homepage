@@ -4,21 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0a0b0e">
-<meta name="description" content="Create your own Chubbitz in 3 easy steps.">
-<title>Create your Chubbitz</title>
+<meta name="description" content="Play The Chubbolator on Bash.tv, and make games and apps with friends yourself.">
+<title>The Chubbolator</title>
 
 <meta property="og:site_name" content="The Chubbitz">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://thechubbitz.com/chubbolator">
-<meta property="og:title" content="Create your Chubbitz">
-<meta property="og:description" content="Create your own Chubbitz in 3 easy steps.">
+<meta property="og:title" content="Play The Chubbolator">
+<meta property="og:description" content="Create your own Chubbitz on Bash.tv, where you can make games &amp; apps with friends.">
 <meta property="og:image" content="https://thechubbitz.com/media/chubbolator/chubbolator_embed.png">
 <meta property="og:image:width" content="1280">
 <meta property="og:image:height" content="720">
 <meta property="og:image:alt" content="The Chubbolator">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Create your Chubbitz">
-<meta name="twitter:description" content="Create your own Chubbitz in 3 easy steps.">
+<meta name="twitter:title" content="Play The Chubbolator">
+<meta name="twitter:description" content="Create your own Chubbitz on Bash.tv, where you can make games &amp; apps with friends.">
 <meta name="twitter:image" content="https://thechubbitz.com/media/chubbolator/chubbolator_embed.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -95,22 +95,14 @@
     text-align:center;
     padding:14px 0 24px;
   }
-  .kicker{
-    display:inline-flex;
-    align-items:center;
-    gap:7px;
-    padding:5px 12px;
-    margin-top:14px;   /* sits under the title now */
-    border-radius:999px;
-    background:rgba(79,142,247,.12);
-    border:1px solid rgba(79,142,247,.28);
-    color:var(--accent-2);
-    font-size:11.5px;
-    font-weight:700;
-    letter-spacing:.05em;
-    text-transform:uppercase;
+  .logo{
+    display:block;
+    width:88px;
+    height:88px;
+    margin:0 auto 0;
+    border-radius:22px;
+    object-fit:cover;
   }
-  .kicker svg{ width:13px; height:13px; }
   h1{
     margin:0;
     font-family:'Fredoka', sans-serif;
@@ -205,6 +197,86 @@
     color:var(--text-dim);
   }
   .step-body > :last-child{ margin-bottom:0; }
+
+  /* The lead-in above the sub-steps */
+  .step-body .intro{
+    margin:0 0 30px;
+    font-size:14px;
+    line-height:1.5;
+    color:var(--text-dim);
+  }
+  /* A YouTube embed that keeps its 16:9 shape at any width */
+  .embed{
+    position:relative;
+    aspect-ratio:16 / 9;
+    border-radius:var(--radius-sm);
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:#000;
+  }
+  .embed iframe{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    border:0;
+  }
+  .step-body .watch-link{
+    margin:12px 0 0;
+    text-align:center;
+    font-size:13px;
+  }
+
+  /* a panel that stands alone centres its heading */
+  .steps.solo .step-title{ text-align:center; }
+  /* The Join button, centred between the step text and its recording */
+  .step-body .join-row{
+    margin:4px 0 2px;
+    text-align:center;
+  }
+  .join-row .step-btn{
+    padding:14px 26px;
+    font-size:19px;
+  }
+  .join-row .step-btn svg{ width:22px; height:22px; }
+
+  /* The animation is the link into the game, with a play badge over it. */
+  .play-wrap{
+    position:relative;
+    display:block;
+    border-radius:var(--radius-sm);
+    transition:transform .15s ease;
+  }
+  .play-wrap:hover{ transform:translateY(-1px); }
+  .play-badge{
+    position:absolute;
+    inset:0;
+    display:grid;
+    place-items:center;
+    border-radius:var(--radius-sm);
+    background:rgba(10,11,14,.28);
+    transition:background .15s ease;
+  }
+  .play-wrap:hover .play-badge,
+  .play-wrap:focus-visible .play-badge{ background:rgba(10,11,14,.14); }
+  .play-badge span{
+    display:grid;
+    place-items:center;
+    width:68px;
+    height:68px;
+    border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow:0 6px 20px rgba(0,0,0,.45), 0 0 22px rgba(79,142,247,.45);
+    transition:transform .15s ease, filter .15s ease;
+  }
+  .play-wrap:hover .play-badge span{ transform:scale(1.06); filter:brightness(1.06); }
+  .play-badge svg{
+    width:30px;
+    height:30px;
+    margin-left:4px;      /* the triangle looks centred rather than measuring centred */
+    fill:#0a0b0e;
+    display:block;
+  }
 
   /* The lettered sub-steps inside step 1 */
   .substeps{
@@ -338,166 +410,11 @@
   }
   .step-link:hover{ border-bottom-color:var(--accent-2); }
 
-  /* ---------- Competition ---------- */
-  .comp-label{
+  /* A step that stands on its own, with no number beside it */
+  .steps.solo{
     display:block;
-    margin:16px 0 8px;
-    font-size:11px;
-    font-weight:700;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    color:var(--text-faint);
-  }
-  .comp-label:first-of-type{ margin-top:0; }
-  /* Shared by the criteria and the prize list - a numbered badge, then the text. */
-  .comp-list{
-    list-style:none;
-    margin:0;
-    padding:0;
-    display:flex;
-    flex-direction:column;
-    gap:9px;
-    counter-reset:comp;
-  }
-  .comp-list li{
-    display:flex;
-    align-items:flex-start;
-    gap:9px;
-    font-size:14px;
-    line-height:1.45;
-    color:var(--text-dim);
-  }
-  .comp-list li::before{
-    counter-increment:comp;
-    content:counter(comp);
-    flex:none;
-    width:19px;
-    height:19px;
-    margin-top:1px;
-    border-radius:50%;
-    display:grid;
-    place-items:center;
-    background:rgba(79,142,247,.14);
-    border:1px solid rgba(79,142,247,.3);
-    color:var(--accent-2);
-    font-size:11px;
-    font-weight:800;
-  }
-  .comp-list.prizes li::before{
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));
-    border-color:transparent;
-    color:#0a0b0e;
-  }
-  .comp-list b{ color:var(--text); font-weight:700; }
-  .comp{
-    position:relative;
-    z-index:1;
-    margin-top:22px;
-    padding:18px 18px 20px;
-    background:var(--bg-soft);
-    border:1px solid var(--line);
-    border-radius:var(--radius-lg);
-  }
-  .comp h2{
-    margin:0 0 8px;
-    font-family:'Fredoka', sans-serif;
-    font-size:19px;
-    font-weight:700;
-    color:#fff;
-  }
-  .comp p{
-    margin: 0 0 9px;
-    font-size:14px;
-    line-height:1.55;
-    color:var(--text-dim);
-  }
-
-  /* When the winner is announced - the countdown itself lives in the banner */
-  .comp .comp-winner{
-    margin:6px 0 18px;
-    padding:11px 14px;
-    border-radius:var(--radius-md);
-    background:rgba(79,142,247,.08);
-    border:1px solid rgba(79,142,247,.24);
-    text-align:center;
-    text-wrap:balance;
-    font-size:14px;
-    font-weight:700;
-    color:var(--accent-2);
-  }
-  /* the sticky banner covers the top of the viewport, so land below it */
-  .comp{ scroll-margin-top:76px; }
-
-  /* ---------- Competition banner ---------- */
-  /* Pinned to the top of the column while scrolling; tapping it jumps to the
-     competition details. The script at the bottom of the page fills in the time. */
-  .comp-banner{
-    position:sticky;
-    top:10px;
-    z-index:5;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-top:12px;
-    padding:8px 12px 8px 8px;
-    border-radius:var(--radius-md);
-    background:rgba(18,20,25,.84);
-    -webkit-backdrop-filter:blur(12px);
-    backdrop-filter:blur(12px);
-    border:1px solid rgba(79,142,247,.35);
-    box-shadow:0 8px 24px rgba(0,0,0,.35), 0 0 18px rgba(79,142,247,.14);
-    color:var(--text-dim);
-    text-decoration:none;
-    font-size:13.5px;
-    font-weight:600;
-    transition:border-color .15s ease;
-  }
-  .comp-banner:hover,
-  .comp-banner:focus-visible{ border-color:rgba(142,201,255,.6); }
-  .comp-banner-icon{
-    flex:none;
-    width:30px;
-    height:30px;
-    display:grid;
-    place-items:center;
-    border-radius:50%;
-    color:#0a0b0e;
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));
-  }
-  .comp-banner-icon svg{ width:16px; height:16px; display:block; }
-  .comp-banner-text{ flex:1; min-width:0; white-space:nowrap; }
-  .comp-banner-time{
-    margin-left:6px;
-    font-family:'Fredoka', sans-serif;
-    font-size:17px;
-    font-weight:700;
-    color:#fff;
-    font-variant-numeric:tabular-nums;
-  }
-  .cd-unit{
-    margin-left:1px;
-    font-size:11.5px;
-    font-weight:700;
-    color:var(--accent-2);
-  }
-  .comp-banner-cta{
-    flex:none;
-    display:inline-flex;
-    align-items:center;
-    gap:2px;
-    color:var(--accent-2);
-    font-size:13px;
-    font-weight:700;
-  }
-  .comp-banner-cta svg{ width:15px; height:15px; display:block; }
-  .comp-banner-short{ display:none; }
-  @media (max-width:420px){
-    /* "Ends in" on phones */
-    .comp-banner-long{ display:none; }
-    .comp-banner-short{ display:inline; }
-  }
-  @media (prefers-reduced-motion: no-preference){
-    html{ scroll-behavior:smooth; }
+    margin-top:18px;
+    padding:16px;
   }
 
   footer{
@@ -522,16 +439,6 @@
 
 <div class="page">
 
-  <a class="comp-banner" href="#competition" data-track="chubbolator_click" data-track-label="competition_banner">
-    <span class="comp-banner-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>
-    </span>
-    <span class="comp-banner-text"><span id="comp-banner-label"><span class="comp-banner-long">Competition e</span><span class="comp-banner-short">E</span>nds in</span><span class="comp-banner-time" id="comp-banner-time"></span></span>
-    <span class="comp-banner-cta">Details
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-    </span>
-  </a>
-
   <a class="home-link" href="/" aria-label="The Chubbitz home">
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M3 11L12 4L21 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -540,30 +447,49 @@
   </a>
 
   <header class="top">
-    <h1>THE CHUBBOLATOR</h1>
-    <p class="subtitle">Create your <em>Chubbitz</em><br>In 3 easy steps!</p>
-    <span class="kicker">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-      60 second guide
-    </span>
+    <img class="logo" src="/media/bashtv.gif" width="88" height="88" alt="" decoding="async">
   </header>
 
-  <ol class="steps">
+  <section class="steps solo">
+    <div class="step-body">
+      <h2 class="step-title">Play THE CHUBBOLATOR on Bash.tv!</h2>
+      <a class="play-wrap" data-track="chubbolator_click" data-track-label="chubbolator"
+         href="https://bash.tv/skyman/chubbolator" target="_blank" rel="noopener noreferrer"
+         aria-label="Play the Chubbolator on Bash.tv">
+      <div class="flipbook" id="guide-5">
+        <img class="shot on" src="/media/chubbolator/guide_5_frame_01.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="Building a Chubbitz in the Chubbolator">
+        <img class="shot" src="/media/chubbolator/guide_5_frame_02.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
+        <img class="shot" src="/media/chubbolator/guide_5_frame_03.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
+        <img class="shot" src="/media/chubbolator/guide_5_frame_04.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
+        <img class="shot" src="/media/chubbolator/guide_5_frame_05.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
+        <img class="shot" src="/media/chubbolator/guide_5_frame_06.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
+        <img class="shot" src="/media/chubbolator/guide_5_frame_07.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
+      </div>
+        <span class="play-badge" aria-hidden="true">
+          <span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        </span>
+      </a>
+    </div>
+  </section>
 
-    <li class="step">
-      <span class="step-num">1</span>
-      <div class="step-body">
-        <h2 class="step-title">Get invited to Bash.tv!</h2>
-
+  <section class="steps solo">
+    <div class="step-body">
+        <h2 class="step-title">Try out Bash.tv yourself!</h2>
+        <p class="intro">The Bash.tv website is still in alpha so they're limiting who can join, but you can get a free invite code by following the steps below.</p>
         <ol class="substeps">
           <li class="substep">
             <span class="substep-text">
               <span>
-                <a class="step-link" data-track="chubbolator_click" data-track-label="bash_discord"
-                   href="https://discord.gg/qkz4zFYaZ" target="_blank" rel="noopener noreferrer">Click here</a>
-                to join the Bash Discord and follow the prompts.
+                Join the Bash.tv discord server!
               </span>
             </span>
+            <p class="join-row">
+              <a class="step-btn" data-track="chubbolator_click" data-track-label="bash_discord_button"
+                 href="https://discord.gg/qkz4zFYaZ" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                Join!
+              </a>
+            </p>
             <video class="shot shot-tall" src="/media/chubbolator/bash_account_guide_1.mp4" width="540" height="1200"
                  autoplay loop muted playsinline preload="metadata"
                  aria-label="Joining the Bash Discord"></video>
@@ -586,66 +512,24 @@
             <img class="shot" src="/media/chubbolator/bash_account_guide_4b.png" width="636" height="743" loading="lazy" decoding="async" alt="Creating a Bash.tv account in a web browser">
           </li>
         </ol>
+    </div>
+  </section>
+
+  <section class="steps solo">
+    <div class="step-body">
+      <h2 class="step-title">New to Bash.tv? Learn the basics!</h2>
+      <p class="intro">Watch this quick walkthrough to see what you can make and how it all works.</p>
+      <div class="embed">
+        <iframe src="https://www.youtube-nocookie.com/embed/MmA-CuPwf5A" title="How to use Bash.tv"
+                loading="lazy" referrerpolicy="strict-origin-when-cross-origin"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
       </div>
-    </li>
-
-    <li class="step">
-      <span class="step-num">2</span>
-      <div class="step-body">
-        <h2 class="step-title">Create a Chubbitz!</h2>
-        <p>
-          <a class="step-btn" data-track="chubbolator_click" data-track-label="chubbolator"
-             href="https://bash.tv/skyman/chubbolator" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.3 5.9 6.2.3-4.9 3.9 1.7 6-5.3-3.4L6.7 19l1.7-6-4.9-3.9 6.2-.3z"/></svg>
-            Click here
-          </a>
-        </p>
-        <p>If you're using the same browser you just logged into Bash on, you should be logged in to the game as well. If you're still not logged in, try refreshing.</p>
-        <div class="flipbook" id="guide-5">
-          <img class="shot on" src="/media/chubbolator/guide_5_frame_01.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="Building a Chubbitz in the Chubbolator">
-          <img class="shot" src="/media/chubbolator/guide_5_frame_02.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
-          <img class="shot" src="/media/chubbolator/guide_5_frame_03.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
-          <img class="shot" src="/media/chubbolator/guide_5_frame_04.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
-          <img class="shot" src="/media/chubbolator/guide_5_frame_05.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
-          <img class="shot" src="/media/chubbolator/guide_5_frame_06.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
-          <img class="shot" src="/media/chubbolator/guide_5_frame_07.jpg" width="1000" height="556" loading="lazy" decoding="async" alt="" aria-hidden="true">
-        </div>
-      </div>
-    </li>
-
-    <li class="step">
-      <span class="step-num">3</span>
-      <div class="step-body">
-        <h2 class="step-title">Submit!</h2>
-        <p>Once you're done with your character, click <span class="chip">Finish!</span> and check <span class="chip">Submit to gallery!</span> if you want your character to be considered for joining Brandlandia.</p>
-        <div class="media-stack">
-          <img class="shot" style="max-width:150px" src="/media/chubbolator/bash_account_guide_6.png" width="150" height="80" loading="lazy" decoding="async" alt="The Finish! button">
-          <img class="shot" style="max-width:499px" src="/media/chubbolator/bash_account_guide_7.png" width="499" height="213" loading="lazy" decoding="async" alt="The Submit to gallery! checkbox">
-        </div>
-      </div>
-    </li>
-
-  </ol>
-
-  <section class="comp" id="competition">
-    <h2>Competition details</h2>
-
-    <p class="comp-winner">Winner is announced on September 17th!</p>
-
-    <span class="comp-label">Selection</span>
-    <p>Skyman and the Bash team will choose the Chubbitz to sponsor based on these criteria&hellip;</p>
-    <ol class="comp-list">
-      <li><span><b>Creativity</b> &mdash; is your Chubbitz unique and special?</span></li>
-      <li><span><b>Cohesion</b> &mdash; does your Chubbitz fit with the overall design of the other Chubbitz and Brandlandia?</span></li>
-    </ol>
-
-    <span class="comp-label">Prizes for the winner</span>
-    <ol class="comp-list prizes">
-      <li><span>$100</span></li>
-      <li><span>A Chubbitz sticker sheet</span></li>
-      <li><span>Bash merch</span></li>
-      <li><span>5k additional Bash credits on their account</span></li>
-    </ol>
+      <p class="watch-link">
+        <a class="step-link" data-track="chubbolator_click" data-track-label="learn_video"
+           href="https://www.youtube.com/watch?v=MmA-CuPwf5A" target="_blank" rel="noopener noreferrer">Watch on YouTube</a>
+      </p>
+    </div>
   </section>
 
   <footer>
@@ -654,44 +538,6 @@
 </div>
 
 <script>
-  /* Competition countdown: D:HH:MM until 12am Eastern on Sep 17, 2026.
-     Eastern is on daylight time (UTC-4) in September, hence the -04:00. */
-  (function countdown(){
-    var END = new Date("2026-09-17T00:00:00-04:00").getTime();
-
-    var label = document.getElementById("comp-banner-label");
-    var time = document.getElementById("comp-banner-time");
-    if(!label || !time) return;
-    var timer;
-
-    function pad(n){ return n < 10 ? "0" + n : String(n); }
-
-    /* "2d 05h 09m 12s" - the days drop off once there is less than a day left */
-    function part(n, unit){ return pad(n) + '<span class="cd-unit">' + unit + "</span>"; }
-
-    function tick(){
-      var left = Math.max(0, Math.floor((END - Date.now()) / 1000));
-      var days = Math.floor(left / 86400);
-      var hrs = Math.floor(left % 86400 / 3600);
-      var mins = Math.floor(left % 3600 / 60);
-      var secs = left % 60;
-
-      if(left === 0){
-        label.textContent = "Competition has ended";
-        time.textContent = "";
-        clearInterval(timer);
-        return;
-      }
-
-      var out = days ? [part(days, "d"), part(hrs, "h"), part(mins, "m")]
-                     : [part(hrs, "h"), part(mins, "m"), part(secs, "s")];
-      time.innerHTML = out.join(" ");
-    }
-
-    tick();
-    timer = setInterval(tick, 1000);
-  })();
-
   /* The step 2 capture is a flipbook, not a video. The original clip was 0.23s
      long and reported no seekable range, so it could neither be slowed to a
      readable speed nor rewound to loop. Its seven frames were pulled out as
