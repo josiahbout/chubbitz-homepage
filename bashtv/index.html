@@ -210,6 +210,28 @@
     margin:0 0 38px;
     font-style:italic;
   }
+  /* A YouTube embed that keeps its 16:9 shape at any width */
+  .embed{
+    position:relative;
+    aspect-ratio:16 / 9;
+    border-radius:var(--radius-sm);
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:#000;
+  }
+  .embed iframe{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    border:0;
+  }
+  .step-body .watch-link{
+    margin:12px 0 0;
+    text-align:center;
+    font-size:13px;
+  }
+
   /* a panel that stands alone centres its heading */
   .steps.solo .step-title{ text-align:center; }
   /* the game button, centred and a size up from the page's other buttons */
@@ -433,6 +455,23 @@
             <img class="shot" src="/media/chubbolator/bash_account_guide_4b.png" width="636" height="743" loading="lazy" decoding="async" alt="Creating a Bash.tv account in a web browser">
           </li>
         </ol>
+    </div>
+  </section>
+
+  <section class="steps solo">
+    <div class="step-body">
+      <h2 class="step-title">New to Bash.tv? Learn the basics!</h2>
+      <p class="intro">Watch this quick walkthrough to see what you can make and how it all works.</p>
+      <div class="embed">
+        <iframe src="https://www.youtube-nocookie.com/embed/MmA-CuPwf5A" title="How to use Bash.tv"
+                loading="lazy" referrerpolicy="strict-origin-when-cross-origin"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+      </div>
+      <p class="watch-link">
+        <a class="step-link" data-track="bashtv_click" data-track-label="learn_video"
+           href="https://www.youtube.com/watch?v=MmA-CuPwf5A" target="_blank" rel="noopener noreferrer">Watch on YouTube</a>
+      </p>
     </div>
   </section>
 
