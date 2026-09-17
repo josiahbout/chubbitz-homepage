@@ -229,6 +229,17 @@
 
   /* a panel that stands alone centres its heading */
   .steps.solo .step-title{ text-align:center; }
+  /* The Join button, centred between the step text and its recording */
+  .step-body .join-row{
+    margin:4px 0 2px;
+    text-align:center;
+  }
+  .join-row .step-btn{
+    padding:14px 26px;
+    font-size:19px;
+  }
+  .join-row .step-btn svg{ width:22px; height:22px; }
+
   /* The animation is the link into the game, with a play badge over it. */
   .play-wrap{
     position:relative;
@@ -443,6 +454,7 @@
 
   <section class="steps solo">
     <div class="step-body">
+        <h2 class="step-title">Getting started&hellip;</h2>
         <p class="intro">The Bash.tv website is still in alpha so they're limiting who can join, but you can get a free invite code by following the steps below.</p>
         <ol class="substeps">
           <li class="substep">
@@ -450,9 +462,16 @@
               <span>
                 <a class="step-link" data-track="bashtv_click" data-track-label="bash_discord"
                    href="https://discord.gg/qkz4zFYaZ" target="_blank" rel="noopener noreferrer">Click here</a>
-                to join the Bash Discord and follow the prompts.
+                to join the Bash.tv discord server!
               </span>
             </span>
+            <p class="join-row">
+              <a class="step-btn" data-track="bashtv_click" data-track-label="bash_discord_button"
+                 href="https://discord.gg/qkz4zFYaZ" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                Join!
+              </a>
+            </p>
             <video class="shot shot-tall" src="/media/chubbolator/bash_account_guide_1.mp4" width="540" height="1200"
                  autoplay loop muted playsinline preload="metadata"
                  aria-label="Joining the Bash Discord"></video>
