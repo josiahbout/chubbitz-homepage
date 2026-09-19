@@ -432,6 +432,12 @@
   footer a{ color:var(--text-faint); text-decoration:none; }
   footer a:not([href="/"]){ border-bottom:1px solid var(--line); }
   .dot{ margin:0 8px; opacity:.5; }
+  .outro .fine-print{
+    margin:0 0 14px;
+    font-size:12px;
+    line-height:1.55;
+    color:var(--text-faint);
+  }
   footer a:hover{ color:var(--text-dim); }
 
   @media (prefers-reduced-motion: reduce){
@@ -547,12 +553,17 @@
 
 <div class="col">
   <section class="outro">
+    <p class="fine-print">Supporter plans renew automatically each month or year at the price shown until you cancel. Cancel anytime from <a href="https://billing.stripe.com/p/login/aFa3cwdej10q5gMah673G00" target="_blank" rel="noopener noreferrer">Manage your payment</a> and keep your perks until the end of the period you've paid for. Payments aren't refunded. See the <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.</p>
     <p>Have a question or just want to reach out to me directly? <a href="mailto:hello@thechubbitz.com">Email me here!</a></p>
   </section>
 
   <footer>
     <a data-track="support_click" data-track-label="manage_payment"
        href="https://billing.stripe.com/p/login/aFa3cwdej10q5gMah673G00" target="_blank" rel="noopener noreferrer">Manage your payment</a>
+    <span class="dot">&middot;</span>
+    <a href="/privacy">Privacy</a>
+    <span class="dot">&middot;</span>
+    <a href="/terms">Terms</a>
     <span class="dot">&middot;</span>
     <a href="/">The Chubbitz</a>
   </footer>
