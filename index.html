@@ -725,7 +725,7 @@
         </a>
       </li>
       <li>
-        <a class="link-card" data-track="link_click" data-track-label="discord" href="/discord" target="_blank" rel="noopener noreferrer">
+        <a class="link-card" id="ab-discord" data-track="link_click" data-track-label="discord" href="/discord" target="_blank" rel="noopener noreferrer">
           <img class="link-icon" loading="lazy" src="/media/chub-club.webp" alt="">
           <span class="link-text">
             <span class="link-title">Join "The Chub Club" community!</span>
@@ -733,6 +733,54 @@
           </span>
           <svg class="link-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
         </a>
+        <script>
+          /* A/B TEST: which community card gets more taps?
+               A = Join "The Chub Club" community!  (the original)
+               B = Join the Discord community!      (Discord logo)
+             Each visitor gets one version at random and keeps it on later visits.
+             Results go to Google Analytics as event names, so no GA setup is needed:
+               ab_discord_seen_A / _B   the card scrolled into view
+               ab_discord_click_A / _B  the card was tapped
+             Preview a version with ?ab=A or ?ab=B (that also pins it for this browser).
+             To end the test: delete this script and keep whichever card won. */
+          (function (){
+            var KEY = "ab_discord_card";
+            var card = document.getElementById("ab-discord");
+            if(!card) return;
+
+            var v = null;
+            var forced = /[?&]ab=([AB])\b/.exec(location.search);
+            try {
+              v = forced ? forced[1] : localStorage.getItem(KEY);
+              if(v !== "A" && v !== "B") v = Math.random() < 0.5 ? "A" : "B";
+              localStorage.setItem(KEY, v);
+            } catch (e) {
+              v = forced ? forced[1] : (Math.random() < 0.5 ? "A" : "B");
+            }
+
+            if(v === "B"){
+              card.querySelector(".link-icon").src = "/media/discord-join.jpg";
+              card.querySelector(".link-title").textContent = "Join the Discord community!";
+            }
+
+            /* analytics.js loads deferred, so wait for it before sending */
+            function send(name){
+              function go(){ if(window.gtag) window.gtag("event", name, { ab_variant: v }); }
+              if(window.gtag) go(); else document.addEventListener("DOMContentLoaded", go);
+            }
+
+            if("IntersectionObserver" in window){
+              var io = new IntersectionObserver(function (entries){
+                if(entries[0].isIntersecting){ send("ab_discord_seen_" + v); io.disconnect(); }
+              }, { threshold: 0.6 });
+              io.observe(card);
+            } else {
+              send("ab_discord_seen_" + v);
+            }
+
+            card.addEventListener("click", function (){ send("ab_discord_click_" + v); });
+          })();
+        </script>
       </li>
     </ul>
   </section>
