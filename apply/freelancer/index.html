@@ -12,49 +12,6 @@
      leave before Analytics had a chance to send anything. -->
 <noscript><meta http-equiv="refresh" content="0; url=https://docs.google.com/forms/d/e/1FAIpQLSehozYT-MZ_KA_C53JOYwtsSToP7N4vFfRHmeS7is2FPV3YzA/viewform"></noscript>
 
-<script>
-  /* Tracked redirect to the application form - same pattern as /sponsors/bashtv.
-
-     This page exists so Google Analytics logs a page_view for /apply, which is
-     how you count how many people open the form. The hit has to be sent BEFORE
-     we navigate away, so:
-
-       1. queue a page_view with transport_type "beacon" - the browser keeps a
-          beacon alive even while the page is unloading
-       2. redirect from its event_callback, i.e. once GA confirms it was sent
-       3. but never wait more than FALLBACK_MS - if an ad blocker stops gtag.js
-          from loading, the callback never fires and the visitor would be stuck
-
-     analytics.js is deliberately NOT included: it fires its own page_view with
-     no callback, which would double-count this visit.
-
-     If the form ever moves, change DEST here and the two links below. */
-  var DEST = "https://docs.google.com/forms/d/e/1FAIpQLSehozYT-MZ_KA_C53JOYwtsSToP7N4vFfRHmeS7is2FPV3YzA/viewform";
-  var MEASUREMENT_ID = "G-S286YSQPJ5";
-  var FALLBACK_MS = 1500;
-
-  var left = false;
-  function go(){
-    if(left) return;
-    left = true;
-    /* replace() so this hop isn't in the back-button history - otherwise Back
-       from the form would land here and bounce straight forward again */
-    location.replace(DEST);
-  }
-
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){ dataLayer.push(arguments); }
-  gtag("js", new Date());
-  gtag("config", MEASUREMENT_ID, { send_page_view: false });
-  gtag("event", "page_view", {
-    transport_type: "beacon",
-    event_callback: go
-  });
-
-  setTimeout(go, FALLBACK_MS);
-</script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-S286YSQPJ5"></script>
-
 <style>
   body{
     margin:0;
@@ -71,12 +28,207 @@
   }
   p{ margin:0; font-size:15px; line-height:1.6; }
   a{ color:#8ec9ff; font-weight:700; }
+
+  /* The card only appears for iPhone visitors stuck in an app's browser. */
+  .card{
+    display:none;
+    width:100%;
+    max-width:380px;
+    padding:26px 22px 22px;
+    border-radius:20px;
+    background:#121419;
+    border:1px solid rgba(255,255,255,.09);
+    text-align:left;
+  }
+  body.stuck .card{ display:block; }
+  body.stuck .fallback{ display:none; }
+  .card h1{
+    margin:0 0 8px;
+    font-size:21px;
+    line-height:1.25;
+    color:#fff;
+  }
+  .card p{ margin:0 0 18px; font-size:14.5px; }
+  .steps{ margin:0 0 20px; padding:0; list-style:none; display:grid; gap:11px; }
+  .steps li{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    font-size:14.5px;
+    line-height:1.5;
+  }
+  .steps b{
+    flex:none;
+    width:21px; height:21px;
+    margin-top:1px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:rgba(79,142,247,.16);
+    border:1px solid rgba(79,142,247,.34);
+    color:#8ec9ff;
+    font-size:12px;
+  }
+  .dots{
+    display:inline-block;
+    padding:0 6px;
+    border-radius:6px;
+    background:rgba(255,255,255,.08);
+    color:#f4f5f7;
+    font-weight:700;
+    letter-spacing:.06em;
+  }
+  .btn{
+    display:block;
+    width:100%;
+    padding:14px 18px;
+    border:0;
+    border-radius:14px;
+    background:linear-gradient(135deg,#4f8ef7,#8ec9ff);
+    color:#0a0b0e;
+    font:700 16px/1 "Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    text-align:center;
+    text-decoration:none;
+    cursor:pointer;
+  }
+  .btn.ghost{
+    margin-top:10px;
+    background:transparent;
+    border:1px solid rgba(255,255,255,.16);
+    color:#f4f5f7;
+    font-weight:600;
+  }
+  .card .small{
+    margin:14px 0 0;
+    font-size:12.5px;
+    color:#6b7280;
+    text-align:center;
+  }
+  .card .small a{ color:#6b7280; font-weight:600; }
 </style>
 </head>
 <body>
-  <p>
+  <p class="fallback">
     Taking you to the application form&hellip;<br>
     <a href="https://docs.google.com/forms/d/e/1FAIpQLSehozYT-MZ_KA_C53JOYwtsSToP7N4vFfRHmeS7is2FPV3YzA/viewform">Click here if nothing happens.</a>
   </p>
+
+  <div class="card">
+    <h1>Open this in Safari</h1>
+    <p>Instagram's built-in browser can't sign in to Google, so the form won't load properly here.</p>
+    <ul class="steps">
+      <li><b>1</b><span>Tap <span class="dots">&#8943;</span> at the top right of this screen.</span></li>
+      <li><b>2</b><span>Choose <strong>Open in external browser</strong>.</span></li>
+    </ul>
+    <button class="btn" id="copy" type="button">Copy the link instead</button>
+    <a class="btn ghost" id="anyway" href="https://docs.google.com/forms/d/e/1FAIpQLSehozYT-MZ_KA_C53JOYwtsSToP7N4vFfRHmeS7is2FPV3YzA/viewform">Continue here anyway</a>
+    <p class="small">Trouble? Email <a href="mailto:support@thechubbitz.com">support@thechubbitz.com</a></p>
+  </div>
+
+<script>
+  /* Tracked redirect to the application form, with a way out of in-app browsers.
+
+     Why this page exists: Analytics logs a page_view for /apply/freelancer, which
+     is how the form's opens get counted. The hit has to be sent BEFORE we navigate
+     away, so the redirect waits for GA's callback (and a 1.5s fallback, in case an
+     ad blocker stops gtag.js from ever loading).
+
+     The in-app part: Instagram, Facebook, TikTok and friends open links inside
+     their own browser, and Google refuses to show its sign-in there. So:
+
+       Android  ->  an intent:// link, which hands the page to Chrome
+       iPhone   ->  Apple allows no such thing, so show the card above instead
+       everyone else -> straight through, as before
+
+     Each route reports its own event name, so the split is visible in Analytics:
+     apply_direct, apply_android_chrome, apply_ios_prompt.
+
+     analytics.js is deliberately NOT included: it fires its own page_view with no
+     callback, which would double-count this visit.
+
+     If the form ever moves, change DEST here and the three links above. */
+  (function (){
+    var DEST = "https://docs.google.com/forms/d/e/1FAIpQLSehozYT-MZ_KA_C53JOYwtsSToP7N4vFfRHmeS7is2FPV3YzA/viewform";
+    var MEASUREMENT_ID = "G-S286YSQPJ5";
+    var FALLBACK_MS = 1500;
+
+    var ua = navigator.userAgent || "";
+    /* the apps that wrap links in their own browser */
+    var inApp = /FBAN|FBAV|FB_IAB|Instagram|TikTok|musical_ly|Snapchat|LinkedInApp|Line\/|Pinterest|Twitter|GSA\//i.test(ua);
+    var iOS = /iPhone|iPad|iPod/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+    var android = /Android/i.test(ua);
+
+    /* Hands the link to Chrome. S.browser_fallback_url keeps people who don't
+       have Chrome from landing on an error page. */
+    function chromeIntent(url){
+      var bare = url.replace(/^https?:\/\//, "");
+      return "intent://" + bare + "#Intent;scheme=https;package=com.android.chrome;" +
+             "S.browser_fallback_url=" + encodeURIComponent(url) + ";end";
+    }
+
+    var route = "direct", target = DEST;
+    if (inApp && android){ route = "android_chrome"; target = chromeIntent(DEST); }
+    else if (inApp && iOS){ route = "ios_prompt"; }
+
+    /* ?route=ios_prompt or ?route=android_chrome to preview a route on any phone */
+    var forced = /[?&]route=(ios_prompt|android_chrome|direct)\b/.exec(location.search);
+    if (forced){
+      route = forced[1];
+      target = route === "android_chrome" ? chromeIntent(DEST) : DEST;
+    }
+
+    var left = false;
+    function go(){
+      if (left || route === "ios_prompt") return;
+      left = true;
+      /* replace() so this hop isn't in the back-button history - otherwise Back
+         from the form would land here and bounce straight forward again */
+      location.replace(target);
+    }
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag("js", new Date());
+    gtag("config", MEASUREMENT_ID, { send_page_view: false });
+    gtag("event", "apply_" + route, { transport_type: "beacon" });
+    gtag("event", "page_view", { transport_type: "beacon", event_callback: go });
+    setTimeout(go, FALLBACK_MS);
+
+    if (route === "ios_prompt"){
+      document.body.className = "stuck";
+
+      var copy = document.getElementById("copy");
+      copy.addEventListener("click", function (){
+        function done(){ copy.textContent = "Link copied - paste it in Safari"; }
+        if (navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(DEST).then(done, select);
+        } else {
+          select();
+        }
+        /* older iOS: put the link in a field and select it, so one tap on
+           "Copy" in the system menu finishes the job */
+        function select(){
+          var box = document.createElement("input");
+          box.value = DEST;
+          box.setAttribute("readonly", "");
+          box.style.cssText = "position:absolute;left:-9999px";
+          document.body.appendChild(box);
+          box.select();
+          box.setSelectionRange(0, DEST.length);
+          try { document.execCommand("copy"); done(); } catch (e) {
+            copy.textContent = "Press and hold the link below to copy";
+          }
+          document.body.removeChild(box);
+        }
+        gtag("event", "apply_ios_copy", { transport_type: "beacon" });
+      });
+
+      document.getElementById("anyway").addEventListener("click", function (){
+        gtag("event", "apply_ios_continue", { transport_type: "beacon" });
+      });
+    }
+  })();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S286YSQPJ5"></script>
 </body>
 </html>
