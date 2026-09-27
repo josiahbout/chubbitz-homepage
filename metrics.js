@@ -16,7 +16,7 @@
 (function () {
 
   var METRICS = [
-    { value: "77.5K", label: "followers" },
+    { value: "78.7K", label: "followers" },
     { value: "8m",   label: "views+"    },
     { value: "5",     label: "sponsors"  }
   ];
