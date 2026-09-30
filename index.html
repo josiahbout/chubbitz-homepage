@@ -405,6 +405,14 @@
     font-weight:650;
     line-height:1.3;
   }
+  /* The Subscribe banner: same card, tinted with YouTube's red so it reads as a
+     banner rather than one more link in the list. */
+  .link-card-yt{
+    background:linear-gradient(135deg, rgba(229,62,62,.16), rgba(229,62,62,.06));
+    border-color:rgba(229,62,62,.32);
+  }
+  .link-card-yt:hover{ border-color:rgba(229,62,62,.55); }
+  .link-card-yt .link-title{ font-size:16px; }
   .link-sub{
     font-size:12px;
     color:var(--text-faint);
@@ -672,6 +680,55 @@
   }
 </style>
 <script src="/analytics.js" defer></script>
+<script>
+  /* Open the Subscribe link in the YouTube app when it's installed.
+
+     The href is a plain https link, so this page works with no JavaScript and on
+     desktop. On a phone:
+       Android - an intent:// URL hands it to the YouTube app, and
+                 S.browser_fallback_url covers phones without the app
+       iPhone  - try youtube://, then fall back to the web link if nothing
+                 happened after a moment (a failed scheme does nothing visible)
+
+     Analytics still records the tap as social_click / youtube through the
+     data-track attributes, handled in analytics.js. */
+  (function (){
+    var link = document.getElementById("yt-subscribe");
+    if(!link) return;
+
+    var WEB = link.href;
+    var CHANNEL = "www.youtube.com/@TheChubbitz";
+    var ua = navigator.userAgent || "";
+    var android = /Android/i.test(ua);
+    var iOS = /iPhone|iPad|iPod/i.test(ua);
+    if(!android && !iOS) return;          /* desktop: the plain link is right */
+
+    link.addEventListener("click", function (e){
+      if(e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      e.preventDefault();
+
+      if(android){
+        window.location.href = "intent://" + CHANNEL +
+          "#Intent;scheme=https;package=com.google.android.youtube;" +
+          "S.browser_fallback_url=" + encodeURIComponent(WEB) + ";end";
+        return;
+      }
+
+      /* iPhone: if the app opens, this page goes to the background and the
+         timer never runs; if it doesn't, the web link opens a moment later */
+      var left = false;
+      function gone(){ left = true; }
+      document.addEventListener("visibilitychange", gone, { once: true });
+      window.addEventListener("pagehide", gone, { once: true });
+
+      window.location.href = "youtube://" + CHANNEL;
+      setTimeout(function (){
+        document.removeEventListener("visibilitychange", gone);
+        if(!left && !document.hidden) window.location.href = WEB;
+      }, 700);
+    });
+  })();
+</script>
 <script src="/metrics.js" defer></script>
 </head>
 <body>
@@ -715,11 +772,12 @@
     </div>
     <ul class="links">
       <li>
-        <a class="link-card" data-track="link_click" data-track-label="chubbolator" href="/chubbolator">
-          <img class="link-icon" loading="lazy" src="/media/chubbolator-icon.webp" alt="">
+        <a class="link-card link-card-yt" id="yt-subscribe"
+           data-track="social_click" data-track-label="youtube"
+           href="https://www.youtube.com/@TheChubbitz?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
+          <img class="link-icon" loading="lazy" src="/media/youtube-card.svg" alt="">
           <span class="link-text">
-            <span class="link-title">Play The <span class="nowrap">Chubbolator! <span class="new-badge">New!</span></span></span>
-            <span class="link-sub">Free character creator game</span>
+            <span class="link-title">Subscribe on Youtube!</span>
           </span>
           <svg class="link-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
         </a>
@@ -730,6 +788,16 @@
           <span class="link-text">
             <span class="link-title">Join the Discord community!</span>
             <span class="link-sub">It's free and fun!</span>
+          </span>
+          <svg class="link-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
+        </a>
+      </li>
+      <li>
+        <a class="link-card" data-track="link_click" data-track-label="chubbolator" href="/chubbolator">
+          <img class="link-icon" loading="lazy" src="/media/chubbolator-icon.webp" alt="">
+          <span class="link-text">
+            <span class="link-title">Play The Chubbolator!</span>
+            <span class="link-sub">Free character creator game</span>
           </span>
           <svg class="link-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
         </a>
