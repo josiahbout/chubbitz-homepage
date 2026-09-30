@@ -706,7 +706,7 @@
             <button type="button" class="cta cta-combo" id="sponsor-btn" data-track="sponsor_open">
               <!-- Filled from /metrics.js - edit the numbers there, not here -->
               <span class="stat-rotator" id="stat-rotator" aria-hidden="true"></span>
-              <span class="cta-action">Sponsor!</span>
+              <span class="cta-action" id="cta-label">Sponsor!</span>
             </button>
           </div>
         </div>
@@ -1105,6 +1105,54 @@
         }
       }, 800);
     });
+  })();
+</script>
+<script>
+  /* A/B TEST: does the big button do better as Sponsor! or Support!?
+       A = Sponsor!  (the original)
+       B = Support!
+     Each visitor gets one version at random and keeps it on later visits.
+     Results go to Analytics as event names, so there is nothing to set up there:
+       ab_cta_seen_A / _B    the button was on screen
+       ab_cta_click_A / _B   the button was tapped
+     Preview a version with ?cta=A or ?cta=B (that also pins it for this browser).
+     To end the test: delete this script and set the label in the markup above.
+
+     This has to stay at the end of the body - in <head> it would run before the
+     button exists and quietly do nothing. */
+  (function (){
+    var KEY = "ab_cta_label";
+    var label = document.getElementById("cta-label");
+    var btn = document.getElementById("sponsor-btn");
+    if(!label || !btn) return;
+
+    var v = null;
+    var forced = /[?&]cta=([AB])\b/.exec(location.search);
+    try {
+      v = forced ? forced[1] : localStorage.getItem(KEY);
+      if(v !== "A" && v !== "B") v = Math.random() < 0.5 ? "A" : "B";
+      localStorage.setItem(KEY, v);
+    } catch (e) {
+      v = forced ? forced[1] : (Math.random() < 0.5 ? "A" : "B");
+    }
+
+    if(v === "B") label.textContent = "Support!";
+
+    /* analytics.js loads deferred, so gtag may not exist yet - keep looking for
+       a few seconds rather than waiting on an event that may already have fired */
+    function send(name){
+      var tries = 0;
+      (function attempt(){
+        if(window.gtag){ window.gtag("event", name); return; }
+        if(++tries < 30) setTimeout(attempt, 100);
+      })();
+    }
+
+    /* the button sits on the first screen, so every visitor sees it - no need
+       to wait for a scroll */
+    send("ab_cta_seen_" + v);
+
+    btn.addEventListener("click", function (){ send("ab_cta_click_" + v); });
   })();
 </script>
 </body>
