@@ -710,8 +710,13 @@
       e.preventDefault();
 
       if(android){
+        /* The full intent form: Chrome wants the action and category spelled out,
+           or it quietly treats this as an unknown scheme and does nothing.
+           S.browser_fallback_url covers phones without the YouTube app. */
         window.location.href = "intent://" + CHANNEL +
-          "#Intent;scheme=https;package=com.google.android.youtube;" +
+          "#Intent;scheme=https;action=android.intent.action.VIEW;" +
+          "category=android.intent.category.BROWSABLE;" +
+          "package=com.google.android.youtube;" +
           "S.browser_fallback_url=" + encodeURIComponent(WEB) + ";end";
         return;
       }
