@@ -697,7 +697,9 @@
     if(!link) return;
 
     var WEB = link.href;
-    var CHANNEL = "www.youtube.com/@TheChubbitz";
+    /* the channel-ID form, not @TheChubbitz: the YouTube app only claims
+       /channel/ links, so a handle link just opens the browser */
+    var CHANNEL = "www.youtube.com/channel/UCW_SKUSeco3My2P3lWyMcyg?sub_confirmation=1";
     var ua = navigator.userAgent || "";
     var android = /Android/i.test(ua);
     var iOS = /iPhone|iPad|iPod/i.test(ua);
@@ -721,7 +723,7 @@
       document.addEventListener("visibilitychange", gone, { once: true });
       window.addEventListener("pagehide", gone, { once: true });
 
-      window.location.href = "youtube://" + CHANNEL;
+      window.location.href = "vnd.youtube://" + CHANNEL;
       setTimeout(function (){
         document.removeEventListener("visibilitychange", gone);
         if(!left && !document.hidden) window.location.href = WEB;
@@ -774,7 +776,7 @@
       <li>
         <a class="link-card link-card-yt" id="yt-subscribe"
            data-track="social_click" data-track-label="youtube"
-           href="https://www.youtube.com/@TheChubbitz?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
+           href="https://www.youtube.com/channel/UCW_SKUSeco3My2P3lWyMcyg?sub_confirmation=1" target="_blank" rel="noopener noreferrer">
           <img class="link-icon" loading="lazy" src="/media/youtube-card.svg" alt="">
           <span class="link-text">
             <span class="link-title">Subscribe on Youtube!</span>
