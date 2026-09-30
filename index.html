@@ -680,62 +680,6 @@
   }
 </style>
 <script src="/analytics.js" defer></script>
-<script>
-  /* Open the Subscribe link in the YouTube app when it's installed.
-
-     The href is a plain https link, so this page works with no JavaScript and on
-     desktop. On a phone:
-       Android - an intent:// URL hands it to the YouTube app, and
-                 S.browser_fallback_url covers phones without the app
-       iPhone  - try youtube://, then fall back to the web link if nothing
-                 happened after a moment (a failed scheme does nothing visible)
-
-     Analytics still records the tap as social_click / youtube through the
-     data-track attributes, handled in analytics.js. */
-  (function (){
-    var link = document.getElementById("yt-subscribe");
-    if(!link) return;
-
-    var WEB = link.href;
-    /* the channel-ID form, not @TheChubbitz: the YouTube app only claims
-       /channel/ links, so a handle link just opens the browser */
-    var CHANNEL = "www.youtube.com/channel/UCW_SKUSeco3My2P3lWyMcyg?sub_confirmation=1";
-    var ua = navigator.userAgent || "";
-    var android = /Android/i.test(ua);
-    var iOS = /iPhone|iPad|iPod/i.test(ua);
-    if(!android && !iOS) return;          /* desktop: the plain link is right */
-
-    link.addEventListener("click", function (e){
-      if(e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey) return;
-      e.preventDefault();
-
-      if(android){
-        /* The full intent form: Chrome wants the action and category spelled out,
-           or it quietly treats this as an unknown scheme and does nothing.
-           S.browser_fallback_url covers phones without the YouTube app. */
-        window.location.href = "intent://" + CHANNEL +
-          "#Intent;scheme=https;action=android.intent.action.VIEW;" +
-          "category=android.intent.category.BROWSABLE;" +
-          "package=com.google.android.youtube;" +
-          "S.browser_fallback_url=" + encodeURIComponent(WEB) + ";end";
-        return;
-      }
-
-      /* iPhone: if the app opens, this page goes to the background and the
-         timer never runs; if it doesn't, the web link opens a moment later */
-      var left = false;
-      function gone(){ left = true; }
-      document.addEventListener("visibilitychange", gone, { once: true });
-      window.addEventListener("pagehide", gone, { once: true });
-
-      window.location.href = "vnd.youtube://" + CHANNEL;
-      setTimeout(function (){
-        document.removeEventListener("visibilitychange", gone);
-        if(!left && !document.hidden) window.location.href = WEB;
-      }, 700);
-    });
-  })();
-</script>
 <script src="/metrics.js" defer></script>
 </head>
 <body>
@@ -1096,5 +1040,72 @@
   })();
 </script>
 
+<script>
+  /* Open the Subscribe banner in the YouTube app when it's installed.
+
+     This has to live at the end of the body: in <head> it ran before the banner
+     existed, found nothing, and every tap just followed the plain web link.
+
+     The href is a normal https link, so the page works with no JavaScript and on
+     desktop. On a phone we try the app first:
+
+       vnd.youtube://   the scheme the YouTube app registers for itself. It needs
+                        no domain verification, so it works even when Android's
+                        "open supported links" is off for YouTube.
+       intent://        Android's own hand-off, tried next if the scheme did
+                        nothing; its S.browser_fallback_url covers phones with no
+                        YouTube app.
+       the web link     last resort, on both platforms.
+
+     The link is the /channel/ form, not @TheChubbitz: the app only claims
+     channel-ID links. ?sub_confirmation=1 opens the Subscribe prompt.
+
+     Analytics still records the tap as social_click / youtube, through the
+     data-track attributes that analytics.js reads. */
+  (function (){
+    var link = document.getElementById("yt-subscribe");
+    if(!link) return;
+
+    var WEB = link.href;
+    var CHANNEL = "www.youtube.com/channel/UCW_SKUSeco3My2P3lWyMcyg?sub_confirmation=1";
+    var ua = navigator.userAgent || "";
+    var android = /Android/i.test(ua);
+    var iOS = /iPhone|iPad|iPod/i.test(ua);
+    if(!android && !iOS) return;          /* desktop: the plain link is right */
+
+    function intentUrl(){
+      return "intent://" + CHANNEL +
+        "#Intent;scheme=https;action=android.intent.action.VIEW;" +
+        "category=android.intent.category.BROWSABLE;" +
+        "package=com.google.android.youtube;" +
+        "S.browser_fallback_url=" + encodeURIComponent(WEB) + ";end";
+    }
+
+    link.addEventListener("click", function (e){
+      if(e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      e.preventDefault();
+
+      /* If the app opens, this page goes to the background and the timers below
+         never get their chance. If it doesn't, we step down to the next option. */
+      var left = false;
+      function gone(){ left = true; }
+      document.addEventListener("visibilitychange", gone, { once: true });
+      window.addEventListener("pagehide", gone, { once: true });
+      function stillHere(){ return !left && !document.hidden; }
+
+      window.location.href = "vnd.youtube://" + CHANNEL;
+
+      setTimeout(function (){
+        if(!stillHere()) return;
+        window.location.href = android ? intentUrl() : WEB;
+        if(android){
+          /* the intent has its own fallback, but if Chrome ignored it outright
+             this gets the visitor to the channel anyway */
+          setTimeout(function (){ if(stillHere()) window.location.href = WEB; }, 900);
+        }
+      }, 800);
+    });
+  })();
+</script>
 </body>
 </html>
