@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0b0e">
+<meta name="description" content="Chubbash is a casual 7 day mini game jam. Make a small game starring your Chubbitz on Bash.tv and win prizes.">
+<title>Chubbash</title>
+
+<meta property="og:site_name" content="The Chubbitz">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thechubbitz.com/chubbash">
+<meta property="og:title" content="Chubbash: a 7 day mini game jam">
+<meta property="og:description" content="Make a small game starring your Chubbitz on Bash.tv. Solo, beginner friendly, silly encouraged.">
+<meta property="og:image" content="https://thechubbitz.com/media/chubbolator/chubbolator_embed.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="720">
+<meta property="og:image:alt" content="Chubbash">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Chubbash: a 7 day mini game jam">
+<meta name="twitter:description" content="Make a small game starring your Chubbitz on Bash.tv. Solo, beginner friendly, silly encouraged.">
+<meta name="twitter:image" content="https://thechubbitz.com/media/chubbolator/chubbolator_embed.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  /* Same tokens as the homepage and the other sub-pages. */
+  :root{
+    --bg:#0a0b0e;
+    --bg-soft:#121419;
+    --text:#f4f5f7;
+    --text-dim:#a3a9b4;
+    --text-faint:#6b7280;
+    --line:rgba(255,255,255,.09);
+    --line-hover:rgba(255,255,255,.2);
+    --card:rgba(255,255,255,.045);
+    --accent:#4f8ef7;
+    --accent-2:#8ec9ff;
+    --gold:#f3c969;
+    --radius-lg:20px;
+    --radius-md:16px;
+    --radius-sm:12px;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    overflow-x:hidden;
+  }
+  a{color:inherit;}
+  .page{
+    position:relative;
+    width:100%;
+    max-width:460px;
+    padding:0 18px 48px;
+  }
+
+  /* ---------- Header ---------- */
+  .glow{
+    position:absolute;
+    top:-130px;
+    left:0;
+    width:100%;
+    height:470px;
+    pointer-events:none;
+    z-index:0;
+    background:radial-gradient(ellipse 85% 55% at 50% 30%, rgba(79,142,247,.26), transparent 70%);
+  }
+  .home-link{
+    position:relative;
+    z-index:1;
+    display:inline-flex;
+    margin-top:20px;
+    color:var(--text-dim);
+    transition:color .15s ease, transform .15s ease;
+  }
+  .home-link:hover{ color:var(--text); transform:translateY(-1px); }
+  .home-link svg{ width:22px; height:22px; display:block; }
+
+  header.top{
+    position:relative;
+    z-index:1;
+    text-align:center;
+    padding:10px 0 24px;
+  }
+  h1{
+    margin:0;
+    font-family:'Fredoka', sans-serif;
+    font-weight:700;
+    font-size:clamp(34px, 11vw, 54px);
+    line-height:1.02;
+    letter-spacing:.02em;
+    color:#fff;
+    white-space:nowrap;
+  }
+  .subtitle{
+    margin:10px 0 0;
+    font-family:"Fredoka", sans-serif;
+    font-weight:600;
+    font-size:clamp(17px, 5vw, 21px);
+    line-height:1.25;
+    color:var(--text);
+  }
+  .subtitle em{
+    font-style:normal;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  /* ---------- Countdown banner ---------- */
+  /* Pinned at the top while scrolling; the label changes as the jam moves from
+     "opens in" to "closes in" to voting. */
+  .bar{
+    text-decoration:none;
+    position:sticky;
+    top:10px;
+    z-index:5;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:12px;
+    padding:8px 12px 8px 8px;
+    border-radius:var(--radius-md);
+    background:rgba(18,20,25,.84);
+    -webkit-backdrop-filter:blur(12px);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(79,142,247,.35);
+    box-shadow:0 8px 24px rgba(0,0,0,.35), 0 0 18px rgba(79,142,247,.14);
+    color:var(--text-dim);
+    font-size:13.5px;
+    font-weight:600;
+  }
+  .bar-icon{
+    flex:none;
+    width:30px;
+    height:30px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    color:#0a0b0e;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  }
+  .bar-icon svg{ width:16px; height:16px; display:block; }
+  .bar-text{ flex:1; min-width:0; white-space:nowrap; }
+  .bar-time{
+    margin-left:6px;
+    font-family:'Fredoka', sans-serif;
+    font-size:17px;
+    font-weight:700;
+    color:#fff;
+    font-variant-numeric:tabular-nums;
+  }
+  .cd-unit{
+    margin-left:1px;
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--accent-2);
+  }
+
+  /* ---------- Panels ---------- */
+  .panel{
+    position:relative;
+    z-index:1;
+    margin-top:18px;
+    padding:18px 18px 20px;
+    background:var(--bg-soft);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+  }
+  .panel h2{
+    margin:0 0 10px;
+    font-family:'Fredoka', sans-serif;
+    font-size:19px;
+    font-weight:700;
+    color:#fff;
+  }
+  .panel p{
+    margin:0 0 10px;
+    font-size:14px;
+    line-height:1.55;
+    color:var(--text-dim);
+  }
+  .panel > :last-child{ margin-bottom:0; }
+  .label{
+    display:block;
+    margin:18px 0 8px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+  }
+
+  /* ---------- Steps ---------- */
+  .steps{
+    position:relative;
+    z-index:1;
+    list-style:none;
+    margin:0;
+    display:flex;
+    flex-direction:column;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    padding:0 16px;
+    margin-top:18px;
+  }
+  .step{
+    position:relative;
+    display:grid;
+    grid-template-columns:34px 1fr;
+    gap:13px;
+    padding:16px 0;
+  }
+  .step + .step{ border-top:1px solid var(--line); }
+  .step:not(:last-child)::after{
+    content:"";
+    position:absolute;
+    left:17px;
+    top:50px;
+    height:calc(100% - 34px);
+    width:2px;
+    transform:translateX(-1px);
+    background:linear-gradient(to bottom, rgba(79,142,247,.45), rgba(79,142,247,.06));
+  }
+  .step-num{
+    width:34px;
+    height:34px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    font-family:'Fredoka', sans-serif;
+    font-size:17px;
+    font-weight:700;
+    color:#0a0b0e;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow:0 0 16px rgba(79,142,247,.35);
+  }
+  .step-body{ min-width:0; }
+  .step-title{
+    margin:6px 0 8px;
+    font-family:'Fredoka', sans-serif;
+    font-size:18px;
+    font-weight:700;
+    letter-spacing:.02em;
+    color:#fff;
+    line-height:1.15;
+  }
+  .step-body p{
+    margin:0 0 10px;
+    font-size:14px;
+    line-height:1.5;
+    color:var(--text-dim);
+  }
+  .step-body > :last-child{ margin-bottom:0; }
+  .step-link{
+    color:var(--accent-2);
+    font-weight:700;
+    text-decoration:none;
+    border-bottom:1px solid rgba(142,201,255,.35);
+  }
+  .step-link:hover{ border-bottom-color:var(--accent-2); }
+
+  /* ---------- Timeline ---------- */
+  .timeline{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+  }
+  .ev{
+    position:relative;
+    display:grid;
+    grid-template-columns:76px 1fr;
+    gap:12px;
+    padding:9px 0 9px 0;
+  }
+  .ev + .ev{ border-top:1px solid var(--line); }
+  .ev-date{
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--accent-2);
+    padding-top:1px;
+    font-variant-numeric:tabular-nums;
+  }
+  .ev-what{ font-size:14px; line-height:1.5; color:var(--text-dim); }
+  .ev-what b{ color:var(--text); font-weight:700; }
+  /* days already past are dimmed, so the next thing stands out */
+  .ev.done .ev-date{ color:var(--text-faint); }
+  .ev.done .ev-what, .ev.done .ev-what b{ color:var(--text-faint); font-weight:400; }
+  .ev.now::before{
+    content:"";
+    position:absolute;
+    left:-18px;
+    top:0;
+    bottom:0;
+    width:3px;
+    border-radius:0 3px 3px 0;
+    background:linear-gradient(to bottom,var(--accent),var(--accent-2));
+  }
+
+  /* ---------- Lists ---------- */
+  .numbered{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+    counter-reset:rule;
+  }
+  .numbered li{
+    display:flex;
+    align-items:flex-start;
+    gap:9px;
+    font-size:14px;
+    line-height:1.45;
+    color:var(--text-dim);
+  }
+  .numbered li::before{
+    counter-increment:rule;
+    content:counter(rule);
+    flex:none;
+    width:19px;
+    height:19px;
+    margin-top:1px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:rgba(79,142,247,.14);
+    border:1px solid rgba(79,142,247,.3);
+    color:var(--accent-2);
+    font-size:11px;
+    font-weight:800;
+  }
+  .numbered b{ color:var(--text); font-weight:700; }
+
+  /* ---------- Prizes ---------- */
+  .prizes{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .prize{
+    padding:14px 15px;
+    border-radius:var(--radius-md);
+    background:rgba(255,255,255,.03);
+    border:1px solid var(--line);
+  }
+  .prize.first{
+    background:linear-gradient(135deg, rgba(243,201,105,.14), rgba(243,201,105,.04));
+    border-color:rgba(243,201,105,.34);
+  }
+  .prize-head{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin-bottom:9px;
+    font-family:'Fredoka', sans-serif;
+    font-size:16px;
+    font-weight:700;
+    color:#fff;
+  }
+  .medal{
+    flex:none;
+    width:24px;
+    height:24px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    font-size:12px;
+    font-weight:800;
+    color:#0a0b0e;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  }
+  .prize.first .medal{ background:linear-gradient(135deg,#f3c969,#ffe6a8); }
+  .prize ul{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .prize li{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    font-size:14px;
+    line-height:1.45;
+    color:var(--text-dim);
+  }
+  .prize li::before{
+    content:"";
+    flex:none;
+    width:6px;
+    height:6px;
+    margin-top:7px;
+    border-radius:50%;
+    background:var(--accent-2);
+  }
+  .prize.first li::before{ background:var(--gold); }
+
+  /* ---------- Link preview card ---------- */
+  /* The thumbnail and blurb come from the linked page itself, so it reads like a
+     shared link rather than one more button. */
+  .link-preview{
+    display:block;
+    text-decoration:none;
+    border-radius:var(--radius-md);
+    border:1px solid var(--line);
+    overflow:hidden;
+    background:rgba(255,255,255,.03);
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .link-preview:hover{ transform:translateY(-1px); border-color:var(--line-hover); }
+  .link-preview img{
+    display:block;
+    width:100%;
+    height:auto;
+    border-bottom:1px solid var(--line);
+  }
+  .lp-text{ display:block; padding:12px 14px 13px; }
+  .lp-title{
+    display:block;
+    font-family:'Fredoka', sans-serif;
+    font-size:16px;
+    font-weight:700;
+    color:#fff;
+  }
+  .lp-sub{
+    display:block;
+    margin-top:3px;
+    font-size:13px;
+    line-height:1.45;
+    color:var(--text-dim);
+  }
+  .lp-host{
+    display:block;
+    margin-top:6px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.07em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+  }
+
+  /* ---------- Join button ---------- */
+  .join-row{ margin-top:18px; text-align:center; }
+  .join-row-top{ margin-top:4px; }
+  .join-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    padding:15px 28px;
+    border-radius:var(--radius-md);
+    text-decoration:none;
+    font-size:19px;
+    font-weight:800;
+    color:#0a0b0e;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow:0 6px 18px rgba(0,0,0,.35), 0 0 18px rgba(79,142,247,.35);
+    transition:transform .15s ease, filter .15s ease;
+  }
+  .join-btn:hover{ transform:translateY(-1px); filter:brightness(1.06); }
+  .join-btn svg{ width:20px; height:20px; }
+  .join-note{
+    margin:10px 0 0;
+    text-align:center;
+    font-size:12.5px;
+    color:var(--text-faint);
+  }
+
+  footer{
+    position:relative;
+    z-index:1;
+    text-align:center;
+    margin-top:26px;
+    font-size:11.5px;
+    color:var(--text-faint);
+  }
+  footer a{ color:var(--text-faint); text-decoration:none; }
+  footer a:hover{ color:var(--text-dim); }
+  .dot{ margin:0 8px; opacity:.5; }
+
+  @media (max-width: 380px){
+    .facts li{ grid-template-columns:1fr; gap:3px; }
+    .ev{ grid-template-columns:66px 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+</style>
+<script src="/analytics.js" defer></script>
+</head>
+<body>
+<div class="glow" aria-hidden="true"></div>
+
+<div class="page">
+
+  <a class="bar" href="#how" id="jam-bar">
+    <span class="bar-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg>
+    </span>
+    <span class="bar-text"><span id="bar-label">Jam opens in</span><span class="bar-time" id="bar-time"></span></span>
+  </a>
+
+  <a class="home-link" href="/" aria-label="The Chubbitz home">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 11L12 4L21 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5.5 9.5V19C5.5 19.5523 5.94772 20 6.5 20H9.5C10.0523 20 10.5 19.5523 10.5 19V15C10.5 14.4477 10.9477 14 11.5 14H12.5C13.0523 14 13.5 14.4477 13.5 15V19C13.5 19.5523 13.9477 20 14.5 20H17.5C18.0523 20 18.5 19.5523 18.5 19V9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
+
+  <header class="top">
+    <h1>CHUBBASH</h1>
+    <p class="subtitle">A 7 day mini game jam<br>Make a tiny game with your <em>Chubbitz</em></p>
+  </header>
+
+  <div class="join-row join-row-top">
+    <a class="join-btn" data-track="chubbash_click" data-track-label="discord_join_top"
+       href="/discord" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      Join the Discord
+    </a>
+  </div>
+
+  <section class="panel">
+    <h2>What is it?</h2>
+    <p>Chubbash is a casual mini game jam for the community, built on Bash.tv. Make one small, playable game starring a Chubbitz character. Silly is good, and you don't need to have made a game before.</p>
+  </section>
+
+  <ol class="steps" id="how">
+
+    <li class="step">
+      <span class="step-num">1</span>
+      <div class="step-body">
+        <h2 class="step-title">Make a Chubbitz</h2>
+        <p>Build your character in <a class="step-link" data-track="chubbash_click" data-track-label="chubbolator" href="/chubbolator">The Chubbolator</a>. It's free, and it takes a couple of minutes.</p>
+      </div>
+    </li>
+
+    <li class="step">
+      <span class="step-num">2</span>
+      <div class="step-body">
+        <h2 class="step-title">Build your game on Bash.tv</h2>
+        <p>Need an account? <a class="step-link" data-track="chubbash_click" data-track-label="bashtv" href="/bashtv">Here's how to get a free invite</a>. Start building once the jam opens, and follow the theme the community picks.</p>
+      </div>
+    </li>
+
+    <li class="step">
+      <span class="step-num">3</span>
+      <div class="step-body">
+        <h2 class="step-title">Submit by Fri, Oct 16</h2>
+        <p>Post your Bash game link in Discord with a one or two sentence pitch. Then the community votes, and the top 3 are featured in the results video.</p>
+      </div>
+    </li>
+
+  </ol>
+
+  <section class="panel">
+    <h2>Rules</h2>
+    <ol class="numbered">
+      <li><span>Build it on <b>Bash.tv</b>.</span></li>
+      <li><span>Use at least <b>one character from the Chubbolator</b>.</span></li>
+      <li><span>Start after the jam opens on Oct 9. <b>No pre-built games.</b></span></li>
+      <li><span>Follow the <b>theme</b> the community votes for.</span></li>
+      <li><span><b>Solo entries only.</b></span></li>
+      <li><span>Submit by <b>Oct 16</b> with your Bash game link and a 1&ndash;2 sentence pitch.</span></li>
+      <li><span><b>Keep it kind.</b> Entries or members breaking the server rules can be removed.</span></li>
+    </ol>
+  </section>
+
+  <section class="panel">
+    <h2>Voting</h2>
+    <p>The community votes in Bash's Discord, one vote per member, and the top 3 win. If there's a tie or anything needs a judgement call, Skyman will be the tie breaker.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Timeline</h2>
+    <ul class="timeline" id="timeline">
+      <li class="ev" data-until="2026-10-08"><span class="ev-date">Thu Oct 8</span><span class="ev-what"><b>Theme vote opens.</b> The community picks the theme in Discord.</span></li>
+      <li class="ev" data-until="2026-10-09"><span class="ev-date">Fri Oct 9</span><span class="ev-what"><b>Chubbash begins.</b> The theme is revealed and building starts.</span></li>
+      <li class="ev" data-until="2026-10-12"><span class="ev-date">Mon Oct 12</span><span class="ev-what"><b>Build session.</b> Optional hang-out, Q&amp;A and show-and-tell in Discord.</span></li>
+      <li class="ev" data-until="2026-10-16"><span class="ev-date">Fri Oct 16</span><span class="ev-what"><b>Submissions close.</b> Last call for entries.</span></li>
+      <li class="ev" data-until="2026-10-18"><span class="ev-date">Oct 17&ndash;18</span><span class="ev-what"><b>Voting weekend.</b> Everyone plays the entries and votes.</span></li>
+      <li class="ev" data-until="2026-10-20"><span class="ev-date">Tue Oct 20</span><span class="ev-what"><b>Winners announced</b> in the results video.</span></li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>Prizes</h2>
+    <ul class="prizes">
+      <li class="prize first">
+        <div class="prize-head"><span class="medal">1</span>First place</div>
+        <ul>
+          <li>$100 gift card</li>
+          <li>Featured in the results video</li>
+          <li>8,000 Bash credits</li>
+          <li>A Chubbitz sticker sheet</li>
+          <li>A special Discord role</li>
+        </ul>
+      </li>
+      <li class="prize">
+        <div class="prize-head"><span class="medal">2</span>Second place</div>
+        <ul>
+          <li>$50 gift card</li>
+          <li>Featured in the results video</li>
+          <li>4,000 Bash credits</li>
+        </ul>
+      </li>
+      <li class="prize">
+        <div class="prize-head"><span class="medal">3</span>Third place</div>
+        <ul>
+          <li>Featured in the results video</li>
+          <li>2,000 Bash credits</li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>Getting started on Bash.tv</h2>
+    <p>Never made a game before? The Bash.tv FAQ walks through the basics.</p>
+    <a class="link-preview" data-track="chubbash_click" data-track-label="bash_faq"
+       href="https://harsh-haddock-757.notion.site/Bash-tv-FAQ-3edbbd3cecd98131b57ccd461b8e0dec"
+       target="_blank" rel="noopener noreferrer">
+      <img src="/media/bash-faq.png" width="1200" height="630" loading="lazy" decoding="async" alt="">
+      <span class="lp-text">
+        <span class="lp-title">Bash.tv FAQ</span>
+        <span class="lp-sub">Choose a topic below, then open a question to see the answer.</span>
+        <span class="lp-host">notion.site</span>
+      </span>
+    </a>
+  </section>
+
+  <div class="join-row">
+    <a class="join-btn" data-track="chubbash_click" data-track-label="discord_join"
+       href="/discord" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      Join the Discord
+    </a>
+    <p class="join-note">Everything happens in the server: the theme vote, submissions, and the final vote.</p>
+  </div>
+
+  <footer>
+    <a href="/">The Chubbitz</a>
+    <span class="dot">&middot;</span>
+    <a href="/privacy">Privacy</a>
+    <span class="dot">&middot;</span>
+    <a href="/terms">Terms</a>
+  </footer>
+</div>
+
+<script>
+  /* The sticky bar counts down to whatever comes next, and the timeline dims the
+     days that have passed. Eastern time, which is UTC-4 until Nov 1.
+
+     If a date moves, change it here and in the timeline markup above. */
+  (function (){
+    var PHASES = [
+      { until: "2026-10-09T00:00:00-04:00", label: "Jam opens in" },
+      { until: "2026-10-17T00:00:00-04:00", label: "Submissions close in" },
+      { until: "2026-10-20T00:00:00-04:00", label: "Winners announced in" }
+    ];
+
+    var label = document.getElementById("bar-label");
+    var time = document.getElementById("bar-time");
+    if(!label || !time) return;
+
+    function pad(n){ return n < 10 ? "0" + n : String(n); }
+    function part(n, unit){ return pad(n) + '<span class="cd-unit">' + unit + "</span>"; }
+
+    var timer;
+    function tick(){
+      var now = Date.now(), phase = null;
+      for(var i = 0; i < PHASES.length; i++){
+        if(new Date(PHASES[i].until).getTime() > now){ phase = PHASES[i]; break; }
+      }
+      if(!phase){
+        label.textContent = "Chubbash is over - thanks for playing!";
+        time.textContent = "";
+        clearInterval(timer);
+        return;
+      }
+
+      label.textContent = phase.label;
+      var left = Math.max(0, Math.floor((new Date(phase.until).getTime() - now) / 1000));
+      var days = Math.floor(left / 86400);
+      var hrs = Math.floor(left % 86400 / 3600);
+      var mins = Math.floor(left % 3600 / 60);
+      var secs = left % 60;
+      time.innerHTML = days
+        ? [days + '<span class="cd-unit">d</span>', part(hrs, "h"), part(mins, "m")].join(" ")
+        : [part(hrs, "h"), part(mins, "m"), part(secs, "s")].join(" ");
+    }
+
+    tick();
+    timer = setInterval(tick, 1000);
+
+    /* grey out days gone by, and mark the next one */
+    var events = document.querySelectorAll("#timeline .ev");
+    var marked = false;
+    for(var i = 0; i < events.length; i++){
+      var end = new Date(events[i].dataset.until + "T23:59:59-04:00").getTime();
+      if(end < Date.now()){
+        events[i].className = "ev done";
+      } else if(!marked){
+        events[i].className = "ev now";
+        marked = true;
+      }
+    }
+  })();
+</script>
+
+</body>
+</html>
