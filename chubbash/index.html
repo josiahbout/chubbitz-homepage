@@ -481,10 +481,23 @@
   .join-btn:hover{ transform:translateY(-1px); filter:brightness(1.06); }
   .join-btn svg{ width:20px; height:20px; }
   .join-note{
-    margin:10px 0 0;
+    margin:10px auto 0;
+    max-width:310px;      /* with balance, keeps the two lines a similar length */
     text-align:center;
+    text-wrap:balance;
     font-size:12.5px;
     color:var(--text-faint);
+  }
+
+  /* screenshots inside a step */
+  .shot{
+    display:block;
+    width:100%;
+    height:auto;
+    margin-top:4px;
+    border-radius:var(--radius-sm);
+    border:1px solid var(--line);
+    background:#1a1d23;
   }
 
   footer{
@@ -552,15 +565,17 @@
       <span class="step-num">1</span>
       <div class="step-body">
         <h2 class="step-title">Make a Chubbitz</h2>
-        <p>Build your character in <a class="step-link" data-track="chubbash_click" data-track-label="chubbolator" href="/chubbolator">The Chubbolator</a>. It's free, and it takes a couple of minutes.</p>
+        <p>Build your character in <a class="step-link" data-track="chubbash_click" data-track-label="chubbolator" href="/chubbolator">The Chubbolator</a>. It's free, and it takes a couple of minutes. You'll need a <a class="step-link" data-track="chubbash_click" data-track-label="bashtv" href="/bashtv">free Bash account</a>.</p>
       </div>
     </li>
 
     <li class="step">
       <span class="step-num">2</span>
       <div class="step-body">
-        <h2 class="step-title">Build your game on Bash.tv</h2>
-        <p>Need an account? <a class="step-link" data-track="chubbash_click" data-track-label="bashtv" href="/bashtv">Here's how to get a free invite</a>. Start building once the jam opens, and follow the theme the community picks.</p>
+        <h2 class="step-title">Use a template</h2>
+        <p>Quickly set up your game with any Chubbitz character by <a class="step-link" data-track="chubbash_click" data-track-label="template" href="https://bash.tv/baby/chubbitz-template?sc=jg8k8ka#db1e3b11ac9865c5764b2c83dd77bee4" target="_blank" rel="noopener noreferrer">going here</a> and clicking &ldquo;Use as template&rdquo;.</p>
+        <img class="shot" src="/media/chubbash/use-as-template.png" width="870" height="640" loading="lazy" decoding="async"
+             alt="The Bash.tv template page, with the three-dot menu open and Use as template highlighted.">
       </div>
     </li>
 
