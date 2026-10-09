@@ -783,14 +783,16 @@
         </a>
       </li>
       <li>
-        <a class="link-card" data-track="link_click" data-track-label="chubbolator" href="/chubbolator">
-          <img class="link-icon" loading="lazy" src="/media/chubbolator-icon.webp" alt="">
+        <button type="button" class="link-card" id="email-link" data-track="email_copy">
+          <span class="link-icon link-icon-mail" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>
+          </span>
           <span class="link-text">
-            <span class="link-title">Play The Chubbolator!</span>
-            <span class="link-sub">Free character creator game</span>
+            <span class="link-title" id="email-title">Email me! (Tap to copy)</span>
+            <span class="link-sub" id="email-sub">Loading&hellip;</span>
           </span>
           <svg class="link-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
-        </a>
+        </button>
       </li>
     </ul>
   </section>
@@ -808,16 +810,14 @@
     </a>
     <ul class="links">
       <li>
-        <button type="button" class="link-card" id="email-link" data-track="email_copy">
-          <span class="link-icon link-icon-mail" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>
-          </span>
+        <a class="link-card" data-track="link_click" data-track-label="chubbolator" href="/chubbolator">
+          <img class="link-icon" loading="lazy" src="/media/chubbolator-icon.webp" alt="">
           <span class="link-text">
-            <span class="link-title" id="email-title">Email me! (Tap to copy)</span>
-            <span class="link-sub" id="email-sub">Loading&hellip;</span>
+            <span class="link-title">Play The Chubbolator!</span>
+            <span class="link-sub">Free character creator game</span>
           </span>
           <svg class="link-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
-        </button>
+        </a>
       </li>
     </ul>
   </section>
