@@ -708,6 +708,148 @@
   @media (prefers-reduced-motion: reduce){
     *{ transition:none !important; }
   }
+  /* ============================================================
+     DESKTOP LAYOUT  (980px and wider)
+     ------------------------------------------------------------
+     The phone layout above is untouched: the title still sits over
+     the bottom of the video, and the links still run in one column.
+
+     On a wide screen the page opens as a banner - the video standing
+     at its own shape on the right, the name, tagline and Sponsor
+     button beside it on the left, and nothing else. The links, shop,
+     sponsors and videos wait below the fold.
+
+     Stretching the vertical video across a 16:9 screen was the first
+     thing I tried; it crops so hard that you only see one corner of
+     the character, so it keeps its own proportions here instead.
+     ============================================================ */
+  @media (min-width: 980px){
+    body{ align-items:flex-start; }
+
+    .page{
+      --overlay-lift:0px;
+      max-width:none;
+      width:100%;
+      padding:0 0 72px;
+    }
+
+    /* ---------- the banner ---------- */
+    .hero{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:clamp(40px, 6vw, 84px);
+      min-height:min(92vh, 900px);
+      margin:0;
+      padding:40px 48px;
+      /* a soft wash of brand blue behind it all */
+      background:
+        radial-gradient(70% 60% at 68% 42%, rgba(79,142,247,.20), transparent 72%),
+        radial-gradient(50% 50% at 20% 70%, rgba(142,201,255,.08), transparent 70%);
+    }
+
+    .banner{
+      flex:0 0 auto;
+      width:min(320px, 25vw);
+      border-radius:26px;
+      overflow:hidden;
+      border:1px solid var(--line);
+      box-shadow:0 30px 70px rgba(0,0,0,.55), 0 0 60px rgba(79,142,247,.18);
+    }
+    .banner-frame{ height:auto; }        /* keeps the video's own 9:16 shape */
+    .banner-fade{ display:none; }        /* nothing is overlaid on it now */
+
+    /* the title block becomes the left half of the banner */
+    .hero-overlay{
+      position:static;
+      flex:0 1 auto;
+      max-width:520px;
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      text-align:left;
+      gap:26px;
+      padding:0;
+    }
+    .hero-copy{ gap:16px; }
+    .hero-title{
+      font-size:clamp(44px, 4.6vw, 66px);
+      line-height:1.05;
+      white-space:normal;
+      text-shadow:none;
+    }
+    .hero-subtitle{
+      font-size:17px;
+      line-height:1.5;
+      color:var(--text-dim);
+      text-shadow:none;
+    }
+    .hero-subtitle span{ display:inline; }
+    .hero-overlay .cta-row{ margin-top:4px; }
+    .hero-overlay .cta{ padding:18px 42px; }
+    .hero-overlay .cta-action{ font-size:26px; }
+    .stat-rotator{ bottom:-30px; padding:4px 13px; }
+    .stat-item{ font-size:12.5px; }
+
+    /* a quiet nudge that there is more underneath */
+    .hero{ position:relative; }
+    .hero::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:34px;
+      width:0;
+      height:0;
+      margin-left:-9px;
+      border-left:9px solid transparent;
+      border-right:9px solid transparent;
+      border-top:11px solid rgba(255,255,255,.45);
+      animation:scroll-bob 2.2s ease-in-out infinite;
+      pointer-events:none;
+    }
+
+    /* ---------- everything below ---------- */
+    .content{
+      max-width:620px;   /* one column of cards reads badly any wider */
+      margin:0 auto;
+      padding:0 24px;
+      background:none;
+    }
+    .section{ margin-top:46px; }
+    .content > .section:first-child{ margin-top:10px; }
+    section[aria-labelledby="links-title"] + section,
+    .product + .links{ margin-top:14px; }
+
+    .section-head{ margin-bottom:14px; }
+    .section-head-center{ justify-content:flex-start; }   /* headings line up on the left */
+    .scroll-hint{ display:none; }                          /* the banner has its own cue */
+
+    /* one column, as on a phone - just a calmer width */
+    .links{ gap:11px; }
+    .link-title{ font-size:15.5px; }
+
+    /* the shop card puts its picture beside the text instead of below */
+    .product{
+      display:grid;
+      grid-template-columns:1fr 210px;
+      align-items:center;
+      gap:20px;
+      padding:18px 20px;
+    }
+    .product img{ margin:0; border-radius:var(--radius-md); }
+    .product-body{ padding:0; }
+
+    footer{ margin-top:48px; }
+  }
+
+  @media (min-width: 1500px){
+    .banner{ width:360px; }
+    .content{ max-width:660px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .hero::after{ animation:none; opacity:.6; }
+  }
 </style>
 <script src="/analytics.js" defer></script>
 <script src="/metrics.js" defer></script>
@@ -722,24 +864,23 @@
           <source src="/media/skyman_waving.mp4" type="video/mp4">
         </video>
         <div class="banner-fade" aria-hidden="true"></div>
-
-        <div class="hero-overlay">
-          <div class="hero-copy">
-            <div class="title-row">
-              <h1 class="hero-title">@TheChubbitz</h1>
-            </div>
-
-            <p class="hero-subtitle"><span>Helping brands get attention</span> <span>with funny stories!</span></p>
-          </div>
-
-          <div class="cta-row">
-            <button type="button" class="cta cta-combo" id="sponsor-btn" data-track="sponsor_open">
-              <!-- Filled from /metrics.js - edit the numbers there, not here -->
-              <span class="stat-rotator" id="stat-rotator" aria-hidden="true"></span>
-              <span class="cta-action" id="cta-label">Sponsor!</span>
-            </button>
-          </div>
+      </div>
+    </div>
+    <div class="hero-overlay">
+      <div class="hero-copy">
+        <div class="title-row">
+          <h1 class="hero-title">@TheChubbitz</h1>
         </div>
+
+        <p class="hero-subtitle"><span>Helping brands get attention</span> <span>with funny stories!</span></p>
+      </div>
+
+      <div class="cta-row">
+        <button type="button" class="cta cta-combo" id="sponsor-btn" data-track="sponsor_open">
+          <!-- Filled from /metrics.js - edit the numbers there, not here -->
+          <span class="stat-rotator" id="stat-rotator" aria-hidden="true"></span>
+          <span class="cta-action" id="cta-label">Sponsor!</span>
+        </button>
       </div>
     </div>
   </div>
