@@ -549,6 +549,107 @@
   @media (prefers-reduced-motion: reduce){
     *{ animation:none !important; transition:none !important; }
   }
+  /* ============================================================
+     DESKTOP LAYOUT  (980px and wider)
+     ------------------------------------------------------------
+     Phones keep the narrow column of cards above.
+
+     On a wide screen it stays ONE column, just a roomier one: bigger
+     type, more air, and the panels lose their boxes so each section
+     reads as a part of one page rather than a stack of cards competing
+     for attention. Hairlines mark where one section ends.
+
+     Boxes are kept only where they are really objects in their own
+     right: the prize cards and the link out to the Bash.tv FAQ.
+     ============================================================ */
+  @media (min-width: 980px){
+    body{ align-items:flex-start; }
+
+    .page{
+      max-width:800px;
+      padding:0 28px 84px;
+    }
+
+    /* the countdown becomes a pill, still pinned while you scroll */
+    .bar{
+      width:fit-content;
+      margin:18px auto 0;
+      border-radius:999px;
+      padding:9px 18px 9px 10px;
+      gap:12px;
+    }
+    .bar-text{ line-height:1.2; }
+    .bar-time{ font-size:18px; }
+
+    .home-link{ position:absolute; top:24px; left:0; margin:0; }
+
+    header.top{ padding:34px 0 10px; }
+    h1{ font-size:clamp(64px, 7.4vw, 92px); }
+    .subtitle{ font-size:25px; margin-top:16px; }
+    .join-row-top{ margin-top:28px; }
+    .join-btn{ padding:18px 38px; font-size:22px; }
+
+    /* ---------- sections, not cards ---------- */
+    .panels{ margin-top:54px; }
+    .panel, .steps{
+      background:none;
+      border:0;
+      border-radius:0;
+      padding:44px 0 0;
+      margin-top:44px;
+      border-top:1px solid var(--line);
+    }
+    .panels > .panel:first-child{
+      border-top:0;
+      margin-top:0;
+      padding-top:0;
+    }
+    .panel h2, .steps-head h2{ font-size:30px; margin-bottom:16px; }
+    .panel p{ font-size:16.5px; line-height:1.7; margin-bottom:14px; }
+    .label{ font-size:12px; margin-top:26px; }
+
+    /* the steps get room to breathe, and bigger numbers */
+    .steps-head{ padding:0; border-bottom:0; }
+    .step{ grid-template-columns:46px 1fr; gap:20px; padding:26px 0; }
+    .step + .step{ border-top:1px solid var(--line); }
+    .step:not(:last-child)::after{
+      left:23px;
+      top:66px;
+      height:calc(100% - 46px);
+    }
+    .step-num{ width:46px; height:46px; font-size:21px; }
+    .step-title{ font-size:23px; margin:8px 0 10px; }
+    .step-body p{ font-size:16.5px; line-height:1.65; }
+    .shot{ max-width:580px; margin-top:12px; }
+
+    /* lists read at the same size as the prose */
+    .numbered{ gap:12px; }
+    .numbered li{ font-size:16.5px; line-height:1.55; gap:12px; }
+    .numbered li::before{ width:22px; height:22px; font-size:12px; }
+
+    .ev{ grid-template-columns:120px 1fr; padding:13px 0; }
+    .ev-date{ font-size:14px; }
+    .ev-what{ font-size:16.5px; }
+    .ev.now::before{ left:-24px; }
+
+    .prizes{ gap:14px; }
+    .prize{ padding:20px 22px; }
+    .prize-head{ font-size:19px; margin-bottom:11px; }
+    .prize li{ font-size:16px; }
+    .prize li::before{ margin-top:8px; }
+
+    .link-preview{ max-width:580px; }
+    .lp-title{ font-size:18px; }
+    .lp-sub{ font-size:14px; }
+
+    .join-row{ margin-top:52px; }
+    .join-note{ font-size:13.5px; max-width:none; }
+    footer{ margin-top:44px; font-size:12.5px; }
+  }
+
+  @media (min-width: 1400px){
+    .page{ max-width:860px; }
+  }
 </style>
 <script src="/analytics.js" defer></script>
 </head>
@@ -581,6 +682,8 @@
       Join the Discord
     </a>
   </div>
+
+  <div class="panels">
 
   <section class="panel">
     <h2>What is it?</h2>
@@ -696,6 +799,8 @@
       </span>
     </a>
   </section>
+
+  </div>
 
   <div class="join-row">
     <a class="join-btn" data-track="chubbash_click" data-track-label="discord_join"
