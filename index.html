@@ -708,6 +708,10 @@
   @media (prefers-reduced-motion: reduce){
     *{ transition:none !important; }
   }
+  /* The game jam banner only appears on the desktop layout, where there is
+     room for it above the video. */
+  .jam-bar{ display:none; }
+
   /* ============================================================
      DESKTOP LAYOUT  (980px and wider)
      ------------------------------------------------------------
@@ -733,15 +737,72 @@
       padding:0 0 72px;
     }
 
+    /* ---------- the game jam bubble ---------- */
+    .jam-bar{
+      display:inline-flex;
+      align-items:center;
+      gap:11px;
+      width:fit-content;
+      margin:20px auto 0;
+      padding:9px 14px 9px 9px;
+      border-radius:999px;
+      background:rgba(18,20,25,.9);
+      border:1px solid rgba(79,142,247,.35);
+      box-shadow:0 10px 30px rgba(0,0,0,.4), 0 0 20px rgba(79,142,247,.14);
+      color:var(--text-dim);
+      font-size:13.5px;
+      font-weight:600;
+      text-decoration:none;
+      transition:transform .15s ease, border-color .15s ease;
+    }
+    /* .page is a block, so the pill centres on its own margins */
+    .jam-bar{ display:flex; }
+    .jam-bar:hover{ transform:translateY(-1px); border-color:rgba(142,201,255,.6); }
+    .jam-live{
+      flex:none;
+      display:inline-flex;
+      align-items:center;
+      gap:5px;
+      padding:4px 9px 4px 8px;
+      border-radius:999px;
+      background:rgba(229,62,62,.16);
+      border:1px solid rgba(229,62,62,.45);
+      color:#ff9b9b;
+      font-size:10.5px;
+      font-weight:800;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+    .jam-live::before{
+      content:"";
+      width:6px;
+      height:6px;
+      border-radius:50%;
+      background:#ef4444;
+      box-shadow:0 0 6px rgba(239,68,68,.9);
+      animation:live-pulse 1.8s ease-in-out infinite;
+    }
+    .jam-time{
+      margin-left:6px;
+      font-family:'Fredoka', sans-serif;
+      font-size:16px;
+      font-weight:700;
+      color:#fff;
+      font-variant-numeric:tabular-nums;
+    }
+    .jam-time .u{ font-size:11px; font-weight:700; color:var(--accent-2); margin-left:1px; }
+    .jam-chevron{ width:16px; height:16px; color:var(--text-faint); flex:none; }
+
     /* ---------- the banner ---------- */
     .hero{
       display:flex;
       align-items:center;
       justify-content:center;
       gap:clamp(40px, 6vw, 84px);
-      /* 88vh, so a slice of the links always shows below the fold - see the
-         note on .banner about keeping the video shorter than this */
-      min-height:min(88vh, 900px);
+      /* 82vh, which with the game jam bubble above it still leaves a slice of
+         the links showing below the fold - see the note on .banner about
+         keeping the video shorter than this */
+      min-height:min(82vh, 860px);
       margin:0;
       padding:32px 48px;
       /* a soft wash of brand blue behind it all */
@@ -838,16 +899,33 @@
     .links{ gap:11px; }
     .link-title{ font-size:15.5px; }
 
-    /* the shop card puts its picture beside the text instead of below */
+    /* the shop card puts its picture on the left, text and Buy to the right */
     .product{
       display:grid;
-      grid-template-columns:1fr 210px;
+      grid-template-columns:294px 1fr;
       align-items:center;
-      gap:20px;
-      padding:18px 20px;
+      gap:24px;
+      padding:20px 22px;
     }
-    .product img{ margin:0; border-radius:var(--radius-md); }
-    .product-body{ padding:0; }
+    /* a Buy button you can't miss */
+    .product-cta{
+      font-size:22px;
+      padding:14px 30px;
+    }
+    .product img{
+      grid-column:1;
+      grid-row:1;
+      margin:0;
+      border-radius:var(--radius-md);
+    }
+    .product-body{
+      grid-column:2;
+      grid-row:1;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:14px;
+      padding:0;
+    }
 
     footer{ margin-top:48px; }
   }
@@ -866,6 +944,14 @@
 </head>
 <body>
 <div class="page">
+
+  <!-- Game jam banner. Desktop only for now; the countdown and the "has ended"
+       hiding are handled by the script at the bottom of the page. -->
+  <a class="jam-bar" href="/chubbash" data-track="link_click" data-track-label="chubbash_banner">
+    <span class="jam-live">Live</span>
+    <span class="jam-text"><span id="jam-label">The game jam has begun! Time left:</span><span class="jam-time" id="jam-time"></span></span>
+    <svg class="jam-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+  </a>
 
   <div class="hero">
     <div class="banner">
@@ -1345,5 +1431,48 @@
     btn.addEventListener("click", function (){ send("ab_cta_click_" + v); });
   })();
 </script>
+<script>
+  /* The game jam bubble's countdown, matching the one on /chubbash.
+     When the jam is over the bubble takes itself off the page.
+     If the dates move, change them here and on /chubbash. */
+  (function (){
+    var PHASES = [
+      { until: "2026-10-09T00:00:00-04:00", label: "The game jam starts in:" },
+      { until: "2026-10-17T00:00:00-04:00", label: "The game jam has begun! Time left:" },
+      { until: "2026-10-20T00:00:00-04:00", label: "Game jam winners announced in:" }
+    ];
+
+    var bar = document.querySelector(".jam-bar");
+    var label = document.getElementById("jam-label");
+    var time = document.getElementById("jam-time");
+    if(!bar || !label || !time) return;
+
+    function pad(n){ return n < 10 ? "0" + n : String(n); }
+    function part(n, unit){ return pad(n) + '<span class="u">' + unit + "</span>"; }
+
+    var timer;
+    function tick(){
+      var now = Date.now(), phase = null;
+      for(var i = 0; i < PHASES.length; i++){
+        if(new Date(PHASES[i].until).getTime() > now){ phase = PHASES[i]; break; }
+      }
+      if(!phase){ bar.remove(); clearInterval(timer); return; }
+
+      label.textContent = phase.label;
+      var left = Math.max(0, Math.floor((new Date(phase.until).getTime() - now) / 1000));
+      var days = Math.floor(left / 86400);
+      var hrs = Math.floor(left % 86400 / 3600);
+      var mins = Math.floor(left % 3600 / 60);
+      var secs = left % 60;
+      time.innerHTML = days
+        ? [days + '<span class="u">d</span>', part(hrs, "h"), part(mins, "m")].join(" ")
+        : [part(hrs, "h"), part(mins, "m"), part(secs, "s")].join(" ");
+    }
+
+    tick();
+    timer = setInterval(tick, 1000);
+  })();
+</script>
+
 </body>
 </html>
