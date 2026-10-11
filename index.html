@@ -739,9 +739,11 @@
       align-items:center;
       justify-content:center;
       gap:clamp(40px, 6vw, 84px);
-      min-height:min(92vh, 900px);
+      /* 88vh, so a slice of the links always shows below the fold - see the
+         note on .banner about keeping the video shorter than this */
+      min-height:min(88vh, 900px);
       margin:0;
-      padding:40px 48px;
+      padding:32px 48px;
       /* a soft wash of brand blue behind it all */
       background:
         radial-gradient(70% 60% at 68% 42%, rgba(79,142,247,.20), transparent 72%),
@@ -750,13 +752,21 @@
 
     .banner{
       flex:0 0 auto;
-      width:min(320px, 25vw);
+      /* Sized by HEIGHT, not width. Sized by width it stayed the same size on a
+         short window - or a screen with Windows display scaling turned up, which
+         shrinks the page in CSS pixels - and grew taller than the banner, pushing
+         the links out of sight. Tied to the viewport's height it always leaves
+         room for them, at any zoom. */
+      height:min(62vh, 620px);
+      width:auto;
+      aspect-ratio:9 / 16;
+      max-width:28vw;
       border-radius:26px;
       overflow:hidden;
       border:1px solid var(--line);
       box-shadow:0 30px 70px rgba(0,0,0,.55), 0 0 60px rgba(79,142,247,.18);
     }
-    .banner-frame{ height:auto; }        /* keeps the video's own 9:16 shape */
+    .banner-frame{ height:100%; padding-top:0; }
     .banner-fade{ display:none; }        /* nothing is overlaid on it now */
 
     /* the title block becomes the left half of the banner */
@@ -843,7 +853,7 @@
   }
 
   @media (min-width: 1500px){
-    .banner{ width:360px; }
+    .banner{ height:min(66vh, 700px); }
     .content{ max-width:660px; }
   }
 
