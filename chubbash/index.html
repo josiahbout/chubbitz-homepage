@@ -141,18 +141,35 @@
     font-size:13.5px;
     font-weight:600;
   }
-  .bar-icon{
+  /* "Live" while the jam is running, with a blinking dot - same badge as the
+     game jam card on the homepage */
+  .bar-live{
     flex:none;
-    width:30px;
-    height:30px;
-    display:grid;
-    place-items:center;
-    border-radius:50%;
-    color:#0a0b0e;
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    padding:4px 9px 4px 8px;
+    border-radius:999px;
+    background:rgba(229,62,62,.16);
+    border:1px solid rgba(229,62,62,.45);
+    color:#ff9b9b;
+    font-size:10.5px;
+    font-weight:800;
+    letter-spacing:.04em;
+    text-transform:uppercase;
   }
-  .bar-icon svg{ width:16px; height:16px; display:block; }
-  .bar-text{ flex:1; min-width:0; white-space:nowrap; }
+  .bar-live::before{
+    content:"";
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:#ef4444;
+    box-shadow:0 0 6px rgba(239,68,68,.9);
+    animation:live-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes live-pulse{ 0%,100%{ opacity:1 } 50%{ opacity:.35 } }
+  /* the label is long enough to wrap on a phone, so let it */
+  .bar-text{ flex:1; min-width:0; line-height:1.35; }
   .bar-time{
     margin-left:6px;
     font-family:'Fredoka', sans-serif;
@@ -541,9 +558,7 @@
 <div class="page">
 
   <a class="bar" href="#how" id="jam-bar">
-    <span class="bar-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg>
-    </span>
+    <span class="bar-live">Live</span>
     <span class="bar-text"><span id="bar-label">Jam opens in</span><span class="bar-time" id="bar-time"></span></span>
   </a>
 
@@ -707,9 +722,9 @@
      If a date moves, change it here and in the timeline markup above. */
   (function (){
     var PHASES = [
-      { until: "2026-10-09T00:00:00-04:00", label: "Jam opens in" },
-      { until: "2026-10-17T00:00:00-04:00", label: "Submissions close in" },
-      { until: "2026-10-20T00:00:00-04:00", label: "Winners announced in" }
+      { until: "2026-10-09T00:00:00-04:00", label: "The game jam starts in:" },
+      { until: "2026-10-17T00:00:00-04:00", label: "The game jam has begun! Time left:" },
+      { until: "2026-10-20T00:00:00-04:00", label: "Winners announced in:" }
     ];
 
     var label = document.getElementById("bar-label");
