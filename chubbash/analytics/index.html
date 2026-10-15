@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0a0b0e">
+<title>Chubbash analytics</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- analytics.js is deliberately left out: this page shouldn't count itself. -->
+
+<style>
+  /* Same tokens as the rest of the site. */
+  :root{
+    --bg:#0a0b0e;
+    --panel:#121419;
+    --line:rgba(255,255,255,.08);
+    --text:#f4f5f7;
+    --text-dim:#a3a9b4;
+    --text-faint:#6b7280;
+    --grid:#1f232b;
+    --axis:#2c313b;
+    --accent:#4f8ef7;
+    --accent-2:#8ec9ff;
+
+    --src-instagram:#d55181;
+    --src-direct:#3987e5;
+    --src-youtube:#e66767;
+    --src-linkme:#1baf7a;
+    --src-other:#5b6270;
+  }
+  *{ box-sizing:border-box; }
+  html{ -webkit-text-size-adjust:100%; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font:15px/1.55 "Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-inline:18px;
+  }
+  .page{
+    max-width:860px;
+    margin:0 auto;
+    padding-block:34px 64px;
+    display:grid;
+    gap:18px;
+  }
+  a{ color:var(--accent-2); }
+
+  header{ display:grid; gap:5px; margin-bottom:6px; }
+  .kicker{
+    font-size:11.5px; font-weight:700; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--accent);
+  }
+  h1{
+    margin:0;
+    font-family:'Fredoka', sans-serif;
+    font-weight:700;
+    font-size:clamp(32px, 6vw, 46px);
+    line-height:1.04;
+    color:#fff;
+  }
+  .range{ margin:3px 0 0; color:var(--text-dim); font-size:14px; }
+
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:18px;
+  }
+  .stat{ padding:16px 18px; display:grid; gap:2px; }
+  .stat + .stat{ border-left:1px solid var(--line); }
+  .stat-value{ font-size:27px; font-weight:700; letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
+  .stat-label{ font-size:12.5px; color:var(--text-dim); }
+
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:20px 22px 22px;
+    display:grid;
+    gap:14px;
+    min-width:0;
+  }
+  h2{
+    margin:0;
+    font-family:'Fredoka', sans-serif;
+    font-weight:600;
+    font-size:20px;
+    line-height:1.2;
+  }
+  .sub{ margin:2px 0 0; font-size:13px; color:var(--text-dim); }
+  .note{ margin:0; font-size:12.5px; color:var(--text-faint); }
+  .row{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+
+  /* chart */
+  .chart{ position:relative; }
+  .chart svg{ width:100%; height:auto; display:block; overflow:visible; }
+  .gridline{ stroke:var(--grid); stroke-width:1; }
+  .baseline{ stroke:var(--axis); stroke-width:1; }
+  .tick{ font:500 11px "Inter",sans-serif; fill:var(--text-faint); font-variant-numeric:tabular-nums; }
+  .day{ font:500 11px "Inter",sans-serif; fill:var(--text-dim); }
+  .bar{ fill:var(--accent); }
+  .bar.pre{ fill:#2b4f8f; }
+  .bar.partial{ fill:#2b4f8f; }
+  .callout{ font:600 12px "Inter",sans-serif; fill:#fff; }
+  .callout-dim{ font:500 11px "Inter",sans-serif; fill:var(--text-dim); }
+  .hit{ fill:transparent; }
+  .col.on .bar{ filter:brightness(1.25); }
+
+  /* share bars */
+  .shares{ list-style:none; margin:0; padding:0; display:grid; gap:13px; }
+  .share{ display:grid; gap:6px; }
+  .share-top{ display:flex; justify-content:space-between; align-items:baseline; gap:12px; }
+  .share-name{ font-weight:500; }
+  .share-name small{ display:block; font-size:12px; color:var(--text-faint); }
+  .share-val{ font-variant-numeric:tabular-nums; color:var(--text-dim); white-space:nowrap; }
+  .share-val b{ color:var(--text); font-weight:700; margin-right:6px; }
+  .track{ height:10px; border-radius:5px; background:#1b1e25; overflow:hidden; }
+  .fill{ height:100%; border-radius:5px; background:var(--accent); }
+  .fill.quiet{ background:#3a4150; }
+
+  /* donut */
+  .donut-wrap{ display:grid; grid-template-columns:minmax(140px,200px) 1fr; gap:20px; align-items:center; }
+  .donut{ width:100%; height:auto; display:block; }
+  .slice{ stroke:var(--panel); stroke-width:3; stroke-linejoin:round; }
+  .donut-total{ font:700 26px "Inter",sans-serif; fill:var(--text); letter-spacing:-.02em; }
+  .donut-cap{ font:500 10.5px "Inter",sans-serif; fill:var(--text-dim); letter-spacing:.06em; text-transform:uppercase; }
+  .legend{ list-style:none; margin:0; padding:0; display:grid; gap:2px; }
+  .legend li{
+    display:grid;
+    grid-template-columns:12px 1fr auto 42px;
+    align-items:center;
+    gap:9px;
+    padding:6px 7px;
+    border-radius:9px;
+    font-size:14px;
+    font-variant-numeric:tabular-nums;
+  }
+  .swatch{ width:12px; height:12px; border-radius:4px; }
+  .legend .num{ color:var(--text-dim); text-align:right; }
+  .legend .pct{ font-weight:600; text-align:right; }
+
+  .tip{
+    position:absolute;
+    pointer-events:none;
+    background:#1c2029;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:10px;
+    padding:7px 10px;
+    font-size:13px;
+    white-space:nowrap;
+    box-shadow:0 8px 24px rgba(0,0,0,.4);
+    transform:translate(-50%, calc(-100% - 10px));
+    font-variant-numeric:tabular-nums;
+    z-index:2;
+  }
+  .tip b{ display:block; font-weight:600; }
+  .tip span{ color:var(--text-dim); }
+
+  footer{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:space-between;
+    color:var(--text-faint);
+    font-size:12.5px;
+    padding-top:2px;
+  }
+  footer a{ color:var(--text-faint); }
+
+  @media (max-width:720px){
+    .row{ grid-template-columns:1fr; }
+    .stats{ grid-template-columns:repeat(2, 1fr); }
+    .stat:nth-child(3){ border-left:0; }
+    .stat:nth-child(n+3){ border-top:1px solid var(--line); }
+  }
+  @media (max-width:460px){
+    .donut-wrap{ grid-template-columns:1fr; justify-items:center; }
+    .donut{ max-width:200px; }
+    .legend{ width:100%; }
+    .panel{ padding:16px 15px 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="kicker">thechubbitz.com/chubbash &middot; Google Analytics</div>
+    <h1>Chubbash analytics</h1>
+    <p class="range">Oct 7 through Oct 15, 2026. Real visits only, not counting test loads.</p>
+  </header>
+
+  <section class="stats" aria-label="Headline numbers">
+    <div class="stat"><span class="stat-value">2,309</span><span class="stat-label">visitors</span></div>
+    <div class="stat"><span class="stat-value">2,995</span><span class="stat-label">page views</span></div>
+    <div class="stat"><span class="stat-value">405</span><span class="stat-label">tapped Join (18%)</span></div>
+    <div class="stat"><span class="stat-value">330</span><span class="stat-label">went for a Bash invite</span></div>
+  </section>
+
+  <section class="panel">
+    <div>
+      <h2>Visitors per day</h2>
+      <p class="sub">Launch day was Fri Oct 9. Hover a bar for page views.</p>
+    </div>
+    <div class="chart" id="daily"></div>
+    <p class="note">Oct 7&ndash;8 were test loads before the page went out. Oct 15 is only part of a day.</p>
+  </section>
+
+  <section class="panel">
+    <div>
+      <h2>What visitors did</h2>
+      <p class="sub">Share of the 2,309 visitors who tapped each link.</p>
+    </div>
+    <ul class="shares" id="actions"></ul>
+    <p class="note">Someone who tapped two different links counts in both rows.</p>
+  </section>
+
+  <div class="row">
+    <section class="panel">
+      <div>
+        <h2>Where they came from</h2>
+        <p class="sub">By the site that sent them.</p>
+      </div>
+      <div class="donut-wrap chart" id="sources"></div>
+    </section>
+
+    <section class="panel">
+      <div>
+        <h2>From your own site</h2>
+        <p class="sub">Taps on the homepage links to this page.</p>
+      </div>
+      <ul class="shares">
+        <li class="share">
+          <div class="share-top"><span class="share-name">Game jam card <small>top of My Links</small></span><span class="share-val"><b>754</b>people</span></div>
+          <div class="track"><div class="fill" style="width:100%"></div></div>
+        </li>
+        <li class="share">
+          <div class="share-top"><span class="share-name">Countdown bubble <small>desktop only, added Oct 11</small></span><span class="share-val"><b>6</b>people</span></div>
+          <div class="track"><div class="fill quiet" style="width:0.8%"></div></div>
+        </li>
+      </ul>
+      <p class="note">Phones are 90% of this page's traffic, which is why the bubble is quiet.</p>
+    </section>
+  </div>
+
+  <section class="panel">
+    <div>
+      <h2>Phones, computers, tablets</h2>
+    </div>
+    <ul class="shares" id="devices"></ul>
+  </section>
+
+  <footer>
+    <span>Pulled from Google Analytics on Oct 15, 2026. Ask Claude to refresh it.</span>
+    <a href="/chubbash">&larr; Back to Chubbash</a>
+  </footer>
+</div>
+
+<script>
+(function (){
+  var SVGNS = "http://www.w3.org/2000/svg";
+  function el(n, a, p){ var e = document.createElementNS(SVGNS, n); for(var k in a) e.setAttribute(k, a[k]); if(p) p.appendChild(e); return e; }
+  function fmt(n){ return n.toLocaleString("en-US"); }
+
+  /* ---------------- visitors per day ---------------- */
+  var DAYS = [
+    { d:"2026-10-07", v:6,    views:21,   pre:true },
+    { d:"2026-10-08", v:1,    views:6,    pre:true },
+    { d:"2026-10-09", v:253,  views:332,  label:"launch" },
+    { d:"2026-10-10", v:642,  views:798 },
+    { d:"2026-10-11", v:1052, views:1292, label:"peak" },
+    { d:"2026-10-12", v:238,  views:305 },
+    { d:"2026-10-13", v:104,  views:133 },
+    { d:"2026-10-14", v:66,   views:89 },
+    { d:"2026-10-15", v:14,   views:19,   partial:true }
+  ];
+
+  (function (){
+    var host = document.getElementById("daily");
+    var W = 820, H = 290, L = 46, R = 8, T = 34, B = 40;
+    var max = 1200, ticks = [0, 300, 600, 900, 1200];
+    var svg = el("svg", { viewBox:"0 0 " + W + " " + H, role:"img",
+      "aria-label":"Bar chart of visitors per day to /chubbash: 253 on launch day Oct 9, peaking at 1,052 on Oct 11, then tailing off." });
+
+    function y(v){ return T + (H - T - B) * (1 - v / max); }
+    ticks.forEach(function (v){
+      el("line", { x1:L, x2:W - R, y1:y(v), y2:y(v), "class": v === 0 ? "baseline" : "gridline" }, svg);
+      var t = el("text", { x:L - 10, y:y(v) + 4, "text-anchor":"end", "class":"tick" }, svg);
+      t.textContent = fmt(v);
+    });
+
+    var band = (W - L - R) / DAYS.length, bw = Math.min(46, band * 0.6);
+    var tip = document.createElement("div");
+    tip.className = "tip"; tip.hidden = true; host.appendChild(tip);
+
+    DAYS.forEach(function (row, i){
+      var date = new Date(row.d + "T12:00:00");
+      var cx = L + band * i + band / 2, x0 = cx - bw / 2, x1 = cx + bw / 2;
+      var top = y(row.v), bottom = y(0), r = Math.min(4, bottom - top);
+      var g = el("g", { "class":"col" }, svg);
+      el("path", {
+        d:"M" + x0 + "," + bottom + "V" + (top + r) + "Q" + x0 + "," + top + " " + (x0 + r) + "," + top +
+          "H" + (x1 - r) + "Q" + x1 + "," + top + " " + x1 + "," + (top + r) + "V" + bottom + "Z",
+        "class":"bar" + (row.pre ? " pre" : "") + (row.partial ? " partial" : "")
+      }, g);
+
+      if(row.label){
+        var c1 = el("text", { x:cx, y:top - 18, "text-anchor":"middle", "class":"callout" }, svg);
+        c1.textContent = fmt(row.v);
+        var c2 = el("text", { x:cx, y:top - 5, "text-anchor":"middle", "class":"callout-dim" }, svg);
+        c2.textContent = row.label;
+      }
+
+      var lab = el("text", { x:cx, y:H - B + 18, "text-anchor":"middle", "class":"day" }, svg);
+      lab.textContent = date.getDate();
+
+      var hit = el("rect", { x:L + band * i, y:T - 20, width:band, height:H - T - B + 20, "class":"hit" }, svg);
+      hit.addEventListener("pointerenter", function (){
+        g.classList.add("on");
+        var s = host.getBoundingClientRect().width / W;
+        tip.innerHTML = "<b>" + date.toLocaleDateString("en-US", { weekday:"short", month:"short", day:"numeric" }) +
+          (row.partial ? " (so far)" : "") + "</b>" + fmt(row.v) + " visitors <span>· " + fmt(row.views) + " views</span>";
+        tip.style.left = (cx * s) + "px";
+        tip.style.top = (top * s) + "px";
+        tip.hidden = false;
+      });
+      hit.addEventListener("pointerleave", function (){ g.classList.remove("on"); tip.hidden = true; });
+    });
+
+    var ax = el("text", { x:L, y:H - 4, "class":"tick" }, svg);
+    ax.textContent = "October";
+    host.insertBefore(svg, host.firstChild);
+  })();
+
+  /* ---------------- what visitors did ---------------- */
+  var VISITORS = 2309;
+  var ACTIONS = [
+    { name:"Join the Discord", sub:"the button under the title", people:405 },
+    { name:"Get a Bash invite", sub:"link to /bashtv in step 1", people:330 },
+    { name:"Make a Chubbitz", sub:"link to /chubbolator in step 1", people:104 },
+    { name:"Open the template", sub:"step 2", people:97 },
+    { name:"Join the Discord", sub:"the button at the bottom", people:52, quiet:true },
+    { name:"Read the Bash.tv FAQ", sub:"both links together", people:53, quiet:true }
+  ];
+  (function (){
+    var ul = document.getElementById("actions");
+    ACTIONS.forEach(function (a){
+      var pct = a.people / VISITORS * 100;
+      var li = document.createElement("li");
+      li.className = "share";
+      li.innerHTML = '<div class="share-top"><span class="share-name">' + a.name +
+        '<small>' + a.sub + '</small></span>' +
+        '<span class="share-val"><b>' + fmt(a.people) + "</b>" + Math.round(pct) + "%</span></div>" +
+        '<div class="track"><div class="fill' + (a.quiet ? " quiet" : "") + '" style="width:' + pct.toFixed(1) + '%"></div></div>';
+      ul.appendChild(li);
+    });
+  })();
+
+  /* ---------------- sources ---------------- */
+  var SOURCES = [
+    { name:"Instagram", people:1701, color:"var(--src-instagram)" },
+    { name:"Direct", people:487, color:"var(--src-direct)" },
+    { name:"YouTube", people:59, color:"var(--src-youtube)" },
+    { name:"Link.me", people:38, color:"var(--src-linkme)" },
+    { name:"Search & other", people:44, color:"var(--src-other)" }
+  ];
+  (function (){
+    var host = document.getElementById("sources");
+    var total = SOURCES.reduce(function (s, r){ return s + r.people; }, 0);
+    var S = 220, C = S / 2, RO = 102, RI = 66;
+    var svg = el("svg", { viewBox:"0 0 " + S + " " + S, "class":"donut", role:"img",
+      "aria-label":"Donut chart: Instagram 73%, direct 21%, YouTube 3%, Link.me 2%, search and other 2%." });
+    function pt(r, a){ return [C + r * Math.sin(a), C - r * Math.cos(a)]; }
+    var list = document.createElement("ul");
+    list.className = "legend";
+
+    var a0 = 0;
+    SOURCES.forEach(function (src){
+      var frac = src.people / total, a1 = a0 + frac * Math.PI * 2, big = a1 - a0 > Math.PI ? 1 : 0;
+      var p1 = pt(RO, a0), p2 = pt(RO, a1), p3 = pt(RI, a1), p4 = pt(RI, a0);
+      el("path", {
+        d:"M" + p1 + "A" + RO + "," + RO + " 0 " + big + " 1 " + p2 + "L" + p3 + "A" + RI + "," + RI + " 0 " + big + " 0 " + p4 + "Z",
+        "class":"slice", style:"fill:" + src.color
+      }, svg);
+      a0 = a1;
+
+      var li = document.createElement("li");
+      li.innerHTML = '<span class="swatch" style="background:' + src.color + '"></span>' +
+        "<span>" + src.name + "</span>" +
+        '<span class="num">' + fmt(src.people) + "</span>" +
+        '<span class="pct">' + Math.round(frac * 100) + "%</span>";
+      list.appendChild(li);
+    });
+
+    var t1 = el("text", { x:C, y:C + 3, "text-anchor":"middle", "class":"donut-total" }, svg);
+    t1.textContent = Math.round(SOURCES[0].people / total * 100) + "%";
+    var t2 = el("text", { x:C, y:C + 22, "text-anchor":"middle", "class":"donut-cap" }, svg);
+    t2.textContent = "Instagram";
+
+    host.appendChild(svg);
+    host.appendChild(list);
+  })();
+
+  /* ---------------- devices ---------------- */
+  var DEVICES = [
+    { name:"Phones", people:2085 },
+    { name:"Computers", people:181 },
+    { name:"Tablets", people:47 }
+  ];
+  (function (){
+    var ul = document.getElementById("devices");
+    var total = DEVICES.reduce(function (s, d){ return s + d.people; }, 0);
+    DEVICES.forEach(function (d, i){
+      var pct = d.people / total * 100;
+      var li = document.createElement("li");
+      li.className = "share";
+      li.innerHTML = '<div class="share-top"><span class="share-name">' + d.name + "</span>" +
+        '<span class="share-val"><b>' + fmt(d.people) + "</b>" + Math.round(pct) + "%</span></div>" +
+        '<div class="track"><div class="fill' + (i ? " quiet" : "") + '" style="width:' + pct.toFixed(1) + '%"></div></div>';
+      ul.appendChild(li);
+    });
+  })();
+})();
+</script>
+</body>
+</html>
