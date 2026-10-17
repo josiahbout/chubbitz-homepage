@@ -491,7 +491,14 @@
 
   /* ---------- Join button ---------- */
   .join-row{ margin-top:18px; text-align:center; }
-  .join-row-top{ margin-top:4px; }
+  /* two buttons side by side, stacking on a narrow phone */
+  .join-row-top{
+    margin-top:4px;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:10px;
+  }
   .join-btn{
     display:inline-flex;
     align-items:center;
@@ -676,6 +683,11 @@
   </header>
 
   <div class="join-row join-row-top">
+    <a class="join-btn" data-track="chubbash_click" data-track-label="play_games"
+       href="https://bash.tv/chat/03h1yj8giqiwk5kymsz0klv75" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+      Play the games!
+    </a>
     <a class="join-btn" data-track="chubbash_click" data-track-label="discord_join_top"
        href="https://discord.gg/qYfr6jPQMU" target="_blank" rel="noopener noreferrer">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
