@@ -239,6 +239,17 @@
   }
   .modal-btn:hover{ transform:translateY(-1px); filter:brightness(1.06); }
   .modal-btn svg{ width:17px; height:17px; }
+  /* the "then do this" line under the button */
+  .modal-step{ margin-top:-4px; }
+  .modal-channel{
+    padding:1px 6px;
+    border-radius:6px;
+    background:rgba(79,142,247,.14);
+    border:1px solid rgba(79,142,247,.3);
+    color:var(--accent-2);
+    font-weight:700;
+    white-space:nowrap;
+  }
   .modal-link{
     color:var(--accent-2);
     font-weight:700;
@@ -617,11 +628,12 @@
       <p>Bash.tv is still in alpha so they're limiting who can join, but you can get a free invite code by joining their discord community!</p>
       <p class="modal-btn-row">
         <a class="modal-btn" data-track="games_click" data-track-label="bash_discord"
-           href="https://discord.gg/qYfr6jPQMU" target="_blank" rel="noopener noreferrer">
+           href="https://discord.gg/JgZgSJqx" target="_blank" rel="noopener noreferrer">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           Join discord
         </a>
       </p>
+      <p class="modal-step">Go to <span class="modal-channel">#get-a-bash-invite</span>, and tap &ldquo;get invited to Bash.tv&rdquo;</p>
       <p>After you have a Bash.tv account, you can make any game you want! If you want to make a Chubbitz themed game, you could start with <a class="modal-link" data-track="games_click" data-track-label="template" href="https://bash.tv/chat/03h0jw8wzksn12gzrs9fstllq" target="_blank" rel="noopener noreferrer">this template</a>.</p>
     </div>
   </dialog>
