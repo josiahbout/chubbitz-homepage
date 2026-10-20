@@ -111,6 +111,7 @@
 
   /* ---------- Create a game ---------- */
   .create-row{ margin-top:18px; text-align:center; }
+  .create-row-end{ margin-top:26px; }
   .create-btn{
     display:inline-flex;
     align-items:center;
@@ -376,7 +377,6 @@
     color:#0a0b0e;
     background:linear-gradient(135deg,var(--accent),var(--accent-2));
   }
-  .medal.first{ background:linear-gradient(135deg,#f3c969,#ffe6a8); }
   .winner-text{ flex:1; min-width:0; }
   .winner-name{
     display:block;
@@ -546,7 +546,7 @@
       <li>
         <a class="winner" data-track="games_click" data-track-label="winner_1"
            href="https://bash.tv/chat/03h120fxpml74vqmvbuwa1nu8" target="_blank" rel="noopener noreferrer">
-          <span class="medal first">1</span>
+          <span class="medal">1</span>
           <img src="/media/bashtv/games/03h120fxpml74vqmvbuwa1nu8.jpg" width="640" height="360"
                loading="lazy" decoding="async" alt="">
           <span class="winner-text">
@@ -599,6 +599,15 @@
       </a>
     </li>
   </ul>
+
+  <div class="create-row create-row-end">
+    <button type="button" class="create-btn" data-track="games_click" data-track-label="create_game_bottom">
+      <span class="create-icon" aria-hidden="true">
+        <img src="/media/bashtv/create/toy-loop.webp" width="112" height="112" loading="lazy" decoding="async" alt="">
+      </span>
+      Create a game!
+    </button>
+  </div>
 
   <!-- How to get into Bash, in a pop-up. <dialog> brings Esc-to-close and
        focus handling for free. -->
@@ -754,10 +763,12 @@
 
     /* the Create a game pop-up */
     var modal = document.getElementById("create-modal");
-    var openBtn = document.getElementById("create-btn");
-    if(modal && openBtn){
-      openBtn.addEventListener("click", function (){
-        if(modal.showModal) modal.showModal(); else modal.setAttribute("open", "");
+    var openBtns = document.querySelectorAll(".create-btn");
+    if(modal && openBtns.length){
+      [].forEach.call(openBtns, function (btn){
+        btn.addEventListener("click", function (){
+          if(modal.showModal) modal.showModal(); else modal.setAttribute("open", "");
+        });
       });
       document.getElementById("create-close").addEventListener("click", function (){ modal.close(); });
       /* clicking the dark area around the card closes it too */
