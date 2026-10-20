@@ -109,6 +109,120 @@
     color:var(--text-dim);
   }
 
+  /* ---------- Create a game ---------- */
+  .create-row{ margin-top:18px; text-align:center; }
+  .create-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:11px;
+    padding:13px 26px 13px 14px;
+    border:0;
+    border-radius:999px;
+    font:800 19px/1 "Fredoka", "Inter", system-ui, sans-serif;
+    color:#0a0b0e;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow:0 8px 22px rgba(0,0,0,.4), 0 0 20px rgba(79,142,247,.4);
+    cursor:pointer;
+    transition:transform .15s ease, filter .15s ease;
+  }
+  .create-btn:hover{ transform:translateY(-1px); filter:brightness(1.06); }
+  .create-btn:active{ transform:translateY(0); }
+  .create-btn img{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    object-fit:cover;
+    background:#0a0b0e;
+    display:block;
+  }
+
+  /* the pop-up behind it */
+  .modal{
+    width:min(92vw, 400px);
+    padding:0;
+    border:0;
+    border-radius:var(--radius-lg);
+    background:var(--bg-soft);
+    color:var(--text);
+    box-shadow:0 30px 80px rgba(0,0,0,.6);
+  }
+  .modal::backdrop{
+    background:rgba(5,6,8,.72);
+    -webkit-backdrop-filter:blur(3px);
+    backdrop-filter:blur(3px);
+  }
+  .modal-inner{
+    position:relative;
+    padding:26px 22px 24px;
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    text-align:center;
+  }
+  .modal-close{
+    position:absolute;
+    top:12px;
+    right:12px;
+    width:30px;
+    height:30px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:var(--card);
+    color:var(--text-dim);
+    cursor:pointer;
+  }
+  .modal-close:hover{ color:var(--text); border-color:var(--line-hover); }
+  .modal-close svg{ width:13px; height:13px; }
+  .modal-icon{
+    width:56px;
+    height:56px;
+    border-radius:16px;
+    object-fit:cover;
+    border:1px solid var(--line);
+    display:block;
+    margin:0 auto 12px;
+  }
+  .modal h2{
+    margin:0 0 10px;
+    font-family:'Fredoka', sans-serif;
+    font-weight:700;
+    font-size:23px;
+    color:#fff;
+  }
+  .modal p{
+    margin:0 0 12px;
+    font-size:14.5px;
+    line-height:1.6;
+    color:var(--text-dim);
+  }
+  .modal p:last-child{ margin-bottom:0; }
+  .modal-btn-row{ margin:16px 0 14px; }
+  .modal-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:13px 26px;
+    border-radius:var(--radius-md);
+    text-decoration:none;
+    font-size:16.5px;
+    font-weight:800;
+    color:#0a0b0e;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow:0 6px 18px rgba(0,0,0,.35), 0 0 18px rgba(79,142,247,.3);
+    transition:transform .15s ease, filter .15s ease;
+  }
+  .modal-btn:hover{ transform:translateY(-1px); filter:brightness(1.06); }
+  .modal-btn svg{ width:17px; height:17px; }
+  .modal-link{
+    color:var(--accent-2);
+    font-weight:700;
+    text-decoration:none;
+    border-bottom:1px solid rgba(142,201,255,.35);
+  }
+  .modal-link:hover{ border-bottom-color:var(--accent-2); }
+
   /* ---------- Scrolling rows ---------- */
   /* Each row slides sideways for ever. The games are only loaded when you tap
      one, so the page stays light - until then each tile shows the game's own
@@ -312,58 +426,6 @@
   .link-text{ flex:1; min-width:0; font-size:15px; font-weight:600; line-height:1.35; }
   .link-chev{ flex:none; width:16px; height:16px; color:var(--text-faint); }
 
-  /* The "make your own game" card opens instead of linking out. */
-  .drop summary{
-    cursor:pointer;
-    list-style:none;
-  }
-  .drop summary::-webkit-details-marker{ display:none; }
-  .drop[open] summary{
-    border-bottom-left-radius:0;
-    border-bottom-right-radius:0;
-    border-bottom-color:transparent;
-  }
-  .drop[open] .drop-chev{ transform:rotate(90deg); }
-  .drop-chev{ transition:transform .15s ease; }
-  .drop-body{
-    padding:4px 16px 16px;
-    border:1px solid var(--line);
-    border-top:0;
-    border-radius:0 0 var(--radius-md) var(--radius-md);
-    background:var(--card);
-  }
-  .drop-body p{
-    margin:10px 0 0;
-    font-size:14px;
-    line-height:1.55;
-    color:var(--text-dim);
-  }
-  .drop-btn-row{ text-align:center; }
-  .drop-btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    margin-top:4px;
-    padding:12px 24px;
-    border-radius:var(--radius-md);
-    text-decoration:none;
-    font-size:16px;
-    font-weight:800;
-    color:#0a0b0e;
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));
-    box-shadow:0 6px 18px rgba(0,0,0,.35), 0 0 18px rgba(79,142,247,.3);
-    transition:transform .15s ease, filter .15s ease;
-  }
-  .drop-btn:hover{ transform:translateY(-1px); filter:brightness(1.06); }
-  .drop-btn svg{ width:17px; height:17px; }
-  .drop-link{
-    color:var(--accent-2);
-    font-weight:700;
-    text-decoration:none;
-    border-bottom:1px solid rgba(142,201,255,.35);
-  }
-  .drop-link:hover{ border-bottom-color:var(--accent-2); }
 
   .note{
     margin:18px 0 0;
@@ -413,6 +475,13 @@
   <h1>It's Chubbitz Time.</h1>
   <p class="subtitle">Try some community made games!</p>
 </header>
+
+<div class="create-row">
+  <button type="button" class="create-btn" id="create-btn" data-track="games_click" data-track-label="create_game">
+    <img src="/media/bashtv.gif" width="34" height="34" loading="lazy" decoding="async" alt="">
+    Create a game!
+  </button>
+</div>
 
 <div class="rows">
   <div class="row" id="row-1"></div>
@@ -475,29 +544,28 @@
         <svg class="link-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
       </a>
     </li>
-    <li>
-      <!-- A details/summary so it opens and closes with no script of its own. -->
-      <details class="drop">
-        <summary class="link-card" data-track="games_click" data-track-label="make_a_game">
-          <img class="link-icon link-icon-img" src="/media/bashtv.gif" width="38" height="38"
-               loading="lazy" decoding="async" alt="">
-          <span class="link-text">Make your own game with Bash.tv</span>
-          <svg class="link-chev drop-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-        </summary>
-        <div class="drop-body">
-          <p>Bash.tv is still in alpha so they're limiting who can join, but you can get a free invite code by joining their discord!</p>
-          <p class="drop-btn-row">
-            <a class="drop-btn" data-track="games_click" data-track-label="bash_discord"
-               href="https://discord.gg/qYfr6jPQMU" target="_blank" rel="noopener noreferrer">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              Join discord
-            </a>
-          </p>
-          <p>After you're in, you can make any game you want! If you want to make a Chubbitz themed game, you could start with <a class="drop-link" data-track="games_click" data-track-label="template" href="https://bash.tv/chat/03h0jw8wzksn12gzrs9fstllq" target="_blank" rel="noopener noreferrer">this template</a>.</p>
-        </div>
-      </details>
-    </li>
   </ul>
+
+  <!-- How to get into Bash, in a pop-up. <dialog> brings Esc-to-close and
+       focus handling for free. -->
+  <dialog class="modal" id="create-modal" aria-labelledby="create-title">
+    <div class="modal-inner">
+      <button type="button" class="modal-close" id="create-close" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <img class="modal-icon" src="/media/bashtv.gif" width="56" height="56" loading="lazy" decoding="async" alt="">
+      <h2 id="create-title">Create a game!</h2>
+      <p>Bash.tv is still in alpha so they're limiting who can join, but you can get a free invite code by joining their discord!</p>
+      <p class="modal-btn-row">
+        <a class="modal-btn" data-track="games_click" data-track-label="bash_discord"
+           href="https://discord.gg/qYfr6jPQMU" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          Join discord
+        </a>
+      </p>
+      <p>After you're in, you can make any game you want! If you want to make a Chubbitz themed game, you could start with <a class="modal-link" data-track="games_click" data-track-label="template" href="https://bash.tv/chat/03h0jw8wzksn12gzrs9fstllq" target="_blank" rel="noopener noreferrer">this template</a>.</p>
+    </div>
+  </dialog>
 
   <footer>
     <a href="/">The Chubbitz</a>
@@ -593,6 +661,20 @@
     /* half in each row - the top row in order, the bottom row reversed, so the
        two rows never show the same game side by side */
     var half = Math.ceil(GAMES.length / 2);
+    /* the Create a game pop-up */
+    var modal = document.getElementById("create-modal");
+    var openBtn = document.getElementById("create-btn");
+    if(modal && openBtn){
+      openBtn.addEventListener("click", function (){
+        if(modal.showModal) modal.showModal(); else modal.setAttribute("open", "");
+      });
+      document.getElementById("create-close").addEventListener("click", function (){ modal.close(); });
+      /* clicking the dark area around the card closes it too */
+      modal.addEventListener("click", function (e){
+        if(e.target === modal) modal.close();
+      });
+    }
+
     fill(document.getElementById("row-1"), GAMES.slice(0, half));
     fill(document.getElementById("row-2"), GAMES.slice(half).reverse());
   })();
