@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0b0e">
+<meta name="description" content="Play little games made by the Chubbitz community on Bash.tv.">
+<title>Chubbitz games</title>
+
+<meta property="og:site_name" content="The Chubbitz">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thechubbitz.com/bashtv/chubbitz-games">
+<meta property="og:title" content="Chubbitz games">
+<meta property="og:description" content="Try some community made games!">
+<meta property="og:image" content="https://thechubbitz.com/media/bashtv/chubbitz-games-banner.jpg">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="682">
+<meta property="og:image:alt" content="Chubbitz walking down a path toward a mountain">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Chubbitz games">
+<meta name="twitter:description" content="Try some community made games!">
+<meta name="twitter:image" content="https://thechubbitz.com/media/bashtv/chubbitz-games-banner.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* Same tokens as the rest of the site. */
+  :root{
+    --bg:#0a0b0e;
+    --bg-soft:#121419;
+    --text:#f4f5f7;
+    --text-dim:#a3a9b4;
+    --text-faint:#6b7280;
+    --line:rgba(255,255,255,.09);
+    --line-hover:rgba(255,255,255,.2);
+    --card:rgba(255,255,255,.045);
+    --accent:#4f8ef7;
+    --accent-2:#8ec9ff;
+    --radius-lg:20px;
+    --radius-md:16px;
+    --radius-sm:12px;
+  }
+  *{ box-sizing:border-box; }
+  html{ -webkit-text-size-adjust:100%; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{ color:inherit; }
+
+  /* ---------- Banner ---------- */
+  .hero{ position:relative; }
+  .hero img{
+    display:block;
+    width:100%;
+    height:clamp(190px, 30vw, 360px);
+    object-fit:cover;
+    object-position:center 62%;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;
+    left:0; right:0; bottom:0;
+    height:62%;
+    background:linear-gradient(to top, var(--bg) 6%, rgba(10,11,14,.65) 46%, transparent 100%);
+    pointer-events:none;
+  }
+  .home-link{
+    position:absolute;
+    top:16px;
+    left:16px;
+    z-index:2;
+    display:inline-flex;
+    padding:7px;
+    border-radius:999px;
+    background:rgba(10,11,14,.5);
+    -webkit-backdrop-filter:blur(6px);
+    backdrop-filter:blur(6px);
+    color:#fff;
+  }
+  .home-link svg{ width:20px; height:20px; display:block; }
+
+  header.top{
+    position:relative;
+    z-index:1;
+    margin-top:-52px;
+    padding:0 18px 6px;
+    text-align:center;
+  }
+  h1{
+    margin:0;
+    font-family:'Fredoka', sans-serif;
+    font-weight:700;
+    font-size:clamp(34px, 9vw, 54px);
+    line-height:1.05;
+    color:#fff;
+  }
+  .subtitle{
+    margin:8px 0 0;
+    font-family:'Fredoka', sans-serif;
+    font-weight:600;
+    font-size:clamp(16px, 4.6vw, 20px);
+    color:var(--text-dim);
+  }
+
+  /* ---------- Scrolling rows ---------- */
+  /* Each row slides sideways for ever. The games are only loaded when you tap
+     one, so the page stays light - until then each tile shows the game's own
+     picture with a play badge. */
+  .rows{ margin-top:24px; display:grid; gap:14px; }
+  .row{
+    position:relative;
+    overflow:hidden;
+    -webkit-mask-image:linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+    mask-image:linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+  }
+  .track{
+    display:flex;
+    gap:14px;
+    width:max-content;
+    animation:slide 48s linear infinite;
+  }
+  .row.back .track{ animation-direction:reverse; }
+  .row:hover .track,
+  .row:focus-within .track,
+  .track.paused{ animation-play-state:paused; }
+  @keyframes slide{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }   /* the list is duplicated, so -50% loops seamlessly */
+  }
+  @media (prefers-reduced-motion: reduce){
+    .track{ animation:none; }
+    .row{ overflow-x:auto; }
+  }
+
+  .tile{
+    position:relative;
+    flex:none;
+    width:clamp(230px, 56vw, 320px);
+    aspect-ratio:16 / 9;
+    border-radius:var(--radius-md);
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:#1a1d23;
+    cursor:pointer;
+    padding:0;
+    display:block;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .tile:hover{ transform:translateY(-2px); border-color:var(--line-hover); }
+  .tile img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .tile iframe{ width:100%; height:100%; border:0; display:block; }
+  .tile-play{
+    position:absolute;
+    inset:0;
+    display:grid;
+    place-items:center;
+    background:rgba(10,11,14,.3);
+    transition:background .15s ease;
+  }
+  .tile:hover .tile-play{ background:rgba(10,11,14,.15); }
+  .tile-play span{
+    display:grid;
+    place-items:center;
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow:0 6px 18px rgba(0,0,0,.45);
+  }
+  .tile-play svg{ width:22px; height:22px; margin-left:3px; fill:#0a0b0e; display:block; }
+  .tile-name{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    padding:22px 12px 10px;
+    background:linear-gradient(to top, rgba(10,11,14,.9), transparent);
+    font-size:13.5px;
+    font-weight:700;
+    color:#fff;
+    text-align:left;
+  }
+  .tile.playing .tile-play,
+  .tile.playing .tile-name{ display:none; }
+
+  /* ---------- Links underneath ---------- */
+  .page{
+    max-width:460px;
+    margin:0 auto;
+    padding:0 18px 48px;
+  }
+  .links{
+    list-style:none;
+    margin:26px 0 0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .link-card{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 15px;
+    border-radius:var(--radius-md);
+    background:var(--card);
+    border:1px solid var(--line);
+    text-decoration:none;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .link-card:hover{ transform:translateY(-1px); border-color:var(--line-hover); }
+  .link-icon{
+    flex:none;
+    width:38px;
+    height:38px;
+    display:grid;
+    place-items:center;
+    border-radius:11px;
+    background:rgba(79,142,247,.14);
+    border:1px solid rgba(79,142,247,.3);
+    color:var(--accent-2);
+  }
+  .link-icon svg{ width:19px; height:19px; display:block; }
+  .link-text{ flex:1; min-width:0; font-size:15px; font-weight:600; line-height:1.35; }
+  .link-chev{ flex:none; width:16px; height:16px; color:var(--text-faint); }
+
+  .note{
+    margin:18px 0 0;
+    text-align:center;
+    font-size:12.5px;
+    color:var(--text-faint);
+  }
+
+  footer{
+    text-align:center;
+    margin-top:26px;
+    font-size:11.5px;
+    color:var(--text-faint);
+  }
+  footer a{ color:var(--text-faint); text-decoration:none; }
+  footer a:hover{ color:var(--text-dim); }
+  .dot{ margin:0 8px; opacity:.5; }
+
+  /* ---------- Desktop ---------- */
+  @media (min-width: 980px){
+    header.top{ margin-top:-70px; }
+    h1{ font-size:62px; }
+    .subtitle{ font-size:22px; margin-top:10px; }
+    .rows{ margin-top:34px; gap:18px; }
+    .tile{ width:360px; }
+    .page{ max-width:620px; padding-bottom:72px; }
+    .links{ margin-top:36px; }
+    .link-text{ font-size:16px; }
+  }
+</style>
+<script src="/analytics.js" defer></script>
+</head>
+<body>
+
+<div class="hero">
+  <a class="home-link" href="/" aria-label="The Chubbitz home">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 11L12 4L21 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5.5 9.5V19C5.5 19.5523 5.94772 20 6.5 20H9.5C10.0523 20 10.5 19.5523 10.5 19V15C10.5 14.4477 10.9477 14 11.5 14H12.5C13.0523 14 13.5 14.4477 13.5 15V19C13.5 19.5523 13.9477 20 14.5 20H17.5C18.0523 20 18.5 19.5523 18.5 19V9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
+  <img src="/media/bashtv/chubbitz-games-banner.jpg" width="2048" height="682"
+       alt="Chubbitz walking down a path toward a mountain">
+</div>
+
+<header class="top">
+  <h1>Chubbitz games</h1>
+  <p class="subtitle">Try some community made games!</p>
+</header>
+
+<div class="rows">
+  <div class="row" id="row-1"></div>
+  <div class="row back" id="row-2"></div>
+</div>
+
+<div class="page">
+  <ul class="links">
+    <li>
+      <a class="link-card" data-track="games_click" data-track-label="chubbolator"
+         href="https://bash.tv/chat/03grcu1q3bx3k59ebv9nv004m" target="_blank" rel="noopener noreferrer">
+        <span class="link-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.3 5.9 6.2.3-4.9 3.9 1.7 6-5.3-3.4L6.7 19l1.7-6-4.9-3.9 6.2-.3z"/></svg>
+        </span>
+        <span class="link-text">Make your own Chubbitz with the Chubbolator</span>
+        <svg class="link-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </a>
+    </li>
+    <li>
+      <a class="link-card" data-track="games_click" data-track-label="template"
+         href="https://bash.tv/chat/03h0jw8wzksn12gzrs9fstllq" target="_blank" rel="noopener noreferrer">
+        <span class="link-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="M4 9h16M9 9v10"/></svg>
+        </span>
+        <span class="link-text">Make your own game with this template!</span>
+        <svg class="link-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </a>
+    </li>
+  </ul>
+
+  <p class="note">Tap a game to play it right here. Games are made on Bash.tv.</p>
+
+  <footer>
+    <a href="/chubbash">Chubbash</a>
+    <span class="dot">&middot;</span>
+    <a href="/">The Chubbitz</a>
+  </footer>
+</div>
+
+<script>
+  /* The two scrolling rows.
+
+     Each tile shows the game's picture until it's tapped; only then does the
+     game itself load in place. Loading a dozen games at once would make the
+     page crawl, and most visitors only ever play one.
+
+     To change the line-up, edit GAMES: give each one the Bash link, a title
+     and a picture in /media/bashtv. The rows duplicate the list so the slide
+     loops without a seam. */
+  (function (){
+    var GAMES = [
+      { name:"Reboot Season", url:"https://bash.tv/chat/03h0q6vgm3pmwf9p7s28scd8i", img:"/media/bashtv/game-reboot-season.jpg" },
+      { name:"Reboot Season", url:"https://bash.tv/chat/03h0q6vgm3pmwf9p7s28scd8i", img:"/media/bashtv/game-reboot-season.jpg" },
+      { name:"Reboot Season", url:"https://bash.tv/chat/03h0q6vgm3pmwf9p7s28scd8i", img:"/media/bashtv/game-reboot-season.jpg" },
+      { name:"Reboot Season", url:"https://bash.tv/chat/03h0q6vgm3pmwf9p7s28scd8i", img:"/media/bashtv/game-reboot-season.jpg" },
+      { name:"Reboot Season", url:"https://bash.tv/chat/03h0q6vgm3pmwf9p7s28scd8i", img:"/media/bashtv/game-reboot-season.jpg" },
+      { name:"Reboot Season", url:"https://bash.tv/chat/03h0q6vgm3pmwf9p7s28scd8i", img:"/media/bashtv/game-reboot-season.jpg" }
+    ];
+
+    var PLAY = '<span class="tile-play" aria-hidden="true"><span>' +
+      '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></span>';
+
+    function tile(game){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "tile";
+      b.setAttribute("aria-label", "Play " + game.name);
+      b.dataset.track = "games_click";
+      b.dataset.trackLabel = "play_tile";
+      b.innerHTML = '<img src="' + game.img + '" alt="" loading="lazy" decoding="async">' +
+        PLAY + '<span class="tile-name">' + game.name + "</span>";
+
+      b.addEventListener("click", function (){
+        if(b.classList.contains("playing")) return;
+        b.classList.add("playing");
+        b.innerHTML = '<iframe src="' + game.url + '" title="' + game.name +
+          '" allow="autoplay; fullscreen; gamepad; clipboard-write" allowfullscreen></iframe>';
+        /* stop the row sliding while someone is playing */
+        var track = b.closest(".track");
+        if(track) track.classList.add("paused");
+      });
+      return b;
+    }
+
+    function fill(row, list){
+      var track = document.createElement("div");
+      track.className = "track";
+      /* twice through, so the halfway point of the slide lines up with the start */
+      for(var pass = 0; pass < 2; pass++){
+        list.forEach(function (g){ track.appendChild(tile(g)); });
+      }
+      row.appendChild(track);
+
+      /* Hovering pauses a row through CSS, but a phone has no hover and tapping
+         a moving tile is a nuisance. So the first touch stops the row; it starts
+         again a few seconds after the last one, unless a game is playing. */
+      var resume;
+      row.addEventListener("touchstart", function (){
+        track.classList.add("paused");
+        clearTimeout(resume);
+        resume = setTimeout(function (){
+          if(!row.querySelector(".tile.playing")) track.classList.remove("paused");
+        }, 5000);
+      }, { passive:true });
+    }
+
+    fill(document.getElementById("row-1"), GAMES);
+    fill(document.getElementById("row-2"), GAMES.slice().reverse());
+  })();
+</script>
+
+</body>
+</html>
