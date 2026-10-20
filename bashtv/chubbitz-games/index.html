@@ -248,34 +248,28 @@
   .modal-link:hover{ border-bottom-color:var(--accent-2); }
 
   /* ---------- Scrolling rows ---------- */
-  /* Each row slides sideways for ever. The games are only loaded when you tap
-     one, so the page stays light - until then each tile shows the game's own
-     picture with a play badge. */
+  /* Each row drifts sideways on its own and can also be dragged or swiped.
+     The drift is the row's own scroll position, nudged along frame by frame,
+     so a drag and the drift are the same movement and never fight. */
   .rows{ margin-top:24px; display:grid; gap:14px; }
   .row{
     position:relative;
-    overflow:hidden;
+    overflow-x:auto;
+    overflow-y:hidden;
+    scrollbar-width:none;             /* the row scrolls itself; no bar needed */
+    -ms-overflow-style:none;
     -webkit-mask-image:linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
     mask-image:linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+    cursor:grab;
   }
+  .row::-webkit-scrollbar{ display:none; }
+  .row.dragging{ cursor:grabbing; }
+  .row.dragging .tile{ pointer-events:none; }   /* a drag shouldn't open a game */
   .track{
     display:flex;
     width:max-content;
-    animation:slide 48s linear infinite;
   }
   .track > .tile{ margin-right:14px; }
-  .row.back .track{ animation-direction:reverse; }
-  .row:hover .track,
-  .row:focus-within .track,
-  .track.paused{ animation-play-state:paused; }
-  @keyframes slide{
-    from{ transform:translateX(0); }
-    to{ transform:translateX(-50%); }   /* the list is duplicated, so -50% loops seamlessly */
-  }
-  @media (prefers-reduced-motion: reduce){
-    .track{ animation:none; }
-    .row{ overflow-x:auto; }
-  }
 
   .tile{
     position:relative;
@@ -293,7 +287,6 @@
   }
   .tile:hover{ transform:translateY(-2px); border-color:var(--line-hover); }
   .tile img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .tile iframe{ width:100%; height:100%; border:0; display:block; }
   .tile-play{
     position:absolute;
     inset:0;
@@ -323,8 +316,6 @@
     color:#fff;
     text-align:left;
   }
-  .tile.playing .tile-play,
-  .tile.playing .tile-name{ display:none; }
 
   /* ---------- Winners ---------- */
   .winners{ margin-top:28px; }
@@ -680,47 +671,106 @@
       '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></span>';
 
     function tile(game){
-      var b = document.createElement("button");
-      b.type = "button";
-      b.className = "tile";
-      b.setAttribute("aria-label", "Play " + game.name);
-      b.dataset.track = "games_click";
-      b.dataset.trackLabel = "play_tile";
-      b.innerHTML = '<img src="' + game.img + '" alt="" loading="lazy" decoding="async">' +
+      var a = document.createElement("a");
+      a.className = "tile";
+      a.href = game.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.setAttribute("aria-label", "Play " + game.name);
+      a.dataset.track = "games_click";
+      a.dataset.trackLabel = "play_tile";
+      a.draggable = false;              /* dragging the row, not the picture */
+      a.innerHTML = '<img src="' + game.img + '" alt="" loading="lazy" decoding="async" draggable="false">' +
         PLAY + '<span class="tile-name">' + game.name + "</span>";
-
-      b.addEventListener("click", function (){
-        if(b.classList.contains("playing")) return;
-        b.classList.add("playing");
-        b.innerHTML = '<iframe src="' + game.url + '" title="' + game.name +
-          '" allow="autoplay; fullscreen; gamepad; clipboard-write" allowfullscreen></iframe>';
-        /* stop the row sliding while someone is playing */
-        var track = b.closest(".track");
-        if(track) track.classList.add("paused");
-      });
-      return b;
+      return a;
     }
 
-    function fill(row, list){
+    var SPEED = 0.55;        /* pixels per frame, about 33 a second */
+    var REST = 5000;         /* how long a row waits after you let go */
+    var slow = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function fill(row, list, back){
       var track = document.createElement("div");
       track.className = "track";
-      /* twice through, so the halfway point of the slide lines up with the start */
+      /* twice through: when the scroll passes the halfway mark it can jump back
+         by exactly half and nobody sees the join */
       for(var pass = 0; pass < 2; pass++){
         list.forEach(function (g){ track.appendChild(tile(g)); });
       }
       row.appendChild(track);
 
-      /* Hovering pauses a row through CSS, but a phone has no hover and tapping
-         a moving tile is a nuisance. So the first touch stops the row; it starts
-         again a few seconds after the last one, unless a game is playing. */
-      var resume;
-      row.addEventListener("touchstart", function (){
-        track.classList.add("paused");
-        clearTimeout(resume);
-        resume = setTimeout(function (){
-          if(!row.querySelector(".tile.playing")) track.classList.remove("paused");
-        }, 5000);
+      var half = 0;
+      function measure(){ half = track.scrollWidth / 2; }
+      measure();
+      window.addEventListener("resize", measure);
+      /* the pictures arrive late and change the width, so measure again then */
+      [].forEach.call(track.querySelectorAll("img"), function (img){
+        img.addEventListener("load", measure, { once:true });
+      });
+
+      var pos = back ? half : 0;        /* the second row starts from the far end */
+      row.scrollLeft = pos;
+      var held = 0;                     /* while > now, the row stays still */
+
+      function rest(){ held = Date.now() + REST; }
+
+      function frame(){
+        if(!slow && half && Date.now() > held && !dragging){
+          pos += back ? -SPEED : SPEED;
+          if(pos >= half) pos -= half;
+          if(pos < 0) pos += half;
+          row.scrollLeft = pos;
+        }
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+
+      /* a swipe, a wheel or a trackpad nudge: let it move, then wait */
+      row.addEventListener("scroll", function (){
+        if(Date.now() > held && !dragging) return;   /* our own drift */
+        pos = row.scrollLeft;
+        if(half){
+          if(pos >= half) { pos -= half; row.scrollLeft = pos; }
+          if(pos < 0) { pos += half; row.scrollLeft = pos; }
+        }
       }, { passive:true });
+      row.addEventListener("touchstart", rest, { passive:true });
+      row.addEventListener("touchmove", rest, { passive:true });
+      row.addEventListener("wheel", rest, { passive:true });
+      row.addEventListener("mouseenter", function (){ held = Date.now() + REST; });
+      row.addEventListener("mouseleave", function (){ held = 0; });
+
+      /* dragging with a mouse */
+      var dragging = false, startX = 0, startScroll = 0, moved = 0;
+      row.addEventListener("pointerdown", function (e){
+        if(e.pointerType === "touch") return;        /* phones scroll natively */
+        dragging = true; moved = 0;
+        startX = e.clientX;
+        startScroll = row.scrollLeft;
+        row.classList.add("dragging");
+        row.setPointerCapture(e.pointerId);
+      });
+      row.addEventListener("pointermove", function (e){
+        if(!dragging) return;
+        var dx = e.clientX - startX;
+        moved = Math.max(moved, Math.abs(dx));
+        row.scrollLeft = startScroll - dx;
+        pos = row.scrollLeft;
+      });
+      function endDrag(e){
+        if(!dragging) return;
+        dragging = false;
+        row.classList.remove("dragging");
+        rest();
+        /* a real drag shouldn't also open whatever was under the cursor */
+        if(moved > 6){
+          row.addEventListener("click", function (ev){
+            ev.preventDefault(); ev.stopPropagation();
+          }, { capture:true, once:true });
+        }
+      }
+      row.addEventListener("pointerup", endDrag);
+      row.addEventListener("pointercancel", endDrag);
     }
 
     /* half in each row - the top row in order, the bottom row reversed, so the
@@ -779,8 +829,8 @@
       });
     }
 
-    fill(document.getElementById("row-1"), GAMES.slice(0, half));
-    fill(document.getElementById("row-2"), GAMES.slice(half).reverse());
+    fill(document.getElementById("row-1"), GAMES.slice(0, half), false);
+    fill(document.getElementById("row-2"), GAMES.slice(half).reverse(), true);
   })();
 </script>
 
