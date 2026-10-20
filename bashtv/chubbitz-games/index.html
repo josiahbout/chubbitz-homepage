@@ -127,13 +127,34 @@
   }
   .create-btn:hover{ transform:translateY(-1px); filter:brightness(1.06); }
   .create-btn:active{ transform:translateY(0); }
-  .create-btn img{
-    width:34px;
-    height:34px;
-    border-radius:50%;
-    object-fit:cover;
-    background:#0a0b0e;
+  /* the four loops share one cell; only the current one is visible */
+  .create-icon{
+    display:grid;
+    width:36px;
+    height:36px;
+    flex:none;
+  }
+  .create-icon img{
+    grid-area:1/1;
+    width:36px;
+    height:36px;
+    object-fit:contain;
     display:block;
+    opacity:0;
+    transform:scale(.5);
+  }
+  .create-icon img.on{
+    opacity:1;
+    transform:none;
+    animation:icon-bounce .52s cubic-bezier(.34, 1.56, .64, 1);
+  }
+  @keyframes icon-bounce{
+    0%  { opacity:0; transform:scale(.4) translateY(7px); }
+    55% { opacity:1; transform:scale(1.14) translateY(-3px); }
+    100%{ opacity:1; transform:scale(1) translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .create-icon img.on{ animation:none; }
   }
 
   /* the pop-up behind it */
@@ -478,7 +499,13 @@
 
 <div class="create-row">
   <button type="button" class="create-btn" id="create-btn" data-track="games_click" data-track-label="create_game">
-    <img src="/media/bashtv.gif" width="34" height="34" loading="lazy" decoding="async" alt="">
+    <!-- The four Bash loops take turns, each bouncing in. -->
+    <span class="create-icon" id="create-icon" aria-hidden="true">
+      <img class="on" src="/media/bashtv/create/page-loop.webp" width="112" height="112" decoding="async" alt="">
+      <img data-src="/media/bashtv/create/game-loop.webp" width="112" height="112" decoding="async" alt="">
+      <img data-src="/media/bashtv/create/tool-loop.webp" width="112" height="112" decoding="async" alt="">
+      <img data-src="/media/bashtv/create/toy-loop.webp" width="112" height="112" decoding="async" alt="">
+    </span>
     Create a game!
   </button>
 </div>
@@ -661,6 +688,43 @@
     /* half in each row - the top row in order, the bottom row reversed, so the
        two rows never show the same game side by side */
     var half = Math.ceil(GAMES.length / 2);
+    /* The button's icon takes turns between the four Bash loops.
+
+       They're animated WebPs and together weigh over a megabyte, so only the
+       first one loads with the page; the rest follow one at a time afterwards,
+       and the rotation skips anything that hasn't arrived yet rather than
+       flashing an empty square. */
+    (function (){
+      var icons = [].slice.call(document.querySelectorAll("#create-icon img"));
+      if(icons.length < 2) return;
+
+      function loadNext(i){
+        if(i >= icons.length) return;
+        var img = icons[i];
+        var src = img.getAttribute("data-src");
+        if(!src) return loadNext(i + 1);
+        img.addEventListener("load", function (){ loadNext(i + 1); }, { once:true });
+        img.addEventListener("error", function (){ loadNext(i + 1); }, { once:true });
+        img.src = src;
+      }
+      /* wait for the page itself to settle before pulling these down */
+      if(document.readyState === "complete") loadNext(1);
+      else window.addEventListener("load", function (){ loadNext(1); });
+
+      var at = 0;
+      setInterval(function (){
+        var next = at;
+        for(var step = 1; step <= icons.length; step++){
+          var cand = (at + step) % icons.length;
+          if(icons[cand].complete && icons[cand].naturalWidth){ next = cand; break; }
+        }
+        if(next === at) return;             /* nothing else ready yet */
+        icons[at].classList.remove("on");
+        at = next;
+        icons[at].classList.add("on");
+      }, 2400);
+    })();
+
     /* the Create a game pop-up */
     var modal = document.getElementById("create-modal");
     var openBtn = document.getElementById("create-btn");
