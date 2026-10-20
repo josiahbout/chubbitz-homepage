@@ -596,7 +596,10 @@
   <div class="create-row create-row-end">
     <button type="button" class="create-btn" data-track="games_click" data-track-label="create_game_bottom">
       <span class="create-icon" aria-hidden="true">
-        <img src="/media/bashtv/create/toy-loop.webp" width="112" height="112" loading="lazy" decoding="async" alt="">
+        <img class="on" src="/media/bashtv/create/page-loop.webp" width="112" height="112" loading="lazy" decoding="async" alt="">
+        <img data-src="/media/bashtv/create/game-loop.webp" width="112" height="112" decoding="async" alt="">
+        <img data-src="/media/bashtv/create/tool-loop.webp" width="112" height="112" decoding="async" alt="">
+        <img data-src="/media/bashtv/create/toy-loop.webp" width="112" height="112" decoding="async" alt="">
       </span>
       Create a game!
     </button>
@@ -740,34 +743,51 @@
       row.addEventListener("mouseenter", function (){ held = Date.now() + REST; });
       row.addEventListener("mouseleave", function (){ held = 0; });
 
-      /* dragging with a mouse */
-      var dragging = false, startX = 0, startScroll = 0, moved = 0;
+      /* Dragging with a mouse.
+
+         The pointer is captured only once the cursor has actually moved a few
+         pixels. Capturing it on the way down made the row the target of the
+         click that followed, so the tile underneath never opened - a plain
+         click has to stay a plain click. */
+      var dragging = false, pending = false, pointer = null;
+      var startX = 0, startScroll = 0, moved = 0;
+
       row.addEventListener("pointerdown", function (e){
         if(e.pointerType === "touch") return;        /* phones scroll natively */
-        dragging = true; moved = 0;
+        if(e.button !== 0) return;
+        pending = true; dragging = false; moved = 0;
+        pointer = e.pointerId;
         startX = e.clientX;
         startScroll = row.scrollLeft;
-        row.classList.add("dragging");
-        row.setPointerCapture(e.pointerId);
       });
+
       row.addEventListener("pointermove", function (e){
-        if(!dragging) return;
+        if(!pending && !dragging) return;
         var dx = e.clientX - startX;
         moved = Math.max(moved, Math.abs(dx));
+        if(!dragging){
+          if(moved <= 5) return;                     /* still just a click */
+          dragging = true;
+          pending = false;
+          row.classList.add("dragging");
+          try { row.setPointerCapture(pointer); } catch (err){}
+        }
         row.scrollLeft = startScroll - dx;
         pos = row.scrollLeft;
+        e.preventDefault();
       });
-      function endDrag(e){
+
+      function endDrag(){
+        pending = false;
         if(!dragging) return;
         dragging = false;
         row.classList.remove("dragging");
+        try { row.releasePointerCapture(pointer); } catch (err){}
         rest();
         /* a real drag shouldn't also open whatever was under the cursor */
-        if(moved > 6){
-          row.addEventListener("click", function (ev){
-            ev.preventDefault(); ev.stopPropagation();
-          }, { capture:true, once:true });
-        }
+        row.addEventListener("click", function (ev){
+          ev.preventDefault(); ev.stopPropagation();
+        }, { capture:true, once:true });
       }
       row.addEventListener("pointerup", endDrag);
       row.addEventListener("pointercancel", endDrag);
@@ -783,33 +803,41 @@
        and the rotation skips anything that hasn't arrived yet rather than
        flashing an empty square. */
     (function (){
-      var icons = [].slice.call(document.querySelectorAll("#create-icon img"));
-      if(icons.length < 2) return;
+      /* both buttons carry the same four pictures, and turn together */
+      var groups = [].slice.call(document.querySelectorAll(".create-icon"))
+        .map(function (g){ return [].slice.call(g.querySelectorAll("img")); })
+        .filter(function (set){ return set.length > 1; });
+      if(!groups.length) return;
 
-      function loadNext(i){
-        if(i >= icons.length) return;
-        var img = icons[i];
+      function loadNext(set, i){
+        if(i >= set.length) return;
+        var img = set[i];
         var src = img.getAttribute("data-src");
-        if(!src) return loadNext(i + 1);
-        img.addEventListener("load", function (){ loadNext(i + 1); }, { once:true });
-        img.addEventListener("error", function (){ loadNext(i + 1); }, { once:true });
+        if(!src) return loadNext(set, i + 1);
+        img.addEventListener("load", function (){ loadNext(set, i + 1); }, { once:true });
+        img.addEventListener("error", function (){ loadNext(set, i + 1); }, { once:true });
         img.src = src;
       }
       /* wait for the page itself to settle before pulling these down */
-      if(document.readyState === "complete") loadNext(1);
-      else window.addEventListener("load", function (){ loadNext(1); });
+      function start(){ groups.forEach(function (set){ loadNext(set, 1); }); }
+      if(document.readyState === "complete") start();
+      else window.addEventListener("load", start);
 
       var at = 0;
+      var count = groups[0].length;
       setInterval(function (){
         var next = at;
-        for(var step = 1; step <= icons.length; step++){
-          var cand = (at + step) % icons.length;
-          if(icons[cand].complete && icons[cand].naturalWidth){ next = cand; break; }
+        for(var step = 1; step <= count; step++){
+          var cand = (at + step) % count;
+          /* only move on to a picture that has actually arrived */
+          if(groups[0][cand].complete && groups[0][cand].naturalWidth){ next = cand; break; }
         }
-        if(next === at) return;             /* nothing else ready yet */
-        icons[at].classList.remove("on");
+        if(next === at) return;
+        groups.forEach(function (set){
+          if(set[at]) set[at].classList.remove("on");
+          if(set[next]) set[next].classList.add("on");
+        });
         at = next;
-        icons[at].classList.add("on");
       }, 2400);
     })();
 
