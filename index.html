@@ -386,6 +386,34 @@
     flex-shrink:0;
     background:#1a1d23;
   }
+  /* four loops sharing one tile; only the current one shows */
+  .link-icon-loops{
+    display:grid;
+    padding:3px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  }
+  .link-icon-loops img{
+    grid-area:1/1;
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    display:block;
+    opacity:0;
+    transform:scale(.5);
+  }
+  .link-icon-loops img.on{
+    opacity:1;
+    transform:none;
+    animation:link-icon-bounce .52s cubic-bezier(.34, 1.56, .64, 1);
+  }
+  @keyframes link-icon-bounce{
+    0%  { opacity:0; transform:scale(.4) translateY(7px); }
+    55% { opacity:1; transform:scale(1.14) translateY(-3px); }
+    100%{ opacity:1; transform:scale(1) translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .link-icon-loops img.on{ animation:none; }
+  }
   .link-icon-mail{
     display:flex;
     align-items:center;
@@ -708,10 +736,6 @@
   @media (prefers-reduced-motion: reduce){
     *{ transition:none !important; }
   }
-  /* The game jam banner only appears on the desktop layout, where there is
-     room for it above the video. */
-  .jam-bar{ display:none; }
-
   /* ============================================================
      DESKTOP LAYOUT  (980px and wider)
      ------------------------------------------------------------
@@ -737,69 +761,13 @@
       padding:0 0 72px;
     }
 
-    /* ---------- the game jam bubble ---------- */
-    .jam-bar{
-      display:inline-flex;
-      align-items:center;
-      gap:11px;
-      width:fit-content;
-      margin:20px auto 0;
-      padding:9px 14px 9px 9px;
-      border-radius:999px;
-      background:rgba(18,20,25,.9);
-      border:1px solid rgba(79,142,247,.35);
-      box-shadow:0 10px 30px rgba(0,0,0,.4), 0 0 20px rgba(79,142,247,.14);
-      color:var(--text-dim);
-      font-size:13.5px;
-      font-weight:600;
-      text-decoration:none;
-      transition:transform .15s ease, border-color .15s ease;
-    }
-    /* .page is a block, so the pill centres on its own margins */
-    .jam-bar{ display:flex; }
-    .jam-bar:hover{ transform:translateY(-1px); border-color:rgba(142,201,255,.6); }
-    .jam-live{
-      flex:none;
-      display:inline-flex;
-      align-items:center;
-      gap:5px;
-      padding:4px 9px 4px 8px;
-      border-radius:999px;
-      background:rgba(229,62,62,.16);
-      border:1px solid rgba(229,62,62,.45);
-      color:#ff9b9b;
-      font-size:10.5px;
-      font-weight:800;
-      letter-spacing:.04em;
-      text-transform:uppercase;
-    }
-    .jam-live::before{
-      content:"";
-      width:6px;
-      height:6px;
-      border-radius:50%;
-      background:#ef4444;
-      box-shadow:0 0 6px rgba(239,68,68,.9);
-      animation:live-pulse 1.8s ease-in-out infinite;
-    }
-    .jam-time{
-      margin-left:6px;
-      font-family:'Fredoka', sans-serif;
-      font-size:16px;
-      font-weight:700;
-      color:#fff;
-      font-variant-numeric:tabular-nums;
-    }
-    .jam-time .u{ font-size:11px; font-weight:700; color:var(--accent-2); margin-left:1px; }
-    .jam-chevron{ width:16px; height:16px; color:var(--text-faint); flex:none; }
-
     /* ---------- the banner ---------- */
     .hero{
       display:flex;
       align-items:center;
       justify-content:center;
       gap:clamp(40px, 6vw, 84px);
-      /* 82vh, which with the game jam bubble above it still leaves a slice of
+      /* 82vh, which still leaves a slice of
          the links showing below the fold - see the note on .banner about
          keeping the video shorter than this */
       min-height:min(82vh, 860px);
@@ -945,14 +913,6 @@
 <body>
 <div class="page">
 
-  <!-- Game jam banner. Desktop only for now; the countdown and the "has ended"
-       hiding are handled by the script at the bottom of the page. -->
-  <a class="jam-bar" href="/chubbash" data-track="link_click" data-track-label="chubbash_banner">
-    <span class="jam-live">Live</span>
-    <span class="jam-text"><span id="jam-label">The game jam has begun! Time left:</span><span class="jam-time" id="jam-time"></span></span>
-    <svg class="jam-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-  </a>
-
   <div class="hero">
     <div class="banner">
       <div class="banner-frame">
@@ -990,10 +950,17 @@
     </div>
     <ul class="links">
       <li>
-        <a class="link-card" data-track="link_click" data-track-label="chubbash" href="/chubbash">
-          <img class="link-icon" loading="lazy" src="/media/chubbash_thumbnail.png" alt="">
+        <a class="link-card" data-track="link_click" data-track-label="chubbitz_games" href="/bashtv/chubbitz-games">
+          <!-- the same four Bash loops that the games page uses, taking turns -->
+          <span class="link-icon link-icon-loops" aria-hidden="true">
+            <img src="/media/bashtv/create/page-loop.webp" width="112" height="112" decoding="async" alt="">
+            <img data-src="/media/bashtv/create/game-loop.webp" width="112" height="112" decoding="async" alt="">
+            <img data-src="/media/bashtv/create/tool-loop.webp" width="112" height="112" decoding="async" alt="">
+            <img data-src="/media/bashtv/create/toy-loop.webp" width="112" height="112" decoding="async" alt="">
+          </span>
           <span class="link-text">
-            <span class="link-title">Join the <span class="nowrap">No-code Game Jam! <span class="live-badge">Live</span></span></span>
+            <span class="link-title">Create or play a Chubbitz game!</span>
+            <span class="link-sub">Free and in your browser</span>
           </span>
           <svg class="link-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
         </a>
@@ -1045,18 +1012,6 @@
       </span>
       <img loading="lazy" src="/media/sticker-sheet.webp" alt="Chubbitz sticker sheet">
     </a>
-    <ul class="links">
-      <li>
-        <a class="link-card" data-track="link_click" data-track-label="chubbolator" href="/chubbolator">
-          <img class="link-icon" loading="lazy" src="/media/chubbolator-icon.webp" alt="">
-          <span class="link-text">
-            <span class="link-title">Play The Chubbolator!</span>
-            <span class="link-sub">Free character creator game</span>
-          </span>
-          <svg class="link-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
-        </a>
-      </li>
-    </ul>
   </section>
 
   <section class="section" aria-labelledby="sponsors-title">
@@ -1431,46 +1386,42 @@
     btn.addEventListener("click", function (){ send("ab_cta_click_" + v); });
   })();
 </script>
+
 <script>
-  /* The game jam bubble's countdown, matching the one on /chubbash.
-     When the jam is over the bubble takes itself off the page.
-     If the dates move, change them here and on /chubbash. */
+  /* The games card's icon cycles through the four Bash loops. They're animated
+     WebPs and weigh over a megabyte together, so only the first comes down with
+     the page and the rest follow one at a time; the rotation skips any that
+     haven't arrived rather than flashing an empty tile. */
   (function (){
-    var PHASES = [
-      { until: "2026-10-09T00:00:00-04:00", label: "The game jam starts in:" },
-      { until: "2026-10-17T00:00:00-04:00", label: "The game jam has begun! Time left:" },
-      { until: "2026-10-20T00:00:00-04:00", label: "Game jam winners announced in:" }
-    ];
+    var box = document.querySelector(".link-icon-loops");
+    if(!box) return;
+    var set = [].slice.call(box.querySelectorAll("img"));
+    if(set.length < 2) return;
+    set[0].classList.add("on");
 
-    var bar = document.querySelector(".jam-bar");
-    var label = document.getElementById("jam-label");
-    var time = document.getElementById("jam-time");
-    if(!bar || !label || !time) return;
-
-    function pad(n){ return n < 10 ? "0" + n : String(n); }
-    function part(n, unit){ return pad(n) + '<span class="u">' + unit + "</span>"; }
-
-    var timer;
-    function tick(){
-      var now = Date.now(), phase = null;
-      for(var i = 0; i < PHASES.length; i++){
-        if(new Date(PHASES[i].until).getTime() > now){ phase = PHASES[i]; break; }
-      }
-      if(!phase){ bar.remove(); clearInterval(timer); return; }
-
-      label.textContent = phase.label;
-      var left = Math.max(0, Math.floor((new Date(phase.until).getTime() - now) / 1000));
-      var days = Math.floor(left / 86400);
-      var hrs = Math.floor(left % 86400 / 3600);
-      var mins = Math.floor(left % 3600 / 60);
-      var secs = left % 60;
-      time.innerHTML = days
-        ? [days + '<span class="u">d</span>', part(hrs, "h"), part(mins, "m")].join(" ")
-        : [part(hrs, "h"), part(mins, "m"), part(secs, "s")].join(" ");
+    function loadNext(i){
+      if(i >= set.length) return;
+      var src = set[i].getAttribute("data-src");
+      if(!src) return loadNext(i + 1);
+      set[i].addEventListener("load", function (){ loadNext(i + 1); }, { once:true });
+      set[i].addEventListener("error", function (){ loadNext(i + 1); }, { once:true });
+      set[i].src = src;
     }
+    if(document.readyState === "complete") loadNext(1);
+    else window.addEventListener("load", function (){ loadNext(1); });
 
-    tick();
-    timer = setInterval(tick, 1000);
+    var at = 0;
+    setInterval(function (){
+      var next = at;
+      for(var step = 1; step <= set.length; step++){
+        var cand = (at + step) % set.length;
+        if(set[cand].complete && set[cand].naturalWidth){ next = cand; break; }
+      }
+      if(next === at) return;
+      set[at].classList.remove("on");
+      set[next].classList.add("on");
+      at = next;
+    }, 2400);
   })();
 </script>
 
