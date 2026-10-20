@@ -160,7 +160,9 @@
 
   /* the pop-up behind it */
   .modal{
-    width:min(92vw, 400px);
+    /* wide enough that each paragraph settles into two lines on a desktop;
+       92vw keeps it inside the screen on a phone */
+    width:min(92vw, 620px);
     padding:0;
     border:0;
     border-radius:var(--radius-lg);
