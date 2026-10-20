@@ -226,8 +226,70 @@
     color:var(--accent-2);
   }
   .link-icon svg{ width:19px; height:19px; display:block; }
+  .link-thumb{
+    flex:none;
+    width:66px;
+    height:38px;
+    object-fit:cover;
+    border-radius:9px;
+    border:1px solid var(--line);
+    display:block;
+  }
   .link-text{ flex:1; min-width:0; font-size:15px; font-weight:600; line-height:1.35; }
   .link-chev{ flex:none; width:16px; height:16px; color:var(--text-faint); }
+
+  /* The "make your own game" card opens instead of linking out. */
+  .drop summary{
+    cursor:pointer;
+    list-style:none;
+  }
+  .drop summary::-webkit-details-marker{ display:none; }
+  .drop[open] summary{
+    border-bottom-left-radius:0;
+    border-bottom-right-radius:0;
+    border-bottom-color:transparent;
+  }
+  .drop[open] .drop-chev{ transform:rotate(90deg); }
+  .drop-chev{ transition:transform .15s ease; }
+  .drop-body{
+    padding:4px 16px 16px;
+    border:1px solid var(--line);
+    border-top:0;
+    border-radius:0 0 var(--radius-md) var(--radius-md);
+    background:var(--card);
+  }
+  .drop-body p{
+    margin:10px 0 0;
+    font-size:14px;
+    line-height:1.55;
+    color:var(--text-dim);
+  }
+  .drop-btn-row{ text-align:center; }
+  .drop-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    margin-top:4px;
+    padding:12px 24px;
+    border-radius:var(--radius-md);
+    text-decoration:none;
+    font-size:16px;
+    font-weight:800;
+    color:#0a0b0e;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow:0 6px 18px rgba(0,0,0,.35), 0 0 18px rgba(79,142,247,.3);
+    transition:transform .15s ease, filter .15s ease;
+  }
+  .drop-btn:hover{ transform:translateY(-1px); filter:brightness(1.06); }
+  .drop-btn svg{ width:17px; height:17px; }
+  .drop-link{
+    color:var(--accent-2);
+    font-weight:700;
+    text-decoration:none;
+    border-bottom:1px solid rgba(142,201,255,.35);
+  }
+  .drop-link:hover{ border-bottom-color:var(--accent-2); }
 
   .note{
     margin:18px 0 0;
@@ -288,22 +350,34 @@
     <li>
       <a class="link-card" data-track="games_click" data-track-label="chubbolator"
          href="https://bash.tv/chat/03grcu1q3bx3k59ebv9nv004m" target="_blank" rel="noopener noreferrer">
-        <span class="link-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.3 5.9 6.2.3-4.9 3.9 1.7 6-5.3-3.4L6.7 19l1.7-6-4.9-3.9 6.2-.3z"/></svg>
-        </span>
-        <span class="link-text">Make your own Chubbitz with the Chubbolator</span>
+        <img class="link-thumb" src="/media/bashtv/chubbolator-thumb.png" width="1280" height="720"
+             loading="lazy" decoding="async" alt="">
+        <span class="link-text">Make your own Chubbitz!</span>
         <svg class="link-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
       </a>
     </li>
     <li>
-      <a class="link-card" data-track="games_click" data-track-label="template"
-         href="https://bash.tv/chat/03h0jw8wzksn12gzrs9fstllq" target="_blank" rel="noopener noreferrer">
-        <span class="link-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="M4 9h16M9 9v10"/></svg>
-        </span>
-        <span class="link-text">Make your own game with this template!</span>
-        <svg class="link-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-      </a>
+      <!-- A details/summary so it opens and closes with no script of its own. -->
+      <details class="drop">
+        <summary class="link-card" data-track="games_click" data-track-label="make_a_game">
+          <span class="link-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="M4 9h16M9 9v10"/></svg>
+          </span>
+          <span class="link-text">Make your own game with Bash.tv</span>
+          <svg class="link-chev drop-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </summary>
+        <div class="drop-body">
+          <p>Bash.tv is still in alpha so they're limiting who can join, but you can get a free invite code by joining their discord!</p>
+          <p class="drop-btn-row">
+            <a class="drop-btn" data-track="games_click" data-track-label="bash_discord"
+               href="https://discord.gg/qYfr6jPQMU" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              Join discord
+            </a>
+          </p>
+          <p>After you're in, you can make any game you want! If you want to make a Chubbitz themed game, you could start with <a class="drop-link" data-track="games_click" data-track-label="template" href="https://bash.tv/chat/03h0jw8wzksn12gzrs9fstllq" target="_blank" rel="noopener noreferrer">this template</a>.</p>
+        </div>
+      </details>
     </li>
   </ul>
 
