@@ -435,15 +435,39 @@
     background:#1a1d23;
     object-fit:cover;
   }
-  .link-thumb{
-    flex:none;
-    width:66px;
-    height:38px;
-    object-fit:cover;
-    border-radius:9px;
-    border:1px solid var(--line);
+  /* a card that leads with its picture, the way the game tiles do */
+  .big-card{
+    position:relative;
     display:block;
+    border-radius:var(--radius-md);
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:#1a1d23;
+    text-decoration:none;
+    transition:transform .15s ease, border-color .15s ease;
   }
+  .big-card:hover{ transform:translateY(-2px); border-color:var(--line-hover); }
+  .big-card img{
+    display:block;
+    width:100%;
+    height:auto;
+    aspect-ratio:16 / 9;
+    object-fit:cover;
+  }
+  .big-card-name{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:28px 14px 12px;
+    background:linear-gradient(to top, rgba(10,11,14,.92), rgba(10,11,14,.55) 55%, transparent);
+    font-size:16px;
+    font-weight:700;
+    color:#fff;
+  }
+  .big-card-name svg{ flex:none; width:16px; height:16px; color:var(--text-dim); }
   .link-text{ flex:1; min-width:0; font-size:15px; font-weight:600; line-height:1.35; }
   .link-chev{ flex:none; width:16px; height:16px; color:var(--text-faint); }
 
@@ -563,12 +587,15 @@
 
   <ul class="links">
     <li>
-      <a class="link-card" data-track="games_click" data-track-label="chubbolator"
+      <!-- A picture card, like the game tiles above. -->
+      <a class="big-card" data-track="games_click" data-track-label="chubbolator"
          href="https://bash.tv/chat/03grcu1q3bx3k59ebv9nv004m" target="_blank" rel="noopener noreferrer">
-        <img class="link-thumb" src="/media/bashtv/chubbolator-thumb.png" width="1280" height="720"
+        <img src="/media/bashtv/chubbolator-thumb.png" width="1280" height="720"
              loading="lazy" decoding="async" alt="">
-        <span class="link-text">Make your own Chubbitz!</span>
-        <svg class="link-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        <span class="big-card-name">
+          Make your own Chubbitz!
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
       </a>
     </li>
   </ul>
@@ -582,7 +609,7 @@
       </button>
       <img class="modal-icon" src="/media/bashtv.gif" width="56" height="56" loading="lazy" decoding="async" alt="">
       <h2 id="create-title">Create a game!</h2>
-      <p>Bash.tv is still in alpha so they're limiting who can join, but you can get a free invite code by joining their discord!</p>
+      <p>Bash.tv is still in alpha so they're limiting who can join, but you can get a free invite code by joining their discord community!</p>
       <p class="modal-btn-row">
         <a class="modal-btn" data-track="games_click" data-track-label="bash_discord"
            href="https://discord.gg/qYfr6jPQMU" target="_blank" rel="noopener noreferrer">
@@ -590,7 +617,7 @@
           Join discord
         </a>
       </p>
-      <p>After you're in, you can make any game you want! If you want to make a Chubbitz themed game, you could start with <a class="modal-link" data-track="games_click" data-track-label="template" href="https://bash.tv/chat/03h0jw8wzksn12gzrs9fstllq" target="_blank" rel="noopener noreferrer">this template</a>.</p>
+      <p>After you have a Bash.tv account, you can make any game you want! If you want to make a Chubbitz themed game, you could start with <a class="modal-link" data-track="games_click" data-track-label="template" href="https://bash.tv/chat/03h0jw8wzksn12gzrs9fstllq" target="_blank" rel="noopener noreferrer">this template</a>.</p>
     </div>
   </dialog>
 
