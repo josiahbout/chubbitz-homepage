@@ -275,7 +275,7 @@
   <section class="panel">
     <div>
       <h2>The videos</h2>
-      <p class="sub">Four posts across three platforms. Tap a number to open that account.</p>
+      <p class="sub">Four posts across three platforms. Tap Instagram to open the video itself; the others go to the account.</p>
     </div>
     <div class="videos" id="videos"></div>
     <p class="note">Hand-counted from each platform, so these move as the posts keep picking up views.</p>
@@ -356,11 +356,16 @@
     youtube:'<rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9.2l5 2.8-5 2.8z" fill="currentColor" stroke="none"/>',
     tiktok:'<path d="M14 4v9.6a3.4 3.4 0 1 1-2.8-3.35"/><path d="M14 4c.4 2.3 1.9 3.8 4.2 4.1"/>'
   };
+  /* `post` is the video itself; without one a row falls back to the account. */
   var VIDEOS = [
-    { name:"Video 1a", kind:"Announcement", views:{ instagram:150000, youtube:6200, tiktok:2400 } },
-    { name:"Video 1b", kind:"Announcement", views:{ instagram:366000 } },
-    { name:"Video 1c", kind:"Announcement", views:{ instagram:9200 } },
-    { name:"Video 2",  kind:"Results",      views:{ instagram:90700, youtube:6800, tiktok:1800 } }
+    { name:"Video 1a", kind:"Announcement", views:{ instagram:150000, youtube:6200, tiktok:2400 },
+      posts:{ instagram:"https://www.instagram.com/reel/DeSUC_JnErA/" } },
+    { name:"Video 1b", kind:"Announcement", views:{ instagram:366000 },
+      posts:{ instagram:"https://www.instagram.com/reel/DeT4W1bhDG3/" } },
+    { name:"Video 1c", kind:"Announcement", views:{ instagram:9200 },
+      posts:{ instagram:"https://www.instagram.com/reel/DeZNXXNBqEW/?mdxt=ajVkNmcxNm1mYWls" } },
+    { name:"Video 2",  kind:"Results",      views:{ instagram:90700, youtube:6800, tiktok:1800 },
+      posts:{ instagram:"https://www.instagram.com/p/Deu0fpujkgx/" } }
   ];
   var PLATFORMS = [
     { key:"instagram", name:"Instagram", cls:"ig" },
@@ -384,8 +389,9 @@
           return '<li class="plat none">' + icon + "<span>" + p.name +
             '</span><span class="plat-val">&mdash;</span></li>';
         }
+        var href = (v.posts && v.posts[p.key]) || LINKS[p.key];
         return '<li class="plat">' + icon +
-          '<a href="' + LINKS[p.key] + '" target="_blank" rel="noopener noreferrer">' + p.name + "</a>" +
+          '<a href="' + href + '" target="_blank" rel="noopener noreferrer">' + p.name + "</a>" +
           '<span class="plat-val">' + thou(n) + "</span></li>";
       }).join("");
 
