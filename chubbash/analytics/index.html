@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0a0b0e">
-<title>Chubbash analytics</title>
+<title>Chubbitz campaign analytics</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,6 +30,8 @@
     --src-instagram:#d55181;
     --src-direct:#3987e5;
     --src-youtube:#e66767;
+    --src-tiktok:#49cfd4;
+    --src-google:#e0a650;
     --src-linkme:#1baf7a;
     --src-other:#5b6270;
   }
@@ -99,15 +101,77 @@
   .note{ margin:0; font-size:12.5px; color:var(--text-faint); }
   .row{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
 
+  /* ---------- the videos ---------- */
+  .videos{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:12px;
+  }
+  .video{
+    background:#161920;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px 15px 12px;
+    display:grid;
+    gap:10px;
+    align-content:start;
+  }
+  .video-top{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; }
+  .video-name{ font-weight:700; font-size:15px; }
+  .video-name small{
+    display:block;
+    margin-top:1px;
+    font-size:11.5px;
+    font-weight:600;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--accent);
+  }
+  .video-total{
+    font-family:'Fredoka', sans-serif;
+    font-size:19px;
+    font-weight:700;
+    white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+  }
+  .plats{ list-style:none; margin:0; padding:0; display:grid; gap:7px; }
+  .plat{
+    display:grid;
+    grid-template-columns:22px 1fr auto;
+    align-items:center;
+    gap:9px;
+    font-size:13.5px;
+    font-variant-numeric:tabular-nums;
+  }
+  .plat a{
+    color:inherit;
+    text-decoration:none;
+    border-bottom:1px solid transparent;
+  }
+  .plat a:hover{ border-bottom-color:currentColor; }
+  .plat-icon{
+    width:22px; height:22px;
+    display:grid; place-items:center;
+    border-radius:7px;
+    background:rgba(255,255,255,.05);
+  }
+  .plat-icon svg{ width:13px; height:13px; display:block; }
+  .plat-val{ font-weight:600; }
+  .plat.none{ color:var(--text-faint); }
+  .plat.none .plat-icon{ opacity:.4; }
+  .plat.none .plat-val{ font-weight:500; }
+  .ig{ color:var(--src-instagram); }
+  .yt{ color:var(--src-youtube); }
+  .tt{ color:var(--src-tiktok); }
+
   /* chart */
   .chart{ position:relative; }
   .chart svg{ width:100%; height:auto; display:block; overflow:visible; }
   .gridline{ stroke:var(--grid); stroke-width:1; }
   .baseline{ stroke:var(--axis); stroke-width:1; }
   .tick{ font:500 11px "Inter",sans-serif; fill:var(--text-faint); font-variant-numeric:tabular-nums; }
-  .day{ font:500 11px "Inter",sans-serif; fill:var(--text-dim); }
+  .day{ font:500 10.5px "Inter",sans-serif; fill:var(--text-dim); }
   .bar{ fill:var(--accent); }
-  .bar.pre{ fill:#2b4f8f; }
   .bar.partial{ fill:#2b4f8f; }
   .callout{ font:600 12px "Inter",sans-serif; fill:#fff; }
   .callout-dim{ font:500 11px "Inter",sans-serif; fill:var(--text-dim); }
@@ -181,6 +245,9 @@
     .stat:nth-child(3){ border-left:0; }
     .stat:nth-child(n+3){ border-top:1px solid var(--line); }
   }
+  @media (max-width:560px){
+    .videos{ grid-template-columns:1fr; }
+  }
   @media (max-width:460px){
     .donut-wrap{ grid-template-columns:1fr; justify-items:center; }
     .donut{ max-width:200px; }
@@ -193,34 +260,43 @@
 <div class="page">
 
   <header>
-    <div class="kicker">thechubbitz.com/chubbash &middot; Google Analytics</div>
-    <h1>Chubbash analytics</h1>
-    <p class="range">Oct 7 through Oct 15, 2026. Real visits only, not counting test loads.</p>
+    <div class="kicker">The Chubbitz &middot; Bash.tv campaign</div>
+    <h1>Campaign analytics</h1>
+    <p class="range">Oct 9 through Oct 26, 2026. Real visits only, not counting test loads.</p>
   </header>
 
   <section class="stats" aria-label="Headline numbers">
-    <div class="stat"><span class="stat-value">2,309</span><span class="stat-label">visitors</span></div>
-    <div class="stat"><span class="stat-value">2,995</span><span class="stat-label">page views</span></div>
-    <div class="stat"><span class="stat-value">405</span><span class="stat-label">tapped Join (18%)</span></div>
-    <div class="stat"><span class="stat-value">330</span><span class="stat-label">went for a Bash invite</span></div>
+    <div class="stat"><span class="stat-value">633.1K</span><span class="stat-label">video views</span></div>
+    <div class="stat"><span class="stat-value">3,551</span><span class="stat-label">people on the site</span></div>
+    <div class="stat"><span class="stat-value">5,232</span><span class="stat-label">page views</span></div>
+    <div class="stat"><span class="stat-value">0.56%</span><span class="stat-label">video &rarr; site</span></div>
   </section>
 
   <section class="panel">
     <div>
-      <h2>Visitors per day</h2>
-      <p class="sub">Launch day was Fri Oct 9. Hover a bar for page views.</p>
+      <h2>The videos</h2>
+      <p class="sub">Four posts across three platforms. Tap a number to open that account.</p>
+    </div>
+    <div class="videos" id="videos"></div>
+    <p class="note">Hand-counted from each platform, so these move as the posts keep picking up views.</p>
+  </section>
+
+  <section class="panel">
+    <div>
+      <h2>People per day</h2>
+      <p class="sub">Anyone who landed on one of the four campaign pages. Hover a bar for page views.</p>
     </div>
     <div class="chart" id="daily"></div>
-    <p class="note">Oct 7&ndash;8 were test loads before the page went out. Oct 15 is only part of a day.</p>
+    <p class="note">Someone who read two of the pages in one visit counts once here, so these bars stay honest even if the pages start forwarding to each other.</p>
   </section>
 
   <section class="panel">
     <div>
-      <h2>What visitors did</h2>
-      <p class="sub">Share of the 2,309 visitors who tapped each link.</p>
+      <h2>Which page they landed on</h2>
+      <p class="sub">Page views across the four campaign pages.</p>
     </div>
-    <ul class="shares" id="actions"></ul>
-    <p class="note">Someone who tapped two different links counts in both rows.</p>
+    <ul class="shares" id="pages"></ul>
+    <p class="note">These add up to 5,232, more than the 3,551 people above, because plenty of visitors read more than one page.</p>
   </section>
 
   <div class="row">
@@ -234,33 +310,30 @@
 
     <section class="panel">
       <div>
-        <h2>From your own site</h2>
-        <p class="sub">Taps on the homepage links to this page.</p>
+        <h2>Phones, computers, tablets</h2>
+        <p class="sub">Which is why everything is built phone-first.</p>
       </div>
-      <ul class="shares">
-        <li class="share">
-          <div class="share-top"><span class="share-name">Game jam card <small>top of My Links</small></span><span class="share-val"><b>754</b>people</span></div>
-          <div class="track"><div class="fill" style="width:100%"></div></div>
-        </li>
-        <li class="share">
-          <div class="share-top"><span class="share-name">Countdown bubble <small>desktop only, added Oct 11</small></span><span class="share-val"><b>6</b>people</span></div>
-          <div class="track"><div class="fill quiet" style="width:0.8%"></div></div>
-        </li>
-      </ul>
-      <p class="note">Phones are 90% of this page's traffic, which is why the bubble is quiet.</p>
+      <ul class="shares" id="devices"></ul>
     </section>
   </div>
 
   <section class="panel">
     <div>
-      <h2>Phones, computers, tablets</h2>
+      <h2>How this is counted</h2>
     </div>
-    <ul class="shares" id="devices"></ul>
+    <p class="note">
+      Each of the four pages &mdash; <b>/chubbash</b>, <b>/bashtv/chubbitz-games</b>, <b>/bashtv</b> and
+      <b>/chubbolator</b> &mdash; is counted on its own, then the people are de-duplicated: one person
+      reading three of them is one person, not three. That matters for the day the old pages start
+      forwarding to the games page, because a forwarded visit lands on two addresses and would show up
+      twice in a plain page-view total. The headline number and the daily chart both use people, so a
+      forward cannot inflate them; only the page-view breakdown would split one visit across two rows.
+    </p>
   </section>
 
   <footer>
-    <span>Pulled from Google Analytics on Oct 15, 2026. Ask Claude to refresh it.</span>
-    <a href="/chubbash">&larr; Back to Chubbash</a>
+    <span>Pulled from Google Analytics on Oct 27, 2026. Ask Claude to refresh it.</span>
+    <a href="/bashtv/chubbitz-games">&larr; Back to the games</a>
   </footer>
 </div>
 
@@ -269,18 +342,83 @@
   var SVGNS = "http://www.w3.org/2000/svg";
   function el(n, a, p){ var e = document.createElementNS(SVGNS, n); for(var k in a) e.setAttribute(k, a[k]); if(p) p.appendChild(e); return e; }
   function fmt(n){ return n.toLocaleString("en-US"); }
+  function thou(n){ return n >= 1000 ? (n / 1000).toFixed(n % 1000 === 0 ? 0 : 1) + "K" : String(n); }
 
-  /* ---------------- visitors per day ---------------- */
+  /* ---------------- the videos ---------------- */
+  /* Counts are typed in by hand from each app. k = thousands. */
+  var LINKS = {
+    instagram:"https://www.instagram.com/thechubbitz",
+    youtube:"https://www.youtube.com/@TheChubbitz",
+    tiktok:"https://www.tiktok.com/@thechubbitz"
+  };
+  var ICONS = {
+    instagram:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.3" fill="currentColor" stroke="none"/>',
+    youtube:'<rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9.2l5 2.8-5 2.8z" fill="currentColor" stroke="none"/>',
+    tiktok:'<path d="M14 4v9.6a3.4 3.4 0 1 1-2.8-3.35"/><path d="M14 4c.4 2.3 1.9 3.8 4.2 4.1"/>'
+  };
+  var VIDEOS = [
+    { name:"Video 1a", kind:"Announcement", views:{ instagram:150000, youtube:6200, tiktok:2400 } },
+    { name:"Video 1b", kind:"Announcement", views:{ instagram:366000 } },
+    { name:"Video 1c", kind:"Announcement", views:{ instagram:9200 } },
+    { name:"Video 2",  kind:"Results",      views:{ instagram:90700, youtube:6800, tiktok:1800 } }
+  ];
+  var PLATFORMS = [
+    { key:"instagram", name:"Instagram", cls:"ig" },
+    { key:"youtube",   name:"YouTube",   cls:"yt" },
+    { key:"tiktok",    name:"TikTok",    cls:"tt" }
+  ];
+
+  (function (){
+    var host = document.getElementById("videos");
+    VIDEOS.forEach(function (v){
+      var total = PLATFORMS.reduce(function (s, p){ return s + (v.views[p.key] || 0); }, 0);
+      var card = document.createElement("div");
+      card.className = "video";
+
+      var rows = PLATFORMS.map(function (p){
+        var n = v.views[p.key];
+        var icon = '<span class="plat-icon ' + p.cls + '"><svg viewBox="0 0 24 24" fill="none" ' +
+          'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
+          'aria-hidden="true">' + ICONS[p.key] + "</svg></span>";
+        if(!n){
+          return '<li class="plat none">' + icon + "<span>" + p.name +
+            '</span><span class="plat-val">&mdash;</span></li>';
+        }
+        return '<li class="plat">' + icon +
+          '<a href="' + LINKS[p.key] + '" target="_blank" rel="noopener noreferrer">' + p.name + "</a>" +
+          '<span class="plat-val">' + thou(n) + "</span></li>";
+      }).join("");
+
+      card.innerHTML =
+        '<div class="video-top">' +
+          '<span class="video-name">' + v.name + "<small>" + v.kind + "</small></span>" +
+          '<span class="video-total">' + thou(total) + "</span>" +
+        "</div>" +
+        '<ul class="plats">' + rows + "</ul>";
+      host.appendChild(card);
+    });
+  })();
+
+  /* ---------------- people per day ---------------- */
   var DAYS = [
-    { d:"2026-10-07", v:6,    views:21,   pre:true },
-    { d:"2026-10-08", v:1,    views:6,    pre:true },
-    { d:"2026-10-09", v:253,  views:332,  label:"launch" },
-    { d:"2026-10-10", v:642,  views:798 },
-    { d:"2026-10-11", v:1052, views:1292, label:"peak" },
-    { d:"2026-10-12", v:238,  views:305 },
-    { d:"2026-10-13", v:104,  views:133 },
-    { d:"2026-10-14", v:66,   views:89 },
-    { d:"2026-10-15", v:14,   views:19,   partial:true }
+    { d:"2026-10-09", v:300,  views:504, label:"launch" },
+    { d:"2026-10-10", v:701,  views:1045 },
+    { d:"2026-10-11", v:1113, views:1550, label:"peak" },
+    { d:"2026-10-12", v:271,  views:393 },
+    { d:"2026-10-13", v:126,  views:176 },
+    { d:"2026-10-14", v:79,   views:115 },
+    { d:"2026-10-15", v:77,   views:113 },
+    { d:"2026-10-16", v:68,   views:89 },
+    { d:"2026-10-17", v:171,  views:212 },
+    { d:"2026-10-18", v:209,  views:238 },
+    { d:"2026-10-19", v:103,  views:135 },
+    { d:"2026-10-20", v:127,  views:183 },
+    { d:"2026-10-21", v:106,  views:120 },
+    { d:"2026-10-22", v:62,   views:66 },
+    { d:"2026-10-23", v:71,   views:82 },
+    { d:"2026-10-24", v:73,   views:79 },
+    { d:"2026-10-25", v:76,   views:82 },
+    { d:"2026-10-26", v:36,   views:50 }
   ];
 
   (function (){
@@ -288,7 +426,7 @@
     var W = 820, H = 290, L = 46, R = 8, T = 34, B = 40;
     var max = 1200, ticks = [0, 300, 600, 900, 1200];
     var svg = el("svg", { viewBox:"0 0 " + W + " " + H, role:"img",
-      "aria-label":"Bar chart of visitors per day to /chubbash: 253 on launch day Oct 9, peaking at 1,052 on Oct 11, then tailing off." });
+      "aria-label":"Bar chart of people per day across the four campaign pages: 300 on launch day Oct 9, peaking at 1,113 on Oct 11, settling around 70 to 100 a day by late October." });
 
     function y(v){ return T + (H - T - B) * (1 - v / max); }
     ticks.forEach(function (v){
@@ -297,7 +435,7 @@
       t.textContent = fmt(v);
     });
 
-    var band = (W - L - R) / DAYS.length, bw = Math.min(46, band * 0.6);
+    var band = (W - L - R) / DAYS.length, bw = Math.min(46, band * 0.62);
     var tip = document.createElement("div");
     tip.className = "tip"; tip.hidden = true; host.appendChild(tip);
 
@@ -309,7 +447,7 @@
       el("path", {
         d:"M" + x0 + "," + bottom + "V" + (top + r) + "Q" + x0 + "," + top + " " + (x0 + r) + "," + top +
           "H" + (x1 - r) + "Q" + x1 + "," + top + " " + x1 + "," + (top + r) + "V" + bottom + "Z",
-        "class":"bar" + (row.pre ? " pre" : "") + (row.partial ? " partial" : "")
+        "class":"bar" + (row.partial ? " partial" : "")
       }, g);
 
       if(row.label){
@@ -327,7 +465,7 @@
         g.classList.add("on");
         var s = host.getBoundingClientRect().width / W;
         tip.innerHTML = "<b>" + date.toLocaleDateString("en-US", { weekday:"short", month:"short", day:"numeric" }) +
-          (row.partial ? " (so far)" : "") + "</b>" + fmt(row.v) + " visitors <span>· " + fmt(row.views) + " views</span>";
+          "</b>" + fmt(row.v) + " people <span>&middot; " + fmt(row.views) + " views</span>";
         tip.style.left = (cx * s) + "px";
         tip.style.top = (top * s) + "px";
         tip.hidden = false;
@@ -340,44 +478,45 @@
     host.insertBefore(svg, host.firstChild);
   })();
 
-  /* ---------------- what visitors did ---------------- */
-  var VISITORS = 2309;
-  var ACTIONS = [
-    { name:"Join the Discord", sub:"the button under the title", people:405 },
-    { name:"Get a Bash invite", sub:"link to /bashtv in step 1", people:330 },
-    { name:"Make a Chubbitz", sub:"link to /chubbolator in step 1", people:104 },
-    { name:"Open the template", sub:"step 2", people:97 },
-    { name:"Join the Discord", sub:"the button at the bottom", people:52, quiet:true },
-    { name:"Read the Bash.tv FAQ", sub:"both links together", people:53, quiet:true }
+  /* ---------------- which page ---------------- */
+  var PAGES = [
+    { name:"/chubbash", sub:"the game jam", views:3608 },
+    { name:"/bashtv", sub:"get a Bash.tv invite", views:612 },
+    { name:"/bashtv/chubbitz-games", sub:"the games gallery, live Oct 17", views:540 },
+    { name:"/chubbolator", sub:"the character creator", views:472 }
   ];
   (function (){
-    var ul = document.getElementById("actions");
-    ACTIONS.forEach(function (a){
-      var pct = a.people / VISITORS * 100;
+    var ul = document.getElementById("pages");
+    var top = PAGES[0].views;
+    var all = PAGES.reduce(function (s, p){ return s + p.views; }, 0);
+    PAGES.forEach(function (p, i){
       var li = document.createElement("li");
       li.className = "share";
-      li.innerHTML = '<div class="share-top"><span class="share-name">' + a.name +
-        '<small>' + a.sub + '</small></span>' +
-        '<span class="share-val"><b>' + fmt(a.people) + "</b>" + Math.round(pct) + "%</span></div>" +
-        '<div class="track"><div class="fill' + (a.quiet ? " quiet" : "") + '" style="width:' + pct.toFixed(1) + '%"></div></div>';
+      li.innerHTML = '<div class="share-top"><span class="share-name">' + p.name +
+        "<small>" + p.sub + "</small></span>" +
+        '<span class="share-val"><b>' + fmt(p.views) + "</b>" +
+        Math.round(p.views / all * 100) + "%</span></div>" +
+        '<div class="track"><div class="fill' + (i ? " quiet" : "") +
+        '" style="width:' + (p.views / top * 100).toFixed(1) + '%"></div></div>';
       ul.appendChild(li);
     });
   })();
 
   /* ---------------- sources ---------------- */
   var SOURCES = [
-    { name:"Instagram", people:1701, color:"var(--src-instagram)" },
-    { name:"Direct", people:487, color:"var(--src-direct)" },
-    { name:"YouTube", people:59, color:"var(--src-youtube)" },
-    { name:"Link.me", people:38, color:"var(--src-linkme)" },
-    { name:"Search & other", people:44, color:"var(--src-other)" }
+    { name:"Instagram", people:2797, color:"var(--src-instagram)" },
+    { name:"Direct", people:871, color:"var(--src-direct)" },
+    { name:"YouTube", people:156, color:"var(--src-youtube)" },
+    { name:"Google", people:137, color:"var(--src-google)" },
+    { name:"Link.me", people:64, color:"var(--src-linkme)" },
+    { name:"Other", people:60, color:"var(--src-other)" }
   ];
   (function (){
     var host = document.getElementById("sources");
     var total = SOURCES.reduce(function (s, r){ return s + r.people; }, 0);
     var S = 220, C = S / 2, RO = 102, RI = 66;
     var svg = el("svg", { viewBox:"0 0 " + S + " " + S, "class":"donut", role:"img",
-      "aria-label":"Donut chart: Instagram 73%, direct 21%, YouTube 3%, Link.me 2%, search and other 2%." });
+      "aria-label":"Donut chart: Instagram 68%, direct 21%, YouTube 4%, Google 3%, Link.me 2%, other 1%." });
     function pt(r, a){ return [C + r * Math.sin(a), C - r * Math.cos(a)]; }
     var list = document.createElement("ul");
     list.className = "legend";
@@ -411,9 +550,9 @@
 
   /* ---------------- devices ---------------- */
   var DEVICES = [
-    { name:"Phones", people:2085 },
-    { name:"Computers", people:181 },
-    { name:"Tablets", people:47 }
+    { name:"Phones", people:3181 },
+    { name:"Computers", people:289 },
+    { name:"Tablets", people:90 }
   ];
   (function (){
     var ul = document.getElementById("devices");
