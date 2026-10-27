@@ -173,6 +173,9 @@
   .day{ font:500 10.5px "Inter",sans-serif; fill:var(--text-dim); }
   .bar{ fill:var(--accent); }
   .bar.partial{ fill:#2b4f8f; }
+  .flag-stem{ stroke:var(--accent); stroke-width:1.2; stroke-dasharray:3 3; opacity:.7; }
+  .flag-box{ fill:#1b2533; stroke:rgba(79,142,247,.55); stroke-width:1; }
+  .flag-text{ font:700 11px "Inter",sans-serif; fill:var(--accent-2); }
   .callout{ font:600 12px "Inter",sans-serif; fill:#fff; }
   .callout-dim{ font:500 11px "Inter",sans-serif; fill:var(--text-dim); }
   .hit{ fill:transparent; }
@@ -284,7 +287,7 @@
   <section class="panel">
     <div>
       <h2>People per day</h2>
-      <p class="sub">Anyone who landed on one of the four campaign pages. Hover a bar for page views.</p>
+      <p class="sub">Anyone who landed on one of the four campaign pages. The flags mark the days a video went out. Hover a bar for page views.</p>
     </div>
     <div class="chart" id="daily"></div>
     <p class="note">Someone who read two of the pages in one visit counts once here, so these bars stay honest even if the pages start forwarding to each other.</p>
@@ -407,7 +410,7 @@
 
   /* ---------------- people per day ---------------- */
   var DAYS = [
-    { d:"2026-10-09", v:300,  views:504, label:"launch" },
+    { d:"2026-10-09", v:300,  views:504, marker:"Video 1" },
     { d:"2026-10-10", v:701,  views:1045 },
     { d:"2026-10-11", v:1113, views:1550, label:"peak" },
     { d:"2026-10-12", v:271,  views:393 },
@@ -418,7 +421,7 @@
     { d:"2026-10-17", v:171,  views:212 },
     { d:"2026-10-18", v:209,  views:238 },
     { d:"2026-10-19", v:103,  views:135 },
-    { d:"2026-10-20", v:127,  views:183 },
+    { d:"2026-10-20", v:127,  views:183, marker:"Video 2" },
     { d:"2026-10-21", v:106,  views:120 },
     { d:"2026-10-22", v:62,   views:66 },
     { d:"2026-10-23", v:71,   views:82 },
@@ -461,6 +464,15 @@
         c1.textContent = fmt(row.v);
         var c2 = el("text", { x:cx, y:top - 5, "text-anchor":"middle", "class":"callout-dim" }, svg);
         c2.textContent = row.label;
+      }
+
+      /* the day a video went out: a little flag on a dotted line */
+      if(row.marker){
+        var pw = row.marker.length * 6.3 + 16, ph = 18, py = top - 32;
+        el("line", { x1:cx, x2:cx, y1:py + ph, y2:top - 3, "class":"flag-stem" }, svg);
+        el("rect", { x:cx - pw / 2, y:py, width:pw, height:ph, rx:9, "class":"flag-box" }, svg);
+        var ft = el("text", { x:cx, y:py + 12.5, "text-anchor":"middle", "class":"flag-text" }, svg);
+        ft.textContent = row.marker;
       }
 
       var lab = el("text", { x:cx, y:H - B + 18, "text-anchor":"middle", "class":"day" }, svg);
