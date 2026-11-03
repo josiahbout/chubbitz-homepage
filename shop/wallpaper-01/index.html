@@ -402,15 +402,49 @@
       b.setAttribute("aria-current", i === 0 ? "true" : "false");
       b.innerHTML = '<img src="' + s.src + '" alt="" loading="lazy" decoding="async"' +
         (s.contain ? ' class="contain"' : "") + ">";
-      b.addEventListener("click", function (){ show(i); });
+      b.addEventListener("click", function (){ chosen = true; stop(); show(i); });
       thumbs.appendChild(b);
     });
 
     function show(n){
+      at = n;
       imgs.forEach(function (img, i){ img.classList.toggle("on", i === n); });
       [].forEach.call(thumbs.children, function (b, i){
         b.setAttribute("aria-current", i === n ? "true" : "false");
       });
+    }
+
+    /* ---- walking through on its own ----
+       Every EVERY milliseconds the next picture comes up, until the visitor
+       picks one from the thumbnails: then it's theirs and the walk stops for
+       good. It also holds still while they're hovering or tabbed into the
+       pictures, while the tab is in the background, and never starts at all
+       if they've asked the system for less motion. */
+    var EVERY = 3000;
+    var at = 0, timer = null, chosen = false, held = false;
+
+    function stop(){ if(timer){ clearInterval(timer); timer = null; } }
+    function start(){
+      if(timer || chosen || held || imgs.length < 2) return;
+      if(document.hidden) return;
+      timer = setInterval(function (){ show((at + 1) % imgs.length); }, EVERY);
+    }
+
+    var still = window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if(!still){
+      var area = shot.parentNode;             /* the shot and its thumbnails */
+      ["pointerenter", "focusin"].forEach(function (ev){
+        area.addEventListener(ev, function (){ held = true; stop(); });
+      });
+      ["pointerleave", "focusout"].forEach(function (ev){
+        area.addEventListener(ev, function (){ held = false; start(); });
+      });
+      document.addEventListener("visibilitychange", function (){
+        if(document.hidden) stop(); else start();
+      });
+      start();
     }
   })();
 </script>
