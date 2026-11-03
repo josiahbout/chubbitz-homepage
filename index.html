@@ -500,6 +500,46 @@
   }
 
   /* Featured product */
+  /* The two products share one cell and cross-fade; the dots sit on top. */
+  .shop{ position:relative; display:grid; }
+  .shop .product{
+    grid-area:1 / 1;
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    transition:opacity .4s ease, visibility .4s, border-color .15s ease, transform .15s ease;
+  }
+  .shop .product.on{ opacity:1; visibility:visible; pointer-events:auto; }
+  /* bottom corner, over the picture - the Buy button has the top one */
+  .shop-dots{
+    position:absolute;
+    bottom:11px;
+    right:11px;
+    z-index:2;
+    display:flex;
+    gap:7px;
+    padding:6px 8px;
+    border-radius:999px;
+    background:rgba(10,11,14,.55);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+  }
+  .shop-dot{
+    width:7px;
+    height:7px;
+    padding:0;
+    border:0;
+    border-radius:50%;
+    background:rgba(255,255,255,.4);
+    cursor:pointer;
+    transition:background .2s ease, transform .2s ease;
+  }
+  .shop-dot:hover{ background:rgba(255,255,255,.7); }
+  .shop-dot[aria-selected="true"]{ background:#fff; transform:scale(1.25); }
+  @media (prefers-reduced-motion: reduce){
+    .shop .product{ transition:none; }
+  }
+
   .product{
     display:block;
     text-decoration:none;
@@ -880,6 +920,17 @@
       font-size:22px;
       padding:14px 30px;
     }
+    /* out of the picture's corner, into the card's own */
+    .shop-dots{
+      bottom:18px;
+      right:20px;
+      background:none;
+      backdrop-filter:none;
+      -webkit-backdrop-filter:none;
+      padding:0;
+      gap:8px;
+    }
+    .shop-dot{ width:8px; height:8px; background:rgba(255,255,255,.28); }
     .product img{
       grid-column:1;
       grid-row:1;
@@ -1001,17 +1052,31 @@
     </ul>
   </section>
 
+  <!-- Two things for sale, one card. They take turns, and the dots say so. -->
   <section class="section" aria-label="Shop">
-    <a class="product" data-track="shop_click" data-track-label="sticker_sheet" href="https://buy.stripe.com/bJe3cv4VO5cseN7aqkbQY03" target="_blank" rel="noopener noreferrer">
-      <span class="product-body">
-        <span>
-          <span class="product-title">Sticker sheet</span>
-          <div class="product-sub">$10 &middot; U.S. shipping only</div>
+    <div class="shop" id="shop">
+      <a class="product on" data-track="shop_click" data-track-label="sticker_sheet" href="https://buy.stripe.com/bJe3cv4VO5cseN7aqkbQY03" target="_blank" rel="noopener noreferrer">
+        <span class="product-body">
+          <span>
+            <span class="product-title">Sticker sheet</span>
+            <div class="product-sub">$10 &middot; U.S. shipping only</div>
+          </span>
+          <span class="product-cta">Buy</span>
         </span>
-        <span class="product-cta">Buy</span>
-      </span>
-      <img loading="lazy" src="/media/sticker-sheet.webp" alt="Chubbitz sticker sheet">
-    </a>
+        <img loading="lazy" src="/media/sticker-sheet.webp" alt="Chubbitz sticker sheet">
+      </a>
+      <a class="product" data-track="shop_click" data-track-label="wallpaper_01" href="/shop/wallpaper-01">
+        <span class="product-body">
+          <span>
+            <span class="product-title">Digital Wallpaper</span>
+            <div class="product-sub">4k ultrawide</div>
+          </span>
+          <span class="product-cta">Buy</span>
+        </span>
+        <img loading="lazy" src="/media/shop/wallpaper-01-card.jpg" alt="The Chubbitz wallpaper on an ultrawide monitor">
+      </a>
+      <div class="shop-dots" id="shop-dots" role="tablist" aria-label="Choose a product"></div>
+    </div>
   </section>
 
   <section class="section" aria-labelledby="sponsors-title">
@@ -1387,6 +1452,57 @@
   })();
 </script>
 
+<script>
+  /* The shop card holds both products and shows one at a time, with a dot
+     each. It moves on every few seconds, waits while someone is reading it,
+     and stops for good once they pick a dot themselves. */
+  (function (){
+    var EVERY = 3000;
+
+    var shop = document.getElementById("shop");
+    var dots = document.getElementById("shop-dots");
+    if(!shop || !dots) return;
+    var cards = [].slice.call(shop.querySelectorAll(".product"));
+    if(cards.length < 2) return;
+
+    var at = 0, timer = null, held = false, chosen = false;
+
+    cards.forEach(function (card, i){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "shop-dot";
+      b.setAttribute("role", "tab");
+      b.setAttribute("aria-selected", i === 0 ? "true" : "false");
+      var title = card.querySelector(".product-title");
+      b.setAttribute("aria-label", title ? title.textContent : "Product " + (i + 1));
+      b.addEventListener("click", function (){ chosen = true; stop(); show(i); });
+      dots.appendChild(b);
+    });
+
+    function show(n){
+      at = n;
+      cards.forEach(function (c, i){ c.classList.toggle("on", i === n); });
+      [].forEach.call(dots.children, function (d, i){
+        d.setAttribute("aria-selected", i === n ? "true" : "false");
+      });
+    }
+    function tick(){ if(!held) show((at + 1) % cards.length); }
+    function start(){ if(!timer && !chosen) timer = setInterval(tick, EVERY); }
+    function stop(){ clearInterval(timer); timer = null; }
+
+    /* don't swap the card out from under someone's finger or cursor */
+    shop.addEventListener("pointerenter", function (){ held = true; });
+    shop.addEventListener("pointerleave", function (){ held = false; });
+    shop.addEventListener("focusin", function (){ held = true; });
+    shop.addEventListener("focusout", function (){ held = false; });
+    /* and don't run it while the tab is in the background */
+    document.addEventListener("visibilitychange", function (){
+      if(document.hidden) stop(); else start();
+    });
+
+    start();
+  })();
+</script>
 <script>
   /* The games card's icon cycles through the four Bash loops. They're animated
      WebPs and weigh over a megabyte together, so only the first comes down with

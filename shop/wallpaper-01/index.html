@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0b0e">
+<title>Digital Wallpaper &middot; The Chubbitz</title>
+<meta name="description" content="A 4K ultrawide Chubbitz wallpaper: the gang round a campfire under the stars.">
+
+<!-- How the link previews when it's shared (Discord, iMessage, X, Facebook...). -->
+<meta property="og:type" content="product">
+<meta property="og:site_name" content="The Chubbitz">
+<meta property="og:title" content="Digital Wallpaper">
+<meta property="og:description" content="A 4K ultrawide Chubbitz wallpaper: the gang round a campfire under the stars.">
+<meta property="og:url" content="https://thechubbitz.com/shop/wallpaper-01/">
+<meta property="og:image" content="https://thechubbitz.com/media/shop/wallpaper-01-1.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Digital Wallpaper">
+<meta name="twitter:description" content="A 4K ultrawide Chubbitz wallpaper: the gang round a campfire under the stars.">
+<meta name="twitter:image" content="https://thechubbitz.com/media/shop/wallpaper-01-1.jpg">
+<link rel="canonical" href="https://thechubbitz.com/shop/wallpaper-01/">
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#0a0b0e;
+    --card:#121419;
+    --line:rgba(255,255,255,.08);
+    --line-hover:rgba(255,255,255,.18);
+    --text:#f4f5f7;
+    --text-dim:#a3a9b4;
+    --text-faint:#6b7280;
+    --accent:#4f8ef7;
+    --accent-2:#8ec9ff;
+    --radius-md:14px;
+    --radius-lg:18px;
+  }
+  *{ box-sizing:border-box; }
+  html{ -webkit-text-size-adjust:100%; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font:15px/1.55 "Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-inline:18px;
+  }
+  .page{
+    max-width:520px;
+    margin:0 auto;
+    padding-block:22px 56px;
+  }
+  a{ color:var(--accent-2); }
+
+  .back{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--text-dim);
+    text-decoration:none;
+    margin-bottom:16px;
+  }
+  .back:hover{ color:var(--text); }
+  .back svg{ width:15px; height:15px; }
+
+  /* ---------- pictures ---------- */
+  .shot{
+    position:relative;
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    overflow:hidden;
+    background:#0f1116;
+    aspect-ratio:3 / 2;
+  }
+  .shot img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    opacity:0;
+    transition:opacity .3s ease;
+  }
+  /* The bare render is see-through, so it sits whole rather than filling, on
+     a pale panel - a black monitor on a black page is hard to make out. */
+  .shot img.contain{ object-fit:contain; padding:6%; background:#edeff3; }
+  .shot img.on{ opacity:1; }
+
+  .thumbs{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:9px;
+    margin-top:9px;
+  }
+  .thumb{
+    padding:0;
+    border:1px solid var(--line);
+    border-radius:11px;
+    overflow:hidden;
+    background:#0f1116;
+    aspect-ratio:3 / 2;
+    cursor:pointer;
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  .thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .thumb img.contain{ object-fit:contain; padding:7%; background:#edeff3; }
+  .thumb:hover{ border-color:var(--line-hover); transform:translateY(-1px); }
+  .thumb[aria-current="true"]{ border-color:var(--accent); }
+
+  /* ---------- the words ---------- */
+  header{ margin:22px 0 0; }
+  h1{
+    margin:0;
+    font-family:'Fredoka', sans-serif;
+    font-weight:700;
+    font-size:30px;
+    line-height:1.1;
+  }
+  .sub{
+    margin:5px 0 0;
+    color:var(--text-dim);
+    font-size:14.5px;
+  }
+  .price{
+    margin:14px 0 0;
+    font-family:'Fredoka', sans-serif;
+    font-size:26px;
+    font-weight:700;
+  }
+  .price small{
+    display:block;
+    margin-top:2px;
+    font-family:"Inter",sans-serif;
+    font-size:12.5px;
+    font-weight:500;
+    color:var(--text-faint);
+  }
+
+  .buy{
+    display:block;
+    width:100%;
+    margin-top:16px;
+    padding:15px 22px;
+    border:0;
+    border-radius:999px;
+    text-align:center;
+    text-decoration:none;
+    font:800 18px/1 "Inter",sans-serif;
+    color:#0a0b0e;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow:0 8px 22px rgba(0,0,0,.4), 0 0 20px rgba(79,142,247,.3);
+    transition:transform .15s ease, filter .15s ease;
+  }
+  .buy:hover{ transform:translateY(-1px); filter:brightness(1.06); }
+  .buy:active{ transform:translateY(0); }
+  .buy.off{
+    background:#1b1e25;
+    color:var(--text-faint);
+    box-shadow:none;
+    cursor:default;
+    border:1px solid var(--line);
+  }
+  .buy.off:hover{ transform:none; filter:none; }
+
+  .specs{
+    list-style:none;
+    margin:22px 0 0;
+    padding:16px 18px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    display:grid;
+    gap:11px;
+  }
+  .specs li{
+    display:grid;
+    grid-template-columns:20px 1fr;
+    gap:11px;
+    align-items:start;
+    font-size:14px;
+    color:var(--text-dim);
+  }
+  .specs b{ color:var(--text); font-weight:600; }
+  .specs svg{ width:17px; height:17px; color:var(--accent); margin-top:1px; }
+
+  footer{
+    margin-top:30px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:center;
+    color:var(--text-faint);
+    font-size:12.5px;
+  }
+  footer a{ color:var(--text-faint); text-decoration:none; }
+  footer a:hover{ color:var(--text-dim); }
+  .dot{ color:var(--text-faint); }
+
+  @media (min-width:900px){
+    .page{
+      max-width:1020px;
+      display:grid;
+      grid-template-columns:1fr 360px;
+      grid-template-areas:"back back" "shots words" "foot foot";
+      column-gap:40px;
+      align-items:start;
+      padding-block:34px 72px;
+    }
+    .back{ grid-area:back; }
+    .shots{ grid-area:shots; }
+    .words{ grid-area:words; position:sticky; top:34px; }
+    header{ margin-top:0; }
+    h1{ font-size:34px; }
+    footer{ grid-area:foot; margin-top:40px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <a class="back" href="/">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+    The Chubbitz
+  </a>
+
+  <div class="shots">
+    <div class="shot" id="shot"></div>
+    <div class="thumbs" id="thumbs"></div>
+  </div>
+
+  <div class="words">
+    <header>
+      <h1>Digital Wallpaper</h1>
+      <p class="sub">4K ultrawide. The gang round a campfire, somewhere cold and starry.</p>
+    </header>
+
+    <p class="price" id="price" hidden></p>
+
+    <a class="buy" id="buy" data-track="shop_click" data-track-label="wallpaper_01_buy">Buy</a>
+
+    <ul class="specs">
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 20h8"/></svg>
+        <span><b>4K ultrawide.</b> Shown here on an ultrawide, a curved ultrawide and a laptop.</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg>
+        <span><b>A download</b>, not a parcel. Nothing to ship.</span>
+      </li>
+    </ul>
+  </div>
+
+  <footer>
+    <a href="/">The Chubbitz</a>
+    <span class="dot">&middot;</span>
+    <a href="/privacy">Privacy</a>
+    <span class="dot">&middot;</span>
+    <a href="/terms">Terms</a>
+  </footer>
+</div>
+
+<script src="/analytics.js" defer></script>
+<script>
+  /* ---- price and checkout ----
+     Fill these two in and the page goes live. PRICE shows above the button
+     once it's set; the Stripe payment link makes the button work. While
+     they're empty the page just leaves them out rather than guessing. */
+  var PRICE = "";                 /* e.g. "$5" */
+  var PRICE_NOTE = "";            /* e.g. "Instant download" */
+  var STRIPE_LINK = "";           /* e.g. "https://buy.stripe.com/..." */
+
+  (function (){
+    var price = document.getElementById("price");
+    if(PRICE){
+      price.innerHTML = PRICE + (PRICE_NOTE ? "<small>" + PRICE_NOTE + "</small>" : "");
+      price.hidden = false;
+    }
+
+    var buy = document.getElementById("buy");
+    if(STRIPE_LINK){
+      buy.href = STRIPE_LINK;
+      buy.target = "_blank";
+      buy.rel = "noopener noreferrer";
+    } else {
+      buy.classList.add("off");
+      buy.textContent = "Checkout opening soon";
+      buy.removeAttribute("data-track");
+    }
+  })();
+</script>
+<script>
+  /* ---- the pictures ----
+     One big shot with a row of thumbnails under it. The bare render is a
+     see-through WebP, so it's shown whole instead of cropped to fill. */
+  (function (){
+    var SHOTS = [
+      { src:"/media/shop/wallpaper-01-1.jpg", alt:"The wallpaper on an ultrawide monitor in a pink-lit desk setup" },
+      { src:"/media/shop/wallpaper-01-4.jpg", alt:"The wallpaper on a curved ultrawide in a warm wooden setup" },
+      { src:"/media/shop/wallpaper-01-3.jpg", alt:"The wallpaper on a laptop screen" },
+      { src:"/media/shop/wallpaper-01-2.webp", alt:"The wallpaper on an ultrawide monitor, on its own", contain:true }
+    ];
+
+    var shot = document.getElementById("shot");
+    var thumbs = document.getElementById("thumbs");
+    var imgs = [];
+
+    SHOTS.forEach(function (s, i){
+      var img = document.createElement("img");
+      img.src = s.src;
+      img.alt = s.alt;
+      img.decoding = "async";
+      if(i) img.loading = "lazy";
+      if(s.contain) img.className = "contain";
+      if(!i) img.classList.add("on");
+      shot.appendChild(img);
+      imgs.push(img);
+
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "thumb";
+      b.setAttribute("aria-label", "Picture " + (i + 1));
+      b.setAttribute("aria-current", i === 0 ? "true" : "false");
+      b.innerHTML = '<img src="' + s.src + '" alt="" loading="lazy" decoding="async"' +
+        (s.contain ? ' class="contain"' : "") + ">";
+      b.addEventListener("click", function (){ show(i); });
+      thumbs.appendChild(b);
+    });
+
+    function show(n){
+      imgs.forEach(function (img, i){ img.classList.toggle("on", i === n); });
+      [].forEach.call(thumbs.children, function (b, i){
+        b.setAttribute("aria-current", i === n ? "true" : "false");
+      });
+    }
+  })();
+</script>
+</body>
+</html>
