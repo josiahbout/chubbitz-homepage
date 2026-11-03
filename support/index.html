@@ -400,6 +400,112 @@
     box-shadow:0 6px 20px rgba(0,0,0,.4), 0 0 18px rgba(79,142,247,.5);
   }
 
+  /* ---------- The wallpaper perk ---------- */
+  .perk-wrap{
+    position:relative;
+    z-index:1;
+    max-width:1120px;
+    margin:30px auto 0;
+    padding:0 18px;
+  }
+  .perk{
+    padding:22px 18px;
+    background:var(--bg-soft);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+  }
+  .perk-head{ text-align:center; }
+  .perk-head h2{
+    margin:0;
+    font-family:'Fredoka', sans-serif;
+    font-weight:700;
+    font-size:24px;
+    line-height:1.2;
+  }
+  .perk-head p{
+    margin:7px 0 0;
+    font-size:14.5px;
+    line-height:1.5;
+    color:var(--text-dim);
+  }
+  .perk-grid{
+    margin-top:18px;
+    display:grid;
+    gap:16px;
+  }
+
+  /* One big picture with a row of smaller ones under it, same as the shop
+     page it's borrowed from. The bare render is see-through, so it's shown
+     whole on its own backdrop rather than cropped to fill. */
+  .perk-shot{
+    position:relative;
+    aspect-ratio:3 / 2;
+    border-radius:var(--radius-md);
+    overflow:hidden;
+    background:#0f1116;
+    border:1px solid var(--line);
+  }
+  .perk-shot img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    opacity:0;
+    transition:opacity .45s ease;
+  }
+  .perk-shot img.contain{ object-fit:contain; padding:5%; background:#edeff3; }
+  .perk-shot img.on{ opacity:1; }
+  .perk-thumbs{
+    margin-top:9px;
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:8px;
+  }
+  .perk-thumb{
+    padding:0;
+    aspect-ratio:3 / 2;
+    border-radius:10px;
+    overflow:hidden;
+    background:#0f1116;
+    border:1px solid var(--line);
+    cursor:pointer;
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  .perk-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .perk-thumb img.contain{ object-fit:contain; padding:7%; background:#edeff3; }
+  .perk-thumb:hover{ border-color:var(--line-hover); transform:translateY(-1px); }
+  .perk-thumb[aria-current="true"]{ border-color:var(--accent); }
+
+  .perk-words{ display:flex; flex-direction:column; }
+  .perk-specs{
+    list-style:none;
+    margin:0 0 16px;
+    padding:16px 18px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    display:grid;
+    gap:11px;
+  }
+  .perk-specs li{
+    display:grid;
+    grid-template-columns:20px 1fr;
+    gap:11px;
+    align-items:start;
+    font-size:14px;
+    color:var(--text-dim);
+  }
+  .perk-specs b{ color:var(--text); font-weight:600; }
+  .perk-specs svg{ width:17px; height:17px; color:var(--accent); margin-top:1px; }
+  .perk-words .cta{ box-shadow:0 6px 20px rgba(0,0,0,.4), 0 0 18px rgba(79,142,247,.5); }
+
+  @media (min-width:860px){
+    .perk{ padding:26px 26px 28px; }
+    .perk-head h2{ font-size:28px; }
+    .perk-grid{ grid-template-columns:1fr 340px; gap:26px; align-items:start; }
+  }
+
   /* ---------- Closing note ---------- */
   .outro{
     margin:26px auto 0;
@@ -432,12 +538,6 @@
   footer a{ color:var(--text-faint); text-decoration:none; }
   footer a:not([href="/"]){ border-bottom:1px solid var(--line); }
   .dot{ margin:0 8px; opacity:.5; }
-  .outro .fine-print{
-    margin:0 0 14px;
-    font-size:12px;
-    line-height:1.55;
-    color:var(--text-faint);
-  }
   footer a:hover{ color:var(--text-dim); }
 
   @media (prefers-reduced-motion: reduce){
@@ -517,6 +617,7 @@
         <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5L9.5 18L20 6"/></svg></span><span class="label">Early access to videos &amp; sneak peak content</span></li>
         <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5L9.5 18L20 6"/></svg></span><span class="label">Choose the options for the next Chubbitz' name and shape</span></li>
         <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5L9.5 18L20 6"/></svg></span><span class="label">10 votes on every crowd-funded Chubbitz' name &amp; shape</span></li>
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5L9.5 18L20 6"/></svg></span><span class="label">Free 4k digital wallpaper</span></li>
       </ul>
       <a class="cta" id="supporterCta" data-track="tier_click" data-track-label="supporter" href="https://buy.stripe.com/aFa3cwdej10q5gMah673G00">Join</a>
     </article>
@@ -549,11 +650,43 @@
     </article>
 
   </div>
+
+  <p class="tier-note">
+    Renews until you cancel, and no refunds.
+    <a href="https://billing.stripe.com/p/login/aFa3cwdej10q5gMah673G00" target="_blank" rel="noopener noreferrer">Manage your payment</a>
+    &middot; <a href="/terms">Terms</a>
+    &middot; <a href="/privacy">Privacy</a>
+  </p>
+</div>
+
+
+<div class="perk-wrap">
+  <section class="perk">
+    <div class="perk-head">
+      <h2>What&rsquo;s that? Another perk?</h2>
+      <p>Supporters can download this 4k digital wallpaper for free!</p>    </div>
+
+    <div class="perk-grid">
+      <div class="perk-shots">
+        <div class="perk-shot" id="perkShot"></div>
+        <div class="perk-thumbs" id="perkThumbs"></div>
+      </div>
+
+      <div class="perk-words">
+        <ul class="perk-specs">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 20h8"/></svg><span><b>4K ultrawide</b> &mdash; 5120 &times; 2160</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3.5l5 5L9 20H4v-5z"/><path d="M13.5 5.5l5 5"/></svg><span><b>Hand painted.</b> No generative AI used.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg><span><b>Digital download</b></span></li>
+        </ul>
+        <a class="cta" id="perkCta" data-track="tier_click" data-track-label="wallpaper_perk"
+           href="https://buy.stripe.com/aFa3cwdej10q5gMah673G00">Join</a>
+      </div>
+    </div>
+  </section>
 </div>
 
 <div class="col">
   <section class="outro">
-    <p class="fine-print">Supporter plans renew automatically each month or year at the price shown until you cancel. Cancel anytime from <a href="https://billing.stripe.com/p/login/aFa3cwdej10q5gMah673G00" target="_blank" rel="noopener noreferrer">Manage your payment</a> and keep your perks until the end of the period you've paid for. Payments aren't refunded. See the <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.</p>
     <p>Have a question or just want to reach out to me directly? <a href="mailto:hello@thechubbitz.com">Email me here!</a></p>
   </section>
 
@@ -605,12 +738,85 @@
     annual:  { price: '$42', unit: '/ year · cancel anytime',  url: 'https://buy.stripe.com/bJe00k0rxbF47oUdti73G02' }
   };
 
+  const perkCta = document.getElementById('perkCta');
+
   annualToggle.addEventListener('change', () => {
     const m = annualToggle.checked ? modes.annual : modes.monthly;
     priceEl.textContent = m.price;
     unitEl.textContent = m.unit;
     cta.href = m.url;
+    if(perkCta) perkCta.href = m.url;
   });
+
+  /* ---- the wallpaper pictures ----
+     The same four shots as the shop page. The big one steps along on its own
+     every few seconds until somebody picks one, and then it's theirs. */
+  (function (){
+    var SHOTS = [
+      { src:"/media/shop/wallpaper-01-2.webp", alt:"The Chubbitz campfire wallpaper shown on an ultrawide monitor", contain:true },
+      { src:"/media/shop/wallpaper-01-3.jpg", alt:"The Chubbitz campfire wallpaper on a laptop screen on a wooden desk" },
+      { src:"/media/shop/wallpaper-01-4.jpg", alt:"The wallpaper on a curved ultrawide monitor in a warm wooden desk setup" },
+      { src:"/media/shop/wallpaper-01-1.jpg", alt:"The wallpaper on an ultrawide monitor in a pink-lit desk setup" }
+    ];
+
+    var shot = document.getElementById("perkShot");
+    var thumbs = document.getElementById("perkThumbs");
+    if(!shot || !thumbs) return;
+    var imgs = [];
+
+    SHOTS.forEach(function (s, i){
+      var img = document.createElement("img");
+      img.src = s.src;
+      img.alt = s.alt;
+      img.loading = "lazy";
+      img.decoding = "async";
+      if(s.contain) img.className = "contain";
+      if(!i) img.classList.add("on");
+      shot.appendChild(img);
+      imgs.push(img);
+
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "perk-thumb";
+      b.setAttribute("aria-label", "Picture " + (i + 1));
+      b.setAttribute("aria-current", i === 0 ? "true" : "false");
+      b.innerHTML = '<img src="' + s.src + '" alt="" loading="lazy" decoding="async"' +
+        (s.contain ? ' class="contain"' : "") + ">";
+      b.addEventListener("click", function (){ chosen = true; stop(); show(i); });
+      thumbs.appendChild(b);
+    });
+
+    function show(n){
+      at = n;
+      imgs.forEach(function (img, i){ img.classList.toggle("on", i === n); });
+      [].forEach.call(thumbs.children, function (b, i){
+        b.setAttribute("aria-current", i === n ? "true" : "false");
+      });
+    }
+
+    var EVERY = 3000;
+    var at = 0, timer = null, chosen = false, held = false;
+
+    function stop(){ if(timer){ clearInterval(timer); timer = null; } }
+    function start(){
+      if(timer || chosen || held || imgs.length < 2 || document.hidden) return;
+      timer = setInterval(function (){ show((at + 1) % imgs.length); }, EVERY);
+    }
+
+    if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    var area = shot.parentNode;
+    ["pointerenter", "focusin"].forEach(function (ev){
+      area.addEventListener(ev, function (){ held = true; stop(); });
+    });
+    ["pointerleave", "focusout"].forEach(function (ev){
+      area.addEventListener(ev, function (){ held = false; start(); });
+    });
+    document.addEventListener("visibilitychange", function (){
+      if(document.hidden) stop(); else start();
+    });
+    start();
+  })();
 </script>
 
 </body>
