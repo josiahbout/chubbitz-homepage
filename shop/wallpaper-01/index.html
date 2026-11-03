@@ -4,21 +4,53 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0a0b0e">
-<title>Digital Wallpaper &middot; The Chubbitz</title>
-<meta name="description" content="A 4K ultrawide Chubbitz wallpaper: the gang round a campfire under the stars.">
+<title>Campout &middot; A Chubbitz digital wallpaper</title>
+<meta name="description" content="A hand-painted 4K ultrawide desktop wallpaper from The Chubbitz, featuring Bacon, Crank, Onion, Twist, Briefcase and Skyman camped out on their way to the mysterious door at the top of Mount Chudalud. 5120 x 2160, no generative AI, instant download.">
 
 <!-- How the link previews when it's shared (Discord, iMessage, X, Facebook...). -->
 <meta property="og:type" content="product">
 <meta property="og:site_name" content="The Chubbitz">
-<meta property="og:title" content="Digital Wallpaper">
-<meta property="og:description" content="A 4K ultrawide Chubbitz wallpaper: the gang round a campfire under the stars.">
+<meta property="og:title" content="Campout">
+<meta property="og:description" content="A hand-painted 4K ultrawide desktop wallpaper from The Chubbitz, featuring Bacon, Crank, Onion, Twist, Briefcase and Skyman camped out on their way to the mysterious door at the top of Mount Chudalud.">
 <meta property="og:url" content="https://thechubbitz.com/shop/wallpaper-01/">
 <meta property="og:image" content="https://thechubbitz.com/media/shop/wallpaper-01-1.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Digital Wallpaper">
-<meta name="twitter:description" content="A 4K ultrawide Chubbitz wallpaper: the gang round a campfire under the stars.">
+<meta name="twitter:title" content="Campout &middot; A Chubbitz digital wallpaper">
+<meta name="twitter:description" content="A hand-painted 4K ultrawide desktop wallpaper from The Chubbitz, featuring Bacon, Crank, Onion, Twist, Briefcase and Skyman camped out on their way to the mysterious door at the top of Mount Chudalud.">
 <meta name="twitter:image" content="https://thechubbitz.com/media/shop/wallpaper-01-1.jpg">
 <link rel="canonical" href="https://thechubbitz.com/shop/wallpaper-01/">
+
+<!-- Structured data, so search engines and assistants can read what this is
+     without guessing. Price and availability are left out until there's a
+     checkout - a wrong offer here is worse than none. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Campout",
+  "category": "Desktop wallpaper",
+  "url": "https://thechubbitz.com/shop/wallpaper-01/",
+  "description": "A hand-painted 4K ultrawide desktop wallpaper from The Chubbitz, featuring Bacon, Crank, Onion, Twist, Briefcase and Skyman. They have made camp together on their way to the giant mysterious door at the top of Mount Chudalud: some are warming themselves by the fire and others are fishing. Painted with extra space at the sides so it fits any screen. No generative AI was used.",
+  "image": [
+    "https://thechubbitz.com/media/shop/wallpaper-01-2.webp",
+    "https://thechubbitz.com/media/shop/wallpaper-01-3.jpg",
+    "https://thechubbitz.com/media/shop/wallpaper-01-4.jpg",
+    "https://thechubbitz.com/media/shop/wallpaper-01-1.jpg"
+  ],
+  "brand": { "@type": "Brand", "name": "The Chubbitz" },
+  "creator": {
+    "@type": "Person",
+    "name": "starrjoyart",
+    "url": "https://x.com/starrjoyart"
+  },
+  "additionalProperty": [
+    { "@type": "PropertyValue", "name": "Resolution", "value": "5120 x 2160" },
+    { "@type": "PropertyValue", "name": "Aspect ratio", "value": "Ultrawide, with extra width for any screen" },
+    { "@type": "PropertyValue", "name": "Made with generative AI", "value": "No" }
+  ],
+  "isFamilyFriendly": true
+}
+</script>
 
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -56,18 +88,19 @@
   }
   a{ color:var(--accent-2); }
 
-  .back{
+  /* the same home pill the other pages use */
+  .home-link{
     display:inline-flex;
-    align-items:center;
-    gap:6px;
-    font-size:13.5px;
-    font-weight:600;
+    padding:7px;
+    border-radius:999px;
+    background:rgba(255,255,255,.06);
+    border:1px solid var(--line);
     color:var(--text-dim);
-    text-decoration:none;
     margin-bottom:16px;
+    transition:color .15s ease, border-color .15s ease;
   }
-  .back:hover{ color:var(--text); }
-  .back svg{ width:15px; height:15px; }
+  .home-link:hover{ color:#fff; border-color:var(--line-hover); }
+  .home-link svg{ width:22px; height:22px; display:block; }
 
   /* ---------- pictures ---------- */
   .shot{
@@ -168,6 +201,22 @@
   }
   .buy.off:hover{ transform:none; filter:none; }
 
+  /* the write-up, down at the bottom under everything else */
+  .about{
+    margin:30px 0 0;
+    padding-top:22px;
+    border-top:1px solid var(--line);
+    max-width:620px;
+  }
+  .about p{
+    margin:0 0 11px;
+    font-size:14.5px;
+    line-height:1.7;
+    color:var(--text-dim);
+  }
+  .about p:last-child{ margin-bottom:0; }
+  .about b{ color:var(--text); font-weight:600; }
+
   .specs{
     list-style:none;
     margin:22px 0 0;
@@ -207,26 +256,29 @@
       max-width:1020px;
       display:grid;
       grid-template-columns:1fr 360px;
-      grid-template-areas:"back back" "shots words" "foot foot";
+      grid-template-areas:"back back" "shots words" "about about" "foot foot";
       column-gap:40px;
       align-items:start;
       padding-block:34px 72px;
     }
-    .back{ grid-area:back; }
+    .home-link{ grid-area:back; justify-self:start; }
     .shots{ grid-area:shots; }
     .words{ grid-area:words; position:sticky; top:34px; }
+    .about{ grid-area:about; margin-top:36px; }
     header{ margin-top:0; }
     h1{ font-size:34px; }
-    footer{ grid-area:foot; margin-top:40px; }
+    footer{ grid-area:foot; margin-top:34px; }
   }
 </style>
 </head>
 <body>
 <div class="page">
 
-  <a class="back" href="/">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
-    The Chubbitz
+  <a class="home-link" href="/" aria-label="The Chubbitz home">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 11L12 4L21 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5.5 9.5V19C5.5 19.5523 5.94772 20 6.5 20H9.5C10.0523 20 10.5 19.5523 10.5 19V15C10.5 14.4477 10.9477 14 11.5 14H12.5C13.0523 14 13.5 14.4477 13.5 15V19C13.5 19.5523 13.9477 20 14.5 20H17.5C18.0523 20 18.5 19.5523 18.5 19V9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
   </a>
 
   <div class="shots">
@@ -236,8 +288,8 @@
 
   <div class="words">
     <header>
-      <h1>Digital Wallpaper</h1>
-      <p class="sub">4K ultrawide. The gang round a campfire, somewhere cold and starry.</p>
+      <h1>Campout</h1>
+      <p class="sub">A Chubbitz digital wallpaper</p>
     </header>
 
     <p class="price" id="price" hidden></p>
@@ -247,13 +299,35 @@
     <ul class="specs">
       <li>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 20h8"/></svg>
-        <span><b>4K ultrawide.</b> Shown here on an ultrawide, a curved ultrawide and a laptop.</span>
+        <span><b>4K ultrawide</b> &mdash; 5120 &times; 2160</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3.5l5 5L9 20H4v-5z"/><path d="M13.5 5.5l5 5"/></svg>
+        <span><b>Hand painted.</b> No generative AI used.</span>
       </li>
       <li>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg>
-        <span><b>A download</b>, not a parcel. Nothing to ship.</span>
+        <span><b>Digital download</b></span>
       </li>
     </ul>
+  </div>
+
+  <div class="about">
+    <p>
+      A hand-painted <b>4K ultrawide desktop wallpaper</b> from
+      &ldquo;The Chubbitz&rdquo;, featuring Bacon, Crank, Onion, Twist,
+      Briefcase and Skyman. They've made camp together on their way to the giant
+      mysterious door at the top of Mount Chudalud. Some Chubbitz are warming
+      themselves by the fire, and others are fishing.
+    </p>
+    <p>
+      The wallpaper was painted with extra space at the sides, so it will fit any
+      computer screen you might have.
+    </p>
+    <p>
+      No generative AI was used. Painted with care by
+      <a href="https://x.com/starrjoyart" target="_blank" rel="noopener noreferrer">@starrjoyart</a>.
+    </p>
   </div>
 
   <footer>
@@ -300,10 +374,10 @@
      see-through WebP, so it's shown whole instead of cropped to fill. */
   (function (){
     var SHOTS = [
-      { src:"/media/shop/wallpaper-01-1.jpg", alt:"The wallpaper on an ultrawide monitor in a pink-lit desk setup" },
-      { src:"/media/shop/wallpaper-01-4.jpg", alt:"The wallpaper on a curved ultrawide in a warm wooden setup" },
-      { src:"/media/shop/wallpaper-01-3.jpg", alt:"The wallpaper on a laptop screen" },
-      { src:"/media/shop/wallpaper-01-2.webp", alt:"The wallpaper on an ultrawide monitor, on its own", contain:true }
+      { src:"/media/shop/wallpaper-01-2.webp", alt:"The Chubbitz campfire wallpaper shown on an ultrawide monitor", contain:true },
+      { src:"/media/shop/wallpaper-01-3.jpg", alt:"The Chubbitz campfire wallpaper on a laptop screen on a wooden desk" },
+      { src:"/media/shop/wallpaper-01-4.jpg", alt:"The wallpaper on a curved ultrawide monitor in a warm wooden desk setup" },
+      { src:"/media/shop/wallpaper-01-1.jpg", alt:"The wallpaper on an ultrawide monitor in a pink-lit desk setup" }
     ];
 
     var shot = document.getElementById("shot");
