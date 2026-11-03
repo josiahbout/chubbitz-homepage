@@ -147,7 +147,13 @@
   .thumb[aria-current="true"]{ border-color:var(--accent); }
 
   /* ---------- the words ---------- */
-  header{ margin:22px 0 0; }
+  header{
+    margin:22px 0 0;
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+  }
   h1{
     margin:0;
     font-family:'Fredoka', sans-serif;
@@ -160,19 +166,30 @@
     color:var(--text-dim);
     font-size:14.5px;
   }
+  /* The price sits in a little tag next to the name. */
   .price{
-    margin:14px 0 0;
-    font-family:'Fredoka', sans-serif;
-    font-size:26px;
-    font-weight:700;
+    flex:none;
+    margin:4px 0 0;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:7px 14px 7px 12px;
+    border:1px solid var(--line-hover);
+    border-radius:999px;
+    background:rgba(79,142,247,.12);
+    font-family:"Inter", sans-serif;
+    font-size:20.5px;
+    font-weight:800;
+    letter-spacing:-.01em;
+    line-height:1;
+    color:#fff;
+    white-space:nowrap;
   }
-  .price small{
-    display:block;
-    margin-top:2px;
-    font-family:"Inter",sans-serif;
-    font-size:12.5px;
-    font-weight:500;
-    color:var(--text-faint);
+  .price svg{
+    width:17px;
+    height:17px;
+    flex:none;
+    color:var(--accent-2);
   }
 
   .buy{
@@ -200,6 +217,32 @@
     border:1px solid var(--line);
   }
   .buy.off:hover{ transform:none; filter:none; }
+
+  /* The other way to get it, just under the button. */
+  .buy-alt{
+    margin:11px 0 0;
+    text-align:center;
+    font-size:13.5px;
+    line-height:1.45;
+    color:var(--text-dim);
+  }
+  .buy-alt b{ color:var(--text); font-weight:700; }
+  .buy-alt a{ color:var(--accent-2); text-decoration:none; border-bottom:1px solid rgba(142,201,255,.35); }
+  .buy-alt a:hover{ border-bottom-color:var(--accent-2); }
+  .buy-alt br{ display:none; }     /* narrow screens wrap on their own */
+
+  /* The Gumroad overlay is driven by a copy of the button kept out of sight,
+     so Gumroad's own styling never lands on the real one. */
+  .gr-hidden{
+    position:absolute;
+    width:1px; height:1px;
+    overflow:hidden;
+    clip:rect(0 0 0 0);
+    white-space:nowrap;
+  }
+  /* Gumroad's inline card, if that's the mode in use. It comes with its own
+     light styling, so it just gets room to sit in. */
+  .gr-embed{ margin-top:16px; min-height:120px; }
 
   /* the write-up, down at the bottom under everything else */
   .about{
@@ -252,6 +295,7 @@
   .dot{ color:var(--text-faint); }
 
   @media (min-width:900px){
+    .buy-alt br{ display:inline; }
     .page{
       max-width:1020px;
       display:grid;
@@ -288,13 +332,19 @@
 
   <div class="words">
     <header>
-      <h1>Campout</h1>
-      <p class="sub">A Chubbitz digital wallpaper</p>
+      <div>
+        <h1>Campout</h1>
+        <p class="sub">A Chubbitz digital wallpaper</p>
+      </div>
+      <p class="price" id="price" hidden></p>
     </header>
 
-    <p class="price" id="price" hidden></p>
-
     <a class="buy" id="buy" data-track="shop_click" data-track-label="wallpaper_01_buy">Buy</a>
+
+    <p class="buy-alt">
+      You can download this wallpaper for<br> <b>FREE</b> by
+      <a href="/support" data-track="link_click" data-track-label="wallpaper_01_support">becoming a supporter!</a>
+    </p>
 
     <ul class="specs">
       <li>
@@ -340,32 +390,93 @@
 </div>
 
 <script src="/analytics.js" defer></script>
+<!-- only the "overlay" checkout mode below needs this; it sits idle otherwise -->
+<script src="https://gumroad.com/js/gumroad.js" defer></script>
 <script>
   /* ---- price and checkout ----
-     Fill these two in and the page goes live. PRICE shows above the button
-     once it's set; the Stripe payment link makes the button work. While
-     they're empty the page just leaves them out rather than guessing. */
-  var PRICE = "";                 /* e.g. "$5" */
-  var PRICE_NOTE = "";            /* e.g. "Instant download" */
-  var STRIPE_LINK = "";           /* e.g. "https://buy.stripe.com/..." */
+     The three things worth changing live right here.
+
+     CHECKOUT  where the Buy button sends people. Empty turns the button off.
+     MODE      how it opens:
+                 "overlay"  Gumroad's checkout slides over this page, so the
+                            visitor never leaves. Needs gumroad.js, and falls
+                            back to the product page if that doesn't load.
+                 "tab"      opens Gumroad in a new tab, straight at the
+                            payment form.
+                 "embed"    drops Gumroad's own product card into the page in
+                            place of the button. It brings its own light
+                            styling with it.
+     PRICE     shown in the tag beside the name. Typed here, not read from
+               Gumroad, so it needs changing here too if it changes there. */
+  var CHECKOUT = "https://josiahbout.gumroad.com/l/zrndc";
+  var MODE = "tab";               /* "overlay" | "tab" | "embed" */
+  var PRICE = "$10";
 
   (function (){
     var price = document.getElementById("price");
     if(PRICE){
-      price.innerHTML = PRICE + (PRICE_NOTE ? "<small>" + PRICE_NOTE + "</small>" : "");
+      price.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+          '<path d="M3 11.5V4.5C3 3.67157 3.67157 3 4.5 3H11.5C11.8978 3 12.2794 3.15804 12.5607 3.43934' +
+            'L20.5607 11.4393C21.1464 12.0251 21.1464 12.9749 20.5607 13.5607L13.5607 20.5607' +
+            'C12.9749 21.1464 12.0251 21.1464 11.4393 20.5607L3.43934 12.5607C3.15804 12.2794 3 11.8978 3 11.5Z"' +
+            ' stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>' +
+          '<circle cx="7.75" cy="7.75" r="1.35" fill="currentColor"/>' +
+        '</svg><span>' + PRICE + '</span>';
       price.hidden = false;
     }
 
     var buy = document.getElementById("buy");
-    if(STRIPE_LINK){
-      buy.href = STRIPE_LINK;
-      buy.target = "_blank";
-      buy.rel = "noopener noreferrer";
-    } else {
+
+    if(!CHECKOUT){
       buy.classList.add("off");
       buy.textContent = "Checkout opening soon";
       buy.removeAttribute("data-track");
+      return;
     }
+
+    if(MODE === "embed"){
+      var box = document.createElement("div");
+      box.className = "gr-embed gumroad-product-embed";
+      box.innerHTML = '<a href="' + CHECKOUT + '">Loading&hellip;</a>';
+      buy.parentNode.replaceChild(box, buy);
+      return;
+    }
+
+    buy.href = CHECKOUT;
+
+    if(MODE === "overlay"){
+      /* A stand-in button, hidden from sight and from screen readers, is what
+         Gumroad's script actually hooks into. Clicking the real button clicks
+         that one, so the overlay opens and this page keeps its own look. If
+         gumroad.js never arrives, the click just follows the link instead. */
+      var ghost = document.createElement("a");
+      ghost.className = "gr-hidden gumroad-button";
+      ghost.href = CHECKOUT;
+      ghost.tabIndex = -1;
+      ghost.setAttribute("aria-hidden", "true");
+      ghost.textContent = "Buy";
+      buy.parentNode.insertBefore(ghost, buy);
+
+      var ready = false;
+      var tag = document.querySelector("script[src*='gumroad.js']");
+      if(tag) tag.addEventListener("load", function (){ ready = true; });
+
+      buy.addEventListener("click", function (e){
+        if(!ready) return;                   /* script missing: follow the link */
+        e.preventDefault();
+        ghost.click();
+      });
+      return;
+    }
+
+    /* Off to Gumroad in a new tab. The product card is being left behind
+       anyway, so wanted=true lands them straight on the payment form.
+       (That trick can't be used with the overlay: Gumroad answers it with a
+       full page load, which throws the visitor off this page.) */
+    buy.href = CHECKOUT + (CHECKOUT.indexOf("?") < 0 ? "?" : "&") + "wanted=true";
+    buy.target = "_blank";
+    buy.rel = "noopener noreferrer";
   })();
 </script>
 <script>
