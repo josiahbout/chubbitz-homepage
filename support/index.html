@@ -400,6 +400,17 @@
     box-shadow:0 6px 20px rgba(0,0,0,.4), 0 0 18px rgba(79,142,247,.5);
   }
 
+  /* What a plan does, kept quiet under the cards. */
+  .tier-note{
+    margin:14px 0 0;
+    text-align:center;
+    font-size:11px;
+    line-height:1.6;
+    color:var(--text-faint);
+  }
+  .tier-note a{ color:var(--text-faint); text-decoration:none; border-bottom:1px solid var(--line); }
+  .tier-note a:hover{ color:var(--text-dim); }
+
   /* ---------- The wallpaper perk ---------- */
   .perk-wrap{
     position:relative;
@@ -528,6 +539,10 @@
     border-bottom:1px solid rgba(142,201,255,.35);
   }
   .outro a:hover{ border-bottom-color:var(--accent-2); }
+  /* Wide enough for the whole sentence to sit on one line. */
+  @media (min-width:680px){
+    .col-wide{ max-width:660px; }
+  }
 
   footer{
     padding:30px 0 44px;
@@ -652,10 +667,8 @@
   </div>
 
   <p class="tier-note">
-    Renews until you cancel, and no refunds.
+    Supporter tier renews until you cancel.
     <a href="https://billing.stripe.com/p/login/aFa3cwdej10q5gMah673G00" target="_blank" rel="noopener noreferrer">Manage your payment</a>
-    &middot; <a href="/terms">Terms</a>
-    &middot; <a href="/privacy">Privacy</a>
   </p>
 </div>
 
@@ -685,7 +698,7 @@
   </section>
 </div>
 
-<div class="col">
+<div class="col col-wide">
   <section class="outro">
     <p>Have a question or just want to reach out to me directly? <a href="mailto:hello@thechubbitz.com">Email me here!</a></p>
   </section>
