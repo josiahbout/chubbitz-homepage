@@ -758,10 +758,14 @@
   </footer>
 </div>
 
+<!-- The figures themselves, kept up to date daily. Loaded before the script
+     below so the bar is right on the first frame. -->
+<script src="/raised.js"></script>
 <script>
-  // Fundraising progress — bar fills and the number counts up on load
-  const RAISED = 82;
-  const GOAL = 1000;
+  // Fundraising progress — bar fills and the number counts up on load.
+  // The fallbacks keep the bar sensible if raised.js ever fails to load.
+  const RAISED = typeof CHUBBITZ_RAISED === 'number' ? CHUBBITZ_RAISED : 82;
+  const GOAL = typeof CHUBBITZ_GOAL === 'number' && CHUBBITZ_GOAL > 0 ? CHUBBITZ_GOAL : 1000;
   requestAnimationFrame(() => {
     document.getElementById('progressFill').style.width = (RAISED / GOAL * 100) + '%';
   });
