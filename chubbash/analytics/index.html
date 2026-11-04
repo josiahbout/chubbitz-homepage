@@ -265,14 +265,14 @@
   <header>
     <div class="kicker">The Chubbitz &middot; Bash.tv campaign</div>
     <h1>Campaign analytics</h1>
-    <p class="range">Oct 9 through Oct 26, 2026. Real visits only, not counting test loads.</p>
+    <p class="range">Oct 9 through Nov 3, 2026. Real visits only, not counting test loads.</p>
   </header>
 
   <section class="stats" aria-label="Headline numbers">
-    <div class="stat"><span class="stat-value">633.1K</span><span class="stat-label">video views</span></div>
-    <div class="stat"><span class="stat-value">3,551</span><span class="stat-label">people on the site</span></div>
-    <div class="stat"><span class="stat-value">5,232</span><span class="stat-label">page views</span></div>
-    <div class="stat"><span class="stat-value">0.56%</span><span class="stat-label">video &rarr; site</span></div>
+    <div class="stat"><span class="stat-value">887.3K</span><span class="stat-label">video views</span></div>
+    <div class="stat"><span class="stat-value">4,247</span><span class="stat-label">people on the site</span></div>
+    <div class="stat"><span class="stat-value">6,069</span><span class="stat-label">page views</span></div>
+    <div class="stat"><span class="stat-value">0.48%</span><span class="stat-label">video &rarr; site</span></div>
   </section>
 
   <section class="panel">
@@ -299,7 +299,7 @@
       <p class="sub">Page views across the four campaign pages.</p>
     </div>
     <ul class="shares" id="pages"></ul>
-    <p class="note">These add up to 5,232, more than the 3,551 people above, because plenty of visitors read more than one page.</p>
+    <p class="note">These add up to 6,069, more than the 4,247 people above, because plenty of visitors read more than one page.</p>
   </section>
 
   <div class="row">
@@ -361,13 +361,13 @@
   };
   /* `post` is the video itself; without one a row falls back to the account. */
   var VIDEOS = [
-    { name:"Video 1a", kind:"Announcement", views:{ instagram:150000, youtube:6200, tiktok:2400 },
+    { name:"Video 1a", kind:"Announcement", views:{ instagram:163000, youtube:6200, tiktok:2400 },
       posts:{ instagram:"https://www.instagram.com/reel/DeSUC_JnErA/" } },
-    { name:"Video 1b", kind:"Announcement", views:{ instagram:366000 },
+    { name:"Video 1b", kind:"Announcement", views:{ instagram:532000 },
       posts:{ instagram:"https://www.instagram.com/reel/DeT4W1bhDG3/" } },
-    { name:"Video 1c", kind:"Announcement", views:{ instagram:9200 },
+    { name:"Video 1c", kind:"Announcement", views:{ instagram:10100 },
       posts:{ instagram:"https://www.instagram.com/reel/DeZNXXNBqEW/?mdxt=ajVkNmcxNm1mYWls" } },
-    { name:"Video 2",  kind:"Results",      views:{ instagram:90700, youtube:6800, tiktok:1800 },
+    { name:"Video 2",  kind:"Results",      views:{ instagram:165000, youtube:6800, tiktok:1800 },
       posts:{ instagram:"https://www.instagram.com/p/Deu0fpujkgx/" } }
   ];
   var PLATFORMS = [
@@ -410,24 +410,32 @@
 
   /* ---------------- people per day ---------------- */
   var DAYS = [
-    { d:"2026-10-09", v:300,  views:504, marker:"Video 1" },
+    { d:"2026-10-09", v:301,  views:506, marker:"Video 1" },
     { d:"2026-10-10", v:701,  views:1045 },
-    { d:"2026-10-11", v:1113, views:1550, label:"peak" },
+    { d:"2026-10-11", v:1115, views:1557, label:"peak" },
     { d:"2026-10-12", v:271,  views:393 },
     { d:"2026-10-13", v:126,  views:176 },
     { d:"2026-10-14", v:79,   views:115 },
     { d:"2026-10-15", v:77,   views:113 },
     { d:"2026-10-16", v:68,   views:89 },
-    { d:"2026-10-17", v:171,  views:212 },
+    { d:"2026-10-17", v:172,  views:215 },
     { d:"2026-10-18", v:209,  views:238 },
     { d:"2026-10-19", v:103,  views:135 },
-    { d:"2026-10-20", v:127,  views:183, marker:"Video 2" },
+    { d:"2026-10-20", v:129,  views:205, marker:"Video 2" },
     { d:"2026-10-21", v:106,  views:120 },
     { d:"2026-10-22", v:62,   views:66 },
     { d:"2026-10-23", v:71,   views:82 },
     { d:"2026-10-24", v:73,   views:79 },
     { d:"2026-10-25", v:76,   views:82 },
-    { d:"2026-10-26", v:36,   views:50 }
+    { d:"2026-10-26", v:36,   views:50 },
+    { d:"2026-10-27", v:49,   views:49 },
+    { d:"2026-10-28", v:46,   views:56 },
+    { d:"2026-10-29", v:63,   views:75 },
+    { d:"2026-10-30", v:50,   views:59 },
+    { d:"2026-10-31", v:164,  views:179 },
+    { d:"2026-11-01", v:141,  views:160 },
+    { d:"2026-11-02", v:106,  views:112 },
+    { d:"2026-11-03", v:103,  views:113 }
   ];
 
   (function (){
@@ -435,7 +443,7 @@
     var W = 820, H = 290, L = 46, R = 8, T = 34, B = 40;
     var max = 1200, ticks = [0, 300, 600, 900, 1200];
     var svg = el("svg", { viewBox:"0 0 " + W + " " + H, role:"img",
-      "aria-label":"Bar chart of people per day across the four campaign pages: 300 on launch day Oct 9, peaking at 1,113 on Oct 11, settling around 70 to 100 a day by late October." });
+      "aria-label":"Bar chart of people per day across the four campaign pages: 301 on launch day Oct 9, peaking at 1,115 on Oct 11, easing to 40 to 70 a day by the end of October, then rising again to 164 on Oct 31 and settling near 100 in early November." });
 
     function y(v){ return T + (H - T - B) * (1 - v / max); }
     ticks.forEach(function (v){
@@ -491,17 +499,27 @@
       hit.addEventListener("pointerleave", function (){ g.classList.remove("on"); tip.hidden = true; });
     });
 
-    var ax = el("text", { x:L, y:H - 4, "class":"tick" }, svg);
-    ax.textContent = "October";
+    /* Name each month once, under the first of its days, so a run that
+       crosses into a new month says so instead of reading as day 1 again. */
+    var seen = {};
+    DAYS.forEach(function (row, i){
+      var date = new Date(row.d + "T12:00:00");
+      var key = date.getFullYear() + "-" + date.getMonth();
+      if(seen[key]) return;
+      seen[key] = 1;
+      var cx = L + band * i + band / 2;
+      var m = el("text", { x:cx, y:H - 4, "text-anchor":"middle", "class":"tick" }, svg);
+      m.textContent = date.toLocaleDateString("en-US", { month:"long" });
+    });
     host.insertBefore(svg, host.firstChild);
   })();
 
   /* ---------------- which page ---------------- */
   var PAGES = [
-    { name:"/chubbash", sub:"the game jam", views:3608 },
-    { name:"/bashtv", sub:"get a Bash.tv invite", views:612 },
-    { name:"/bashtv/chubbitz-games", sub:"the games gallery, live Oct 17", views:540 },
-    { name:"/chubbolator", sub:"the character creator", views:472 }
+    { name:"/chubbash", sub:"the game jam", views:3636 },
+    { name:"/bashtv/chubbitz-games", sub:"the games gallery, live Oct 17", views:1285 },
+    { name:"/bashtv", sub:"get a Bash.tv invite", views:668 },
+    { name:"/chubbolator", sub:"the character creator", views:480 }
   ];
   (function (){
     var ul = document.getElementById("pages");
