@@ -518,14 +518,26 @@
   }
 
   /* ---------- Signing up from Discord ---------- */
-  /* Same panel as the perk above it, with one picture instead of a grid. */
+  /* Same panel as the perk above it: words on one side, the picture on the
+     other. On a phone they stack, words first. */
+  .discord-perk .perk-grid{ margin-top:0; }
+  .discord-perk .perk-head{ margin-bottom:18px; }
   .discord-perk .perk-shot{
-    margin:18px auto 0;
+    width:100%;
     max-width:480px;
+    margin:0 auto;
     aspect-ratio:8 / 5;
     background:#1e1f22;          /* the chat bar's own dark, so it blends in */
   }
   .discord-perk .perk-shot img{ opacity:1; object-fit:contain; }
+  .discord-perk .cta{ margin-top:0; }
+
+  @media (min-width:860px){
+    .discord-perk .perk-grid{ grid-template-columns:1fr 480px; align-items:center; }
+    .discord-perk .perk-head{ text-align:left; }
+    /* A full-width button would stretch the whole column. */
+    .discord-perk .cta{ width:auto; align-self:flex-start; padding-left:34px; padding-right:34px; }
+  }
 
   /* ---------- Closing note ---------- */
   .outro{
@@ -711,14 +723,20 @@
 
 <div class="perk-wrap">
   <section class="perk discord-perk">
-    <div class="perk-head">
-      <h2>If you&rsquo;re already in the Discord&hellip;</h2>
-      <p>You can sign up to be a supporter just by typing &ldquo;/subscribe&rdquo; in any channel and it will send you a private payment link!</p>
-    </div>
+    <div class="perk-grid">
+      <div class="perk-words">
+        <div class="perk-head">
+          <h2>If you&rsquo;re already in the Discord&hellip;</h2>
+          <p>You can sign up to be a supporter just by typing &ldquo;/subscribe&rdquo; in any channel and it will send you a private payment link!</p>
+        </div>
+        <a class="cta" data-track="link_click" data-track-label="support_discord"
+           href="/discord" target="_blank" rel="noopener noreferrer">Open Discord</a>
+      </div>
 
-    <div class="perk-shot">
-      <img loading="lazy" src="/media/discord-subscribe.gif" width="480" height="300"
-           alt="Typing /subscribe into a Discord channel">
+      <div class="perk-shot">
+        <img loading="lazy" src="/media/discord-subscribe.gif" width="480" height="300"
+             alt="Typing /subscribe into a Discord channel">
+      </div>
     </div>
   </section>
 </div>
