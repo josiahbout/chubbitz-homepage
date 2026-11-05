@@ -33,8 +33,8 @@ use POSIX qw(strftime);
 use File::Basename qw(dirname);
 use File::Spec;
 
-# Taken before daily tracking began, in cents. $82.
-my $BASELINE_CENTS = 8200;
+# Taken before daily tracking began, in cents. $112.
+my $BASELINE_CENTS = 11200;
 my $START_DATE     = '2026-11-04';
 
 # Only this currency is counted. Stripe reports every amount in the smallest
