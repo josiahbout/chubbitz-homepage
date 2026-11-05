@@ -1,0 +1,74 @@
+{
+   "count" : 11,
+   "generated_at" : "2026-11-05T01:19:44.244634+00:00",
+   "role" : "Sky Supporter",
+   "supporters" : [
+      {
+         "ext" : "png",
+         "hash" : "b9aa2ec17a6a7a94fdb5f4f3e5474afc",
+         "id" : "1159007307926081636",
+         "name" : "sofix0.1"
+      },
+      {
+         "ext" : "png",
+         "hash" : "8bfd610bd600a6c562b9bd19bfc787f1",
+         "id" : "1220418917881741415",
+         "name" : "davetheredpanda_85004"
+      },
+      {
+         "ext" : "png",
+         "hash" : "02b8c82fd659191a36716271a6b210a6",
+         "id" : "1240154829829963859",
+         "name" : "bludragonyt"
+      },
+      {
+         "ext" : "png",
+         "hash" : "5ef01bd3dbbaf0b2104189c93ac80cfa",
+         "id" : "1467226741276803277",
+         "name" : "larsinnit"
+      },
+      {
+         "ext" : "png",
+         "hash" : "0ca6001dbc18d18575fb4c10eae6d9e8",
+         "id" : "1542639900334096467",
+         "name" : "bndbout"
+      },
+      {
+         "ext" : "png",
+         "hash" : "a_68319dd5ed3585c11b345babc7649e53",
+         "id" : "1550768656898727976",
+         "name" : "kordyuwu_02539"
+      },
+      {
+         "ext" : "png",
+         "hash" : "e05962756b3d307eccaf7374a807e7ac",
+         "id" : "254104108544425985",
+         "name" : "josiah3d"
+      },
+      {
+         "ext" : "png",
+         "hash" : "81a98faf9fd071acec29dee9633d24a8",
+         "id" : "399340387061334028",
+         "name" : "ocelmo"
+      },
+      {
+         "ext" : "png",
+         "hash" : "577d25dd6133504be0e7d56badcf1081",
+         "id" : "571310188121030667",
+         "name" : "doordashguy"
+      },
+      {
+         "ext" : "png",
+         "hash" : "5d11c2ad98f1651c459da69471171484",
+         "id" : "759496303628779591",
+         "name" : "joneila"
+      },
+      {
+         "ext" : "png",
+         "hash" : "a_3af8d2e6675b96b538b75a461c839b11",
+         "id" : "879984473565978644",
+         "name" : "jeflikescheesenshet"
+      }
+   ],
+   "synced_at" : "2026-11-05T01:20:46Z"
+}
