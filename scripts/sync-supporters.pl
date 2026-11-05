@@ -39,6 +39,13 @@ use Encode qw(decode_utf8);
 
 my $MAX_AGE_HOURS = 48;
 
+# Usernames that hold the role but shouldn't be listed - your own account
+# belongs here, since the page is yours. Lower case; matched on the Discord
+# username, not the nickname, because a nickname can change any day.
+my %HIDE = map { $_ => 1 } qw(
+    josiah3d
+);
+
 my $DEFAULT_EXPORT =
     'C:/Users/siahm/Documents/Josiah Programs/chubbitz supporter assistant/supporter_export';
 
@@ -162,6 +169,11 @@ for my $s (@$list) {
     $name = $s->{display_name} unless defined $name && length $name;
     next unless defined $name && length $name;
 
+    if ($HIDE{ lc $name }) {
+        say_now("  leaving $name out of the list (on the hidden list)");
+        next;
+    }
+
     # Only the extension is taken from avatar_file; the name is always the id,
     # so a crafted path can't put a file somewhere it shouldn't go.
     my $ext = 'png';
@@ -257,10 +269,23 @@ for my $p (sort { lc($a->{name}) cmp lc($b->{name}) || $a->{id} cmp $b->{id} } @
       . '      </li>';
 }
 
+# The last bubble is the way in, not a person.
+push @rows,
+    '      <li class="supporter supporter-join">' . "\n"
+  . '        <a href="/support" data-track="link_click" data-track-label="supporters_join">' . "\n"
+  . '          <span class="supporter-plus" aria-hidden="true">' . "\n"
+  . '            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>' . "\n"
+  . '          </span>' . "\n"
+  . '          <span class="supporter-name">Add your name</span>' . "\n"
+  . '        </a>' . "\n"
+  . '      </li>';
+
+my $heading = 'My Supporters &ndash; ' . scalar(@people);
+
 my $section =
     "\n  <!-- Written by scripts/sync-supporters.pl. Edits between the markers are overwritten. -->\n"
   . "  <section class=\"section\" aria-labelledby=\"supporters-title\">\n"
-  . "    <div class=\"section-head\"><span class=\"section-title\" id=\"supporters-title\">My Supporters</span></div>\n"
+  . "    <div class=\"section-head\"><span class=\"section-title\" id=\"supporters-title\">$heading</span></div>\n"
   . "    <ul class=\"supporters\">\n"
   . join("\n", @rows) . "\n"
   . "    </ul>\n"

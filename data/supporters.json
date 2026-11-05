@@ -1,5 +1,5 @@
 {
-   "count" : 11,
+   "count" : 10,
    "generated_at" : "2026-11-05T01:19:44.244634+00:00",
    "role" : "Sky Supporter",
    "supporters" : [
@@ -41,12 +41,6 @@
       },
       {
          "ext" : "png",
-         "hash" : "e05962756b3d307eccaf7374a807e7ac",
-         "id" : "254104108544425985",
-         "name" : "josiah3d"
-      },
-      {
-         "ext" : "png",
          "hash" : "81a98faf9fd071acec29dee9633d24a8",
          "id" : "399340387061334028",
          "name" : "ocelmo"
@@ -70,5 +64,5 @@
          "name" : "jeflikescheesenshet"
       }
    ],
-   "synced_at" : "2026-11-05T01:20:46Z"
+   "synced_at" : "2026-11-05T01:35:12Z"
 }
