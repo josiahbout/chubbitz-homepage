@@ -6,8 +6,12 @@
 #   - data/supporters.json                who is shown, and which picture each
 #                                         one had, so the next run can tell
 #                                         what actually changed
-#   - index.html                          the "My Supporters" section, rendered
+#   - every page in @PAGES below          the "My Supporters" section, rendered
 #                                         between the supporters markers
+#
+# To show the supporters somewhere new, put the two markers on that page and
+# add it to @PAGES. Both pages get exactly the same block, so they can never
+# disagree about who is a supporter.
 #
 #   perl scripts/sync-supporters.pl [path-to-supporter_export]
 #
@@ -68,7 +72,9 @@ die "Can't find the site folder. Worked it out as '$root', but there is no "
 
 my $avatar_dir    = File::Spec->catdir($root, 'media', 'supporters');
 my $manifest_path = File::Spec->catfile($root, 'data', 'supporters.json');
-my $page_path     = File::Spec->catfile($root, 'index.html');
+
+# Every page that shows the supporters. Each needs the two markers on it.
+my @PAGES = ('index.html', 'support/index.html');
 
 sub say_now { print strftime('%Y-%m-%d %H:%M:%S', localtime) . "  $_[0]\n" }
 
@@ -284,28 +290,38 @@ my $heading = 'My Supporters &ndash; ' . scalar(@people);
 
 my $section =
     "\n  <!-- Written by scripts/sync-supporters.pl. Edits between the markers are overwritten. -->\n"
-  . "  <section class=\"section\" aria-labelledby=\"supporters-title\">\n"
+  . "  <section class=\"section supporters-section\" aria-labelledby=\"supporters-title\">\n"
   . "    <div class=\"section-head\"><span class=\"section-title\" id=\"supporters-title\">$heading</span></div>\n"
   . "    <ul class=\"supporters\">\n"
   . join("\n", @rows) . "\n"
   . "    </ul>\n"
   . "  </section>\n\n  ";
 
-my $page = slurp_raw($page_path);
-die "can't read $page_path\n" unless defined $page;
-my $crlf = $page =~ /\r\n/ ? 1 : 0;
-$page =~ s/\r\n/\n/g;
-
 my $start = '<!-- supporters:start -->';
 my $end   = '<!-- supporters:end -->';
-unless ($page =~ /\Q$start\E/ && $page =~ /\Q$end\E/) {
-    die "The supporters markers aren't in index.html, so there's nowhere to write.\n"
-      . "Expected $start and $end just above the My Sponsors section.\n";
-}
 
-my $new_page = $page;
-$new_page =~ s/\Q$start\E.*?\Q$end\E/$start$section$end/s;
-$new_page =~ s/\n/\r\n/g if $crlf;
+# Work every page out in full before writing any of them, so a page with the
+# markers missing stops the lot rather than leaving the site half updated.
+my @writes;
+for my $rel (@PAGES) {
+    my $path = File::Spec->catfile($root, split m{/}, $rel);
+    my $page = slurp_raw($path);
+    die "can't read $rel\n" unless defined $page;
+
+    my $crlf = $page =~ /\r\n/ ? 1 : 0;
+    $page =~ s/\r\n/\n/g;
+
+    unless ($page =~ /\Q$start\E/ && $page =~ /\Q$end\E/) {
+        die "The supporters markers aren't in $rel, so there's nowhere to write.\n"
+          . "Expected $start and $end where the section should go.\n";
+    }
+
+    my $new = $page;
+    $new =~ s/\Q$start\E.*?\Q$end\E/$start$section$end/s;
+    $new =~ s/\n/\r\n/g if $crlf;
+
+    push @writes, { rel => $rel, path => $path, text => $new };
+}
 
 # ---- 7. write the manifest ---------------------------------------------------
 
@@ -329,23 +345,29 @@ sub manifest_without_time {
     return $text;
 }
 
-my $old_page     = slurp_raw($page_path);
 my $old_manifest = slurp_raw($manifest_path);
-
-my $page_changed     = (defined $old_page && $old_page ne $new_page) ? 1 : 0;
 my $manifest_changed =
     manifest_without_time($old_manifest) ne manifest_without_time($new_manifest) ? 1 : 0;
 
-spit_raw($page_path, $new_page)         if $page_changed;
+my $pages_changed = 0;
+my @page_report;
+for my $w (@writes) {
+    my $old = slurp_raw($w->{path});
+    my $changed = (defined $old && $old ne $w->{text}) ? 1 : 0;
+    spit_raw($w->{path}, $w->{text}) if $changed;
+    $pages_changed += $changed;
+    push @page_report, "$w->{rel}: " . ($changed ? 'updated' : 'unchanged');
+}
+
 spit_raw($manifest_path, $new_manifest) if $manifest_changed || !defined $old_manifest;
 
 # ---- 8. report ---------------------------------------------------------------
 
 say_now(sprintf('Pictures: %d copied, %d unchanged, %d removed%s.',
                 $copied, $kept, $removed, $missing ? ", $missing missing" : ''));
-say_now('index.html: ' . ($page_changed ? 'updated' : 'unchanged'));
+say_now($_) for @page_report;
 say_now('data/supporters.json: ' . ($manifest_changed ? 'updated' : 'unchanged'));
 
-my $changed = $page_changed || $manifest_changed || $copied || $removed;
+my $changed = $pages_changed || $manifest_changed || $copied || $removed;
 say_now($changed ? 'Done - there is something to commit.' : 'Done - nothing changed.');
 exit 0;

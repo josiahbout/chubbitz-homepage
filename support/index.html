@@ -411,6 +411,83 @@
   .tier-note a{ color:var(--text-faint); text-decoration:none; border-bottom:1px solid var(--line); }
   .tier-note a:hover{ color:var(--text-dim); }
 
+  /* ---------- The supporters, same block as the homepage ---------- */
+  /* Written by scripts/sync-supporters.pl, which drops the identical markup
+     into both pages, so the styling has to live on each of them. */
+  .supporters-section{ margin:26px 0 0; }
+  .supporters-section .section-head{ margin-bottom:12px; text-align:center; }
+  .supporters-section .section-title{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+  }
+  .supporters{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:9px;
+  }
+  .supporter{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:6px 12px 6px 6px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:999px;
+    min-width:0;
+  }
+  .supporter-pic{
+    width:32px;
+    height:32px;
+    flex:none;
+    border-radius:50%;
+    object-fit:cover;
+    background:var(--bg-soft);
+  }
+  .supporter-name{
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--text-dim);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:150px;
+  }
+  .supporter-join{
+    padding:0;
+    border-style:dashed;
+    border-color:var(--line-hover);
+    background:transparent;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .supporter-join a{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:6px 14px 6px 6px;
+    text-decoration:none;
+  }
+  .supporter-plus{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:32px;
+    height:32px;
+    flex:none;
+    border-radius:50%;
+    background:rgba(79,142,247,.14);
+    color:var(--accent-2);
+  }
+  .supporter-plus svg{ width:16px; height:16px; }
+  .supporter-join .supporter-name{ color:var(--accent-2); }
+  .supporter-join:hover{ border-color:var(--accent); background:rgba(79,142,247,.07); }
+
   /* ---------- The wallpaper perk ---------- */
   .perk-wrap{
     position:relative;
@@ -655,6 +732,7 @@
         <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5L9.5 18L20 6"/></svg></span><span class="label">Choose the options for the next crowd-funded Chubbitz' name and shape</span></li>
         <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5L9.5 18L20 6"/></svg></span><span class="label">10 votes on every crowd-funded Chubbitz' name &amp; shape</span></li>
         <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5L9.5 18L20 6"/></svg></span><span class="label">Free 4k digital wallpaper</span></li>
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5L9.5 18L20 6"/></svg></span><span class="label">Get featured on my homepage as a supporter</span></li>
       </ul>
       <a class="cta" id="supporterCta" data-track="tier_click" data-track-label="supporter" href="https://buy.stripe.com/aFa3cwdej10q5gMah673G00">Join</a>
     </article>
@@ -687,6 +765,74 @@
     </article>
 
   </div>
+
+  <!-- supporters:start -->
+  <!-- Written by scripts/sync-supporters.pl. Edits between the markers are overwritten. -->
+  <section class="section supporters-section" aria-labelledby="supporters-title">
+    <div class="section-head"><span class="section-title" id="supporters-title">My Supporters &ndash; 10</span></div>
+    <ul class="supporters">
+      <li class="supporter">
+        <img class="supporter-pic" loading="lazy" decoding="async" width="64" height="64"
+             src="/media/supporters/1240154829829963859.png" alt="">
+        <span class="supporter-name">bludragonyt</span>
+      </li>
+      <li class="supporter">
+        <img class="supporter-pic" loading="lazy" decoding="async" width="64" height="64"
+             src="/media/supporters/1542639900334096467.png" alt="">
+        <span class="supporter-name">bndbout</span>
+      </li>
+      <li class="supporter">
+        <img class="supporter-pic" loading="lazy" decoding="async" width="64" height="64"
+             src="/media/supporters/1220418917881741415.png" alt="">
+        <span class="supporter-name">davetheredpanda_85004</span>
+      </li>
+      <li class="supporter">
+        <img class="supporter-pic" loading="lazy" decoding="async" width="64" height="64"
+             src="/media/supporters/571310188121030667.png" alt="">
+        <span class="supporter-name">doordashguy</span>
+      </li>
+      <li class="supporter">
+        <img class="supporter-pic" loading="lazy" decoding="async" width="64" height="64"
+             src="/media/supporters/879984473565978644.png" alt="">
+        <span class="supporter-name">jeflikescheesenshet</span>
+      </li>
+      <li class="supporter">
+        <img class="supporter-pic" loading="lazy" decoding="async" width="64" height="64"
+             src="/media/supporters/759496303628779591.png" alt="">
+        <span class="supporter-name">joneila</span>
+      </li>
+      <li class="supporter">
+        <img class="supporter-pic" loading="lazy" decoding="async" width="64" height="64"
+             src="/media/supporters/1550768656898727976.png" alt="">
+        <span class="supporter-name">kordyuwu_02539</span>
+      </li>
+      <li class="supporter">
+        <img class="supporter-pic" loading="lazy" decoding="async" width="64" height="64"
+             src="/media/supporters/1467226741276803277.png" alt="">
+        <span class="supporter-name">larsinnit</span>
+      </li>
+      <li class="supporter">
+        <img class="supporter-pic" loading="lazy" decoding="async" width="64" height="64"
+             src="/media/supporters/399340387061334028.png" alt="">
+        <span class="supporter-name">ocelmo</span>
+      </li>
+      <li class="supporter">
+        <img class="supporter-pic" loading="lazy" decoding="async" width="64" height="64"
+             src="/media/supporters/1159007307926081636.png" alt="">
+        <span class="supporter-name">sofix0.1</span>
+      </li>
+      <li class="supporter supporter-join">
+        <a href="/support" data-track="link_click" data-track-label="supporters_join">
+          <span class="supporter-plus" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </span>
+          <span class="supporter-name">Add your name</span>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <!-- supporters:end -->
 
   <p class="tier-note">
     Supporter tier renews until you cancel.
