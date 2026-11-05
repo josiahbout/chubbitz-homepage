@@ -10,5 +10,5 @@
            subtracted. Gumroad sales aren't counted.
    GOAL    what the bar fills up to. Yours to set.
 */
-var CHUBBITZ_RAISED = 112;
+var CHUBBITZ_RAISED = 117;
 var CHUBBITZ_GOAL = 1000;
