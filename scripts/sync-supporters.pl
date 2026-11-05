@@ -74,7 +74,14 @@ my $avatar_dir    = File::Spec->catdir($root, 'media', 'supporters');
 my $manifest_path = File::Spec->catfile($root, 'data', 'supporters.json');
 
 # Every page that shows the supporters. Each needs the two markers on it.
-my @PAGES = ('index.html', 'support/index.html');
+#
+# join => 1 adds the "Add your name" bubble at the end of the row. The support
+# page leaves it off: the tier buttons right above it are already the way in,
+# and a bubble there would link to the page you are already reading.
+my @PAGES = (
+    { path => 'index.html',         join => 1 },
+    { path => 'support/index.html', join => 0 },
+);
 
 sub say_now { print strftime('%Y-%m-%d %H:%M:%S', localtime) . "  $_[0]\n" }
 
@@ -275,8 +282,9 @@ for my $p (sort { lc($a->{name}) cmp lc($b->{name}) || $a->{id} cmp $b->{id} } @
       . '      </li>';
 }
 
-# The last bubble is the way in, not a person.
-push @rows,
+# The last bubble is the way in, not a person, so only the pages that need
+# inviting get one.
+my $join_row =
     '      <li class="supporter supporter-join">' . "\n"
   . '        <a href="/support" data-track="link_click" data-track-label="supporters_join">' . "\n"
   . '          <span class="supporter-plus" aria-hidden="true">' . "\n"
@@ -288,14 +296,19 @@ push @rows,
 
 my $heading = 'My Supporters &ndash; ' . scalar(@people);
 
-my $section =
-    "\n  <!-- Written by scripts/sync-supporters.pl. Edits between the markers are overwritten. -->\n"
-  . "  <section class=\"section supporters-section\" aria-labelledby=\"supporters-title\">\n"
-  . "    <div class=\"section-head\"><span class=\"section-title\" id=\"supporters-title\">$heading</span></div>\n"
-  . "    <ul class=\"supporters\">\n"
-  . join("\n", @rows) . "\n"
-  . "    </ul>\n"
-  . "  </section>\n\n  ";
+sub build_section {
+    my ($with_join) = @_;
+    my @these = @rows;
+    push @these, $join_row if $with_join;
+    return
+        "\n  <!-- Written by scripts/sync-supporters.pl. Edits between the markers are overwritten. -->\n"
+      . "  <section class=\"section supporters-section\" aria-labelledby=\"supporters-title\">\n"
+      . "    <div class=\"section-head\"><span class=\"section-title\" id=\"supporters-title\">$heading</span></div>\n"
+      . "    <ul class=\"supporters\">\n"
+      . join("\n", @these) . "\n"
+      . "    </ul>\n"
+      . "  </section>\n\n  ";
+}
 
 my $start = '<!-- supporters:start -->';
 my $end   = '<!-- supporters:end -->';
@@ -303,10 +316,13 @@ my $end   = '<!-- supporters:end -->';
 # Work every page out in full before writing any of them, so a page with the
 # markers missing stops the lot rather than leaving the site half updated.
 my @writes;
-for my $rel (@PAGES) {
+for my $spec (@PAGES) {
+    my $rel  = $spec->{path};
     my $path = File::Spec->catfile($root, split m{/}, $rel);
     my $page = slurp_raw($path);
     die "can't read $rel\n" unless defined $page;
+
+    my $section = build_section($spec->{join});
 
     my $crlf = $page =~ /\r\n/ ? 1 : 0;
     $page =~ s/\r\n/\n/g;
