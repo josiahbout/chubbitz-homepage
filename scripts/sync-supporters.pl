@@ -43,7 +43,21 @@ my $DEFAULT_EXPORT =
     'C:/Users/siahm/Documents/Josiah Programs/chubbitz supporter assistant/supporter_export';
 
 my $export = @ARGV ? $ARGV[0] : $DEFAULT_EXPORT;
-my $root   = File::Spec->rel2abs(File::Spec->catdir(dirname(__FILE__), '..'));
+
+# The perl that ships with Git for Windows is a Cygwin build: it splits paths
+# on "/" only. Called from PowerShell or Task Scheduler the script's own path
+# arrives with backslashes, dirname() then finds no separator and answers ".",
+# and the repo root comes out as the folder ABOVE this one - which is how you
+# end up writing files outside the site. Normalising first makes the script
+# behave the same however it was started.
+my $self = __FILE__;
+$self =~ s{\\}{/}g;
+my $root = File::Spec->rel2abs(File::Spec->catdir(dirname($self), '..'));
+
+# If that still didn't land on the site, stop rather than write somewhere odd.
+die "Can't find the site folder. Worked it out as '$root', but there is no "
+  . "index.html there.\nRun this as: perl scripts/sync-supporters.pl\n"
+    unless -e File::Spec->catfile($root, 'index.html');
 
 my $avatar_dir    = File::Spec->catdir($root, 'media', 'supporters');
 my $manifest_path = File::Spec->catfile($root, 'data', 'supporters.json');

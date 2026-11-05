@@ -41,7 +41,10 @@ function Write-LogBlock {
     param([string]$Text, [string]$Prefix = '  ')
     if (-not $Text) { return }
     foreach ($line in ($Text -split "`r?`n")) {
-        if ($line.Trim()) { Write-Log "$Prefix$($line.TrimEnd())" }
+        # The perl script stamps its own lines with the time; Write-Log stamps
+        # them again, so drop its copy and keep one timestamp per line.
+        $clean = $line -replace '^\s*\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\s+', ''
+        if ($clean.Trim()) { Write-Log "$Prefix$($clean.TrimEnd())" }
     }
 }
 
@@ -59,10 +62,33 @@ if ((Test-Path $logFile) -and ((Get-Item $logFile).Length -gt 1MB)) {
     Move-Item $logFile "$logFile.old" -Force
 }
 
+# Perl comes with Git for Windows but isn't on the ordinary PATH, so Task
+# Scheduler would never find it by name. Look where Git keeps it, and fall
+# back to a perl on PATH for anyone who has installed one properly.
+function Find-Perl {
+    $candidates = @(
+        (Join-Path $env:ProgramFiles 'Git\usr\bin\perl.exe'),
+        (Join-Path ${env:ProgramFiles(x86)} 'Git\usr\bin\perl.exe'),
+        (Join-Path $env:LOCALAPPDATA 'Programs\Git\usr\bin\perl.exe')
+    )
+    foreach ($c in $candidates) {
+        if ($c -and (Test-Path $c)) { return $c }
+    }
+    $onPath = Get-Command perl -ErrorAction SilentlyContinue
+    if ($onPath) { return $onPath.Source }
+    return $null
+}
+
 Write-Log '--- sync starting ---'
 
 try {
     Set-Location $repo -ErrorAction Stop
+
+    $perl = Find-Perl
+    if (-not $perl) {
+        throw 'Could not find perl. It ships with Git for Windows at "C:\Program Files\Git\usr\bin\perl.exe" - check Git is installed.'
+    }
+    Write-Log "Using perl at $perl"
 
     # Someone else may have pushed since the last run (the sitemap bot, the
     # raised-amount bot, or you). Start from their work, never on top of it.
@@ -78,8 +104,10 @@ try {
     }
 
     Write-Log 'Reading the supporter export...'
-    $syncScript = Join-Path $PSScriptRoot 'sync-supporters.pl'
-    $syncOut    = & perl $syncScript 2>$errFile | Out-String
+    # Forward slashes: the perl inside Git for Windows is a Cygwin build and
+    # does not treat a backslash as a path separator.
+    $syncScript = (Join-Path $PSScriptRoot 'sync-supporters.pl') -replace '\\', '/'
+    $syncOut    = & $perl $syncScript 2>$errFile | Out-String
     $syncCode   = $LASTEXITCODE
     $syncErr    = Read-Stderr
 
