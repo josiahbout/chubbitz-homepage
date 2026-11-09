@@ -1,8 +1,14 @@
 {
-   "count" : 10,
-   "generated_at" : "2026-11-05T01:19:44.244634+00:00",
+   "count" : 12,
+   "generated_at" : "2026-11-08T23:37:02.018686+00:00",
    "role" : "Sky Supporter",
    "supporters" : [
+      {
+         "ext" : "png",
+         "hash" : "6d463fb0428a15076ca71e1eace2119f",
+         "id" : "1084890567223300138",
+         "name" : "karlislee"
+      },
       {
          "ext" : "png",
          "hash" : "b9aa2ec17a6a7a94fdb5f4f3e5474afc",
@@ -23,9 +29,21 @@
       },
       {
          "ext" : "png",
+         "hash" : "55ccbcefca6429e70136531523453ba0",
+         "id" : "1455504586553950335",
+         "name" : "grimfatal"
+      },
+      {
+         "ext" : "png",
          "hash" : "5ef01bd3dbbaf0b2104189c93ac80cfa",
          "id" : "1467226741276803277",
          "name" : "larsinnit"
+      },
+      {
+         "ext" : "png",
+         "hash" : "5b319f2cf519adcd83f1009a87d72d2b",
+         "id" : "1529272892385263759",
+         "name" : "coolestcyan."
       },
       {
          "ext" : "png",
@@ -35,9 +53,9 @@
       },
       {
          "ext" : "png",
-         "hash" : "a_68319dd5ed3585c11b345babc7649e53",
+         "hash" : "a_8e031ec4102446060c764face0e090a1",
          "id" : "1550768656898727976",
-         "name" : "kordyuwu_02539"
+         "name" : "ephemeral.10"
       },
       {
          "ext" : "png",
@@ -56,13 +74,7 @@
          "hash" : "5d11c2ad98f1651c459da69471171484",
          "id" : "759496303628779591",
          "name" : "joneila"
-      },
-      {
-         "ext" : "png",
-         "hash" : "a_3af8d2e6675b96b538b75a461c839b11",
-         "id" : "879984473565978644",
-         "name" : "jeflikescheesenshet"
       }
    ],
-   "synced_at" : "2026-11-05T01:35:12Z"
+   "synced_at" : "2026-11-09T14:25:26Z"
 }
