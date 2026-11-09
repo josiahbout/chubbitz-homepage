@@ -86,6 +86,7 @@ die "usage: $0 <linkme.html> [discord=<file>]\n" unless defined $html_path;
 my $root         = File::Spec->rel2abs(File::Spec->catdir(dirname(__FILE__), '..'));
 my $metrics_path = File::Spec->catfile($root, 'metrics.js');
 my $history_path = File::Spec->catfile($root, 'data', 'followers.json');
+my $home_path    = File::Spec->catfile($root, 'index.html');
 
 sub slurp {
     my ($path) = @_;
@@ -260,7 +261,42 @@ my $new_js    = $js;
 my $replaced  = ($new_js =~ s/(\{\s*value:\s*")[^"]*("\s*,\s*label:\s*"followers"\s*\})/${1}${formatted}${2}/);
 die "Couldn't find the followers line in metrics.js. Nothing was written.\n" unless $replaced;
 
+# ---- 3b. write the Discord member count onto the homepage --------------------
+
+# The Discord card on the homepage says how many people are in the server. It
+# is the same number recorded above, written straight into the page so it
+# needs no script to show. If Discord couldn't be read today the markers are
+# left alone and yesterday's number stays up.
+
+sub commify {
+    my ($n) = @_;
+    1 while $n =~ s/^(\d+)(\d{3})/$1,$2/;
+    return $n;
+}
+
+my $home        = slurp($home_path);
+my $new_home    = $home;
+my $home_reason = 'no discord count today';
+
+if (defined $platforms{discord}) {
+    my $members = commify($platforms{discord});
+    my $start   = '<!-- discord-members:start -->';
+    my $end     = '<!-- discord-members:end -->';
+
+    if ($home =~ /\Q$start\E/ && $home =~ /\Q$end\E/) {
+        my $crlf_home = $new_home =~ /\r\n/ ? 1 : 0;
+        $new_home =~ s/\r\n/\n/g;
+        $new_home =~ s/\Q$start\E.*?\Q$end\E/$start$members$end/s;
+        $new_home =~ s/\n/\r\n/g if $crlf_home;
+        $home_reason = '';
+    } else {
+        $home_reason = 'the discord-members markers are missing from index.html';
+        warn_note('discord_markers', "Couldn't find the discord-members markers in index.html, so the member count on the homepage was left alone.");
+    }
+}
+
 # ---- 4. write the history ----------------------------------------------------
+
 
 # Today's reading replaces any entry already there for today - including an
 # estimate - and is always a real reading.
@@ -286,7 +322,8 @@ my $new_history = "[\n" . join(",\n", map { entry_json($_) } @history) . "\n]\n"
 
 my $old_history = -e $history_path ? slurp($history_path) : '';
 
-if ($new_js ne $js) { spit($metrics_path, $new_js) }
+if ($new_js ne $js)     { spit($metrics_path, $new_js) }
+if ($new_home ne $home) { spit($home_path, $new_home) }
 if ($new_history ne $old_history) {
     my $dir = dirname($history_path);
     mkdir $dir unless -d $dir;
@@ -308,7 +345,11 @@ if (%platforms) {
 } else {
     print "  No per-platform counts found.\n";
 }
-printf "metrics.js: %s\n", $new_js ne $js ? "updated" : "unchanged";
+printf "metrics.js: %s
+", $new_js ne $js ? "updated" : "unchanged";
+printf "index.html: %s%s
+", $new_home ne $home ? "updated" : "unchanged",
+    $home_reason ? " ($home_reason)" : '';
 printf "data/followers.json: %s, %d day%s of history%s\n",
     $new_history ne $old_history ? "updated" : "unchanged",
     scalar(@history), @history == 1 ? '' : 's',

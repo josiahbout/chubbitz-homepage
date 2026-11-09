@@ -63,13 +63,13 @@ jobs:
       - name: Commit and push if anything changed
         id: commit
         run: |
-          if [ -z "$(git status --porcelain -- metrics.js data/followers.json)" ]; then
+          if [ -z "$(git status --porcelain -- metrics.js data/followers.json index.html)" ]; then
             echo "Nothing changed - no commit needed."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add metrics.js data/followers.json
+          git add metrics.js data/followers.json index.html
           git commit -m "Update follower count ($(date -u +%Y-%m-%d))"
           git push
           echo "pushed=true" >> "$GITHUB_OUTPUT"
