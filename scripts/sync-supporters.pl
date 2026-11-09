@@ -384,6 +384,12 @@ say_now(sprintf('Pictures: %d copied, %d unchanged, %d removed%s.',
 say_now($_) for @page_report;
 say_now('data/supporters.json: ' . ($manifest_changed ? 'updated' : 'unchanged'));
 
+# Everything this script is allowed to have touched, for whatever runs it to
+# commit. Printed rather than written down a second time in the wrapper, so
+# adding a page to @PAGES can't leave its changes sitting uncommitted - which
+# is exactly what happened when the support page was first added.
+print 'PATHS ' . join(' ', (map { $_->{rel} } @writes), 'data/supporters.json', 'media/supporters') . "\n";
+
 my $changed = $pages_changed || $manifest_changed || $copied || $removed;
 say_now($changed ? 'Done - there is something to commit.' : 'Done - nothing changed.');
 exit 0;

@@ -111,7 +111,17 @@ try {
     $syncCode   = $LASTEXITCODE
     $syncErr    = Read-Stderr
 
-    Write-LogBlock $syncOut
+    # The sync script ends with a "PATHS ..." line naming every file it is
+    # allowed to have touched. Taking the list from there means the wrapper
+    # can never fall behind the pages the sync actually writes.
+    $paths = @()
+    foreach ($line in ($syncOut -split "`r?`n")) {
+        if ($line -match '^\s*PATHS\s+(.+?)\s*$') {
+            $paths = $matches[1] -split '\s+'
+        }
+    }
+
+    Write-LogBlock ($syncOut -replace '(?m)^\s*PATHS\s+.*$', '')
     Write-LogBlock $syncErr '  ! '
 
     if ($syncCode -ne 0) {
@@ -120,9 +130,15 @@ try {
         exit $syncCode
     }
 
-    # Only these paths are ever committed, so anything else you happen to be
-    # working on in this folder is left alone.
-    $paths  = @('index.html', 'data/supporters.json', 'media/supporters')
+    # Only the paths the sync reported are ever committed, so anything else you
+    # happen to be working on in this folder is left alone. If the sync didn't
+    # say (an older copy of it, say), stop rather than guess - guessing is what
+    # left the support page uncommitted once already.
+    if (-not $paths -or $paths.Count -eq 0) {
+        throw 'The sync script did not report which files it touched, so there is nothing safe to commit. Is scripts/sync-supporters.pl up to date?'
+    }
+    Write-Log ("Files it may have changed: {0}" -f ($paths -join ', '))
+
     $status = (& git status --porcelain -- $paths 2>$errFile | Out-String)
     Read-Stderr | Out-Null
 
