@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0b0e">
+<meta name="description" content="Make your own Chubbitz on Bash.tv, and win a prize for making a game.">
+<title>Make your chubbitz</title>
+
+<meta property="og:site_name" content="The Chubbitz">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thechubbitz.com/bashtv/chubbolator">
+<meta property="og:title" content="Make your chubbitz">
+<meta property="og:description" content="Make your own Chubbitz, and win a prize for making a game!">
+<meta property="og:image" content="https://thechubbitz.com/media/bashtv/chubbitz-games-banner.jpg">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="682">
+<meta property="og:image:alt" content="Chubbitz walking down a path toward a mountain">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Make your chubbitz">
+<meta name="twitter:description" content="Make your own Chubbitz, and win a prize for making a game!">
+<meta name="twitter:image" content="https://thechubbitz.com/media/bashtv/chubbitz-games-banner.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* Same tokens as the rest of the site. */
+  :root{
+    --bg:#0a0b0e;
+    --bg-soft:#121419;
+    --text:#f4f5f7;
+    --text-dim:#a3a9b4;
+    --text-faint:#6b7280;
+    --line:rgba(255,255,255,.09);
+    --line-hover:rgba(255,255,255,.2);
+    --card:rgba(255,255,255,.045);
+    --accent:#4f8ef7;
+    --accent-2:#8ec9ff;
+    --radius-lg:20px;
+    --radius-md:16px;
+    --radius-sm:12px;
+  }
+  *{ box-sizing:border-box; }
+  html{ -webkit-text-size-adjust:100%; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{ color:inherit; }
+
+  /* ---------- Banner ---------- */
+  .hero{ position:relative; }
+  .hero img{
+    display:block;
+    width:100%;
+    height:clamp(190px, 30vw, 360px);
+    object-fit:cover;
+    object-position:center 62%;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;
+    left:0; right:0; bottom:0;
+    height:62%;
+    background:linear-gradient(to top, var(--bg) 6%, rgba(10,11,14,.65) 46%, transparent 100%);
+    pointer-events:none;
+  }
+  .home-link{
+    position:absolute;
+    top:16px;
+    left:16px;
+    z-index:2;
+    display:inline-flex;
+    padding:7px;
+    border-radius:999px;
+    background:rgba(10,11,14,.5);
+    -webkit-backdrop-filter:blur(6px);
+    backdrop-filter:blur(6px);
+    color:#fff;
+  }
+  .home-link svg{ width:20px; height:20px; display:block; }
+
+  header.top{
+    position:relative;
+    z-index:1;
+    margin-top:-52px;
+    padding:0 18px 6px;
+    text-align:center;
+  }
+  h1{
+    margin:0;
+    font-family:'Fredoka', sans-serif;
+    font-weight:700;
+    font-size:clamp(34px, 9vw, 54px);
+    line-height:1.05;
+    color:#fff;
+  }
+  /* ---------- Scrolling rows ---------- */
+  /* Each row drifts sideways on its own and can also be dragged or swiped.
+     The drift is the row's own scroll position, nudged along frame by frame,
+     so a drag and the drift are the same movement and never fight. */
+  .rows{ margin-top:14px; display:grid; gap:14px; }
+  .row{
+    position:relative;
+    overflow-x:auto;
+    overflow-y:hidden;
+    scrollbar-width:none;             /* the row scrolls itself; no bar needed */
+    -ms-overflow-style:none;
+    -webkit-mask-image:linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+    mask-image:linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+    cursor:grab;
+  }
+  .row::-webkit-scrollbar{ display:none; }
+  .row.dragging{ cursor:grabbing; }
+  .row.dragging .tile{ pointer-events:none; }   /* a drag shouldn't open a game */
+  .track{
+    display:flex;
+    width:max-content;
+  }
+  .track > .tile{ margin-right:14px; }
+
+  .tile{
+    position:relative;
+    flex:none;
+    width:clamp(230px, 56vw, 320px);
+    aspect-ratio:16 / 9;
+    border-radius:var(--radius-md);
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:#1a1d23;
+    cursor:pointer;
+    padding:0;
+    display:block;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .tile:hover{ transform:translateY(-2px); border-color:var(--line-hover); }
+  .tile img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .tile-play{
+    position:absolute;
+    inset:0;
+    display:grid;
+    place-items:center;
+    background:rgba(10,11,14,.3);
+    transition:background .15s ease;
+  }
+  .tile:hover .tile-play{ background:rgba(10,11,14,.15); }
+  .tile-play span{
+    display:grid;
+    place-items:center;
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow:0 6px 18px rgba(0,0,0,.45);
+  }
+  .tile-play svg{ width:22px; height:22px; margin-left:3px; fill:#0a0b0e; display:block; }
+  .tile-name{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    padding:22px 12px 10px;
+    background:linear-gradient(to top, rgba(10,11,14,.9), transparent);
+    font-size:13.5px;
+    font-weight:700;
+    color:#fff;
+    text-align:left;
+  }
+
+  /* ---------- How to win a prize ---------- */
+  .prize{ margin-top:30px; }
+  .prize h2{
+    margin:0 0 8px;
+    font-family:'Fredoka', sans-serif;
+    font-weight:700;
+    font-size:clamp(19px, 5.4vw, 23px);
+    color:#fff;
+    text-align:center;
+    text-wrap:balance;
+  }
+  .prize-lead{
+    margin:0 0 16px;
+    text-align:center;
+    font-size:14.5px;
+    line-height:1.6;
+    color:var(--text-dim);
+  }
+  .steps{
+    /* the numbers are drawn as badges below, so the list's own are off */
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .steps li{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    padding:13px 15px;
+    border-radius:var(--radius-md);
+    background:var(--card);
+    border:1px solid var(--line);
+  }
+  .step-num{
+    flex:none;
+    width:26px;
+    height:26px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    font-family:'Fredoka', sans-serif;
+    font-size:13px;
+    font-weight:700;
+    color:#0a0b0e;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  }
+  .step-text{
+    flex:1;
+    min-width:0;
+    font-size:14.5px;
+    line-height:1.55;
+    color:var(--text-dim);
+  }
+  .inline-link{
+    color:var(--accent-2);
+    font-weight:700;
+    text-decoration:none;
+    border-bottom:1px solid rgba(142,201,255,.35);
+  }
+  .inline-link:hover{ border-bottom-color:var(--accent-2); }
+  /* the menu you tap through inside Bash */
+  .ui-path{
+    padding:1px 6px;
+    border-radius:6px;
+    background:rgba(79,142,247,.14);
+    border:1px solid rgba(79,142,247,.3);
+    color:var(--accent-2);
+    font-weight:700;
+  }
+
+  /* ---------- The line above the rows ---------- */
+  .rows-head{
+    margin-top:36px;
+    padding:0 18px;
+    text-align:center;
+  }
+  .rows-head h2{
+    margin:0;
+    font-family:'Fredoka', sans-serif;
+    font-weight:700;
+    font-size:clamp(19px, 5.4vw, 23px);
+    color:#fff;
+    text-wrap:balance;
+  }
+
+  /* ---------- Links underneath ---------- */
+  .page{
+    max-width:460px;
+    margin:0 auto;
+    padding:0 18px 48px;
+  }
+  .links{
+    list-style:none;
+    margin:26px 0 0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  /* a card that leads with its picture, the way the game tiles do */
+  .big-card{
+    position:relative;
+    display:block;
+    border-radius:var(--radius-md);
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:#1a1d23;
+    text-decoration:none;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .big-card:hover{ transform:translateY(-2px); border-color:var(--line-hover); }
+  .big-card img{
+    display:block;
+    width:100%;
+    height:auto;
+    aspect-ratio:16 / 9;
+    object-fit:cover;
+  }
+  .big-card-name{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:28px 14px 12px;
+    background:linear-gradient(to top, rgba(10,11,14,.92), rgba(10,11,14,.55) 55%, transparent);
+    font-size:16px;
+    font-weight:700;
+    color:#fff;
+  }
+  .big-card-name svg{ flex:none; width:16px; height:16px; color:var(--text-dim); }
+  footer{
+    text-align:center;
+    margin-top:26px;
+    font-size:11.5px;
+    color:var(--text-faint);
+  }
+  footer a{ color:var(--text-faint); text-decoration:none; }
+  footer a:hover{ color:var(--text-dim); }
+  .dot{ margin:0 8px; opacity:.5; }
+
+  /* ---------- Desktop ---------- */
+  @media (min-width: 980px){
+    header.top{ margin-top:-70px; }
+    h1{ font-size:62px; }
+    .rows{ margin-top:18px; gap:18px; }
+    .rows-head{ margin-top:46px; }
+    .tile{ width:360px; }
+    .page{ max-width:620px; padding-bottom:72px; }
+    .links{ margin-top:36px; }
+  }
+</style>
+<script src="/analytics.js" defer></script>
+</head>
+<body>
+
+<div class="hero">
+  <a class="home-link" href="/" aria-label="The Chubbitz home">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 11L12 4L21 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5.5 9.5V19C5.5 19.5523 5.94772 20 6.5 20H9.5C10.0523 20 10.5 19.5523 10.5 19V15C10.5 14.4477 10.9477 14 11.5 14H12.5C13.0523 14 13.5 14.4477 13.5 15V19C13.5 19.5523 13.9477 20 14.5 20H17.5C18.0523 20 18.5 19.5523 18.5 19V9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
+  <img src="/media/bashtv/chubbitz-games-banner.jpg" width="2048" height="682"
+       alt="Chubbitz walking down a path toward a mountain">
+</div>
+
+<header class="top">
+  <h1>Make your chubbitz</h1>
+</header>
+
+<div class="page">
+
+  <ul class="links">
+    <li>
+      <!-- The Chubbolator itself, leading with its picture the way the game
+           tiles further down do. Not lazy-loaded: it is the first thing on
+           the page, so it is already on screen. -->
+      <a class="big-card" data-track="games_click" data-track-label="chubbolator_top"
+         href="https://bash.tv/chat/03grcu1q3bx3k59ebv9nv004m" target="_blank" rel="noopener noreferrer">
+        <img src="/media/bashtv/chubbolator-thumb.png" width="1280" height="720"
+             decoding="async" alt="">
+        <span class="big-card-name">
+          Make your own Chubbitz!
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </a>
+    </li>
+  </ul>
+
+  <section class="prize">
+    <h2>Want to win a prize?</h2>
+    <p class="prize-lead">The Chubbitz is giving a prize to anyone who makes a game! Here&rsquo;s how it works:</p>
+    <ol class="steps">
+      <li>
+        <span class="step-num">1</span>
+        <span class="step-text">Go to <a class="inline-link" data-track="games_click" data-track-label="prize_chubbolator"
+          href="https://bash.tv/chat/03grcu1q3bx3k59ebv9nv004m" target="_blank" rel="noopener noreferrer">The Chubbolator</a>
+          and click <span class="ui-path">Create &rsaquo; Make a Chubbitz Game!</span> and follow the steps.</span>
+      </li>
+      <li>
+        <span class="step-num">2</span>
+        <span class="step-text">Make sure the game is set to &ldquo;public&rdquo; so that I can check it out!</span>
+      </li>
+      <li>
+        <span class="step-num">3</span>
+        <span class="step-text">Fill out <a class="inline-link" data-track="games_click" data-track-label="prize_form"
+          href="https://docs.google.com/forms/d/e/1FAIpQLSfler9tC4MVz65x9Yb1JXdM2jEouNtiZU21TlGJe-w9_ygaiA/viewform?usp=header"
+          target="_blank" rel="noopener noreferrer">this form</a> with relevant information!</span>
+      </li>
+    </ol>
+  </section>
+
+</div>
+
+<div class="rows-head">
+  <h2>Try some community made games!</h2>
+</div>
+
+<div class="rows">
+  <div class="row" id="row-1"></div>
+  <div class="row back" id="row-2"></div>
+</div>
+
+<div class="page">
+
+  <footer>
+    <a href="/">The Chubbitz</a>
+    <span class="dot">&middot;</span>
+    <a href="/privacy">Privacy</a>
+    <span class="dot">&middot;</span>
+    <a href="/terms">Terms</a>
+  </footer>
+</div>
+
+<script>
+  /* The two scrolling rows.
+
+     Each tile shows the game's picture until it's tapped; only then does the
+     game itself load in place. Loading a dozen games at once would make the
+     page crawl, and most visitors only ever play one.
+
+     To change the line-up, edit GAMES: give each one the Bash link, a title
+     and a picture in /media/bashtv. The rows duplicate the list so the slide
+     loops without a seam. */
+  (function (){
+    var GAMES = [
+      { name:"Harvest Ward", url:"https://bash.tv/chat/03h10aszo2vvf87mr02k9gf2m", img:"/media/bashtv/games/03h10aszo2vvf87mr02k9gf2m.jpg" },
+      { name:"cozymaxxing", url:"https://bash.tv/chat/03h0vl2vxvjq25blkumk7bnbe", img:"/media/bashtv/games/03h0vl2vxvjq25blkumk7bnbe.jpg" },
+      { name:"The cozy fall festival", url:"https://bash.tv/chat/03h12jj6pxtatd2qi30kyq4tr", img:"/media/bashtv/games/03h12jj6pxtatd2qi30kyq4tr.jpg" },
+      { name:"Leaf jumper", url:"https://bash.tv/chat/03h0qa5uj0v60zr24qtnh2mzq", img:"/media/bashtv/games/03h0qa5uj0v60zr24qtnh2mzq.jpg" },
+      { name:"The Golden Acorn Has Gone Missing! 🍂", url:"https://bash.tv/chat/03h196cagb2p8j8uiyus5zti3", img:"/media/bashtv/games/03h196cagb2p8j8uiyus5zti3.jpg" },
+      { name:"There Is No Fall", url:"https://bash.tv/chat/03h19ukc6feglt16d6ks96932", img:"/media/bashtv/games/03h19ukc6feglt16d6ks96932.jpg" },
+      { name:"Chub Park", url:"https://bash.tv/chat/03h202y9nh5abh2nj70jr2emw", img:"/media/bashtv/games/03h202y9nh5abh2nj70jr2emw.jpg" },
+      { name:"CHUBB FIGHT ( AUTUMN UPD )", url:"https://bash.tv/chat/03h0u8kos8681t49xj27foyul", img:"/media/bashtv/games/03h0u8kos8681t49xj27foyul.jpg" },
+      { name:"Toast's candyhunt", url:"https://bash.tv/chat/03h11n8milnixgr4feliv8gv6", img:"/media/bashtv/games/03h11n8milnixgr4feliv8gv6.jpg" },
+      { name:"Onion's Delight", url:"https://bash.tv/chat/03h0g7gunulmj43sdgc52kuq3", img:"/media/bashtv/games/03h0g7gunulmj43sdgc52kuq3.jpg" },
+      { name:"COZY", url:"https://bash.tv/chat/03h0wei04w199ct06qemxly94", img:"/media/bashtv/games/03h0wei04w199ct06qemxly94.jpg" },
+      { name:"Mr. Fedora - The unfinisched duet", url:"https://bash.tv/chat/03h0z8s8jg4z0nqhnruvrtqja", img:"/media/bashtv/games/03h0z8s8jg4z0nqhnruvrtqja.jpg" },
+      { name:"Rocky Balrocka vs Chubbitz (autumn update)", url:"https://bash.tv/chat/03h126sq95zya9w9gf7p1n6ua", img:"/media/bashtv/games/03h126sq95zya9w9gf7p1n6ua.jpg" },
+      { name:"a game for the gamejam (a cozy chubbitz cafe☕ )", url:"https://bash.tv/chat/03h0ylowrpoev1g2bkvqz8thb", img:"/media/bashtv/games/03h0ylowrpoev1g2bkvqz8thb.jpg" },
+      { name:"Leaf Clean Up", url:"https://bash.tv/chat/03h0yplkc3fsz8ziaef12duye", img:"/media/bashtv/games/03h0yplkc3fsz8ziaef12duye.jpg" },
+      { name:"Chubkin patch", url:"https://bash.tv/chat/03h0ww0zsl0x1xnuvifgx9agh", img:"/media/bashtv/games/03h0ww0zsl0x1xnuvifgx9agh.jpg" },
+      { name:"When The Leafs Start To Fall", url:"https://bash.tv/chat/03h0rsd0bxnqae4xobvxemfzz", img:"/media/bashtv/games/03h0rsd0bxnqae4xobvxemfzz.jpg" },
+      { name:"katamari chubbitzy", url:"https://bash.tv/chat/03h0j3jcovnn61xhxctx9adtz", img:"/media/bashtv/games/03h0j3jcovnn61xhxctx9adtz.jpg" },
+      { name:"Chubbitz Run! (Chubbash Template)", url:"https://bash.tv/chat/03h0pqvatizvpxotcols1phll", img:"/media/bashtv/games/03h0pqvatizvpxotcols1phll.jpg" },
+      { name:"Angry Chubbitz", url:"https://bash.tv/chat/03gwmybdc83g2w8bjy0kylkw6", img:"/media/bashtv/games/03gwmybdc83g2w8bjy0kylkw6.jpg" },
+      { name:"chubbe cafe: jenga", url:"https://bash.tv/chat/03gvsl5wuzwm2ivsjbkrlzri1", img:"/media/bashtv/games/03gvsl5wuzwm2ivsjbkrlzri1.jpg" }
+    ];
+
+    var PLAY = '<span class="tile-play" aria-hidden="true"><span>' +
+      '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></span>';
+
+    function tile(game){
+      var a = document.createElement("a");
+      a.className = "tile";
+      a.href = game.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.setAttribute("aria-label", "Play " + game.name);
+      a.dataset.track = "games_click";
+      a.dataset.trackLabel = "play_tile";
+      a.draggable = false;              /* dragging the row, not the picture */
+      a.innerHTML = '<img src="' + game.img + '" alt="" loading="lazy" decoding="async" draggable="false">' +
+        PLAY + '<span class="tile-name">' + game.name + "</span>";
+      return a;
+    }
+
+    var SPEED = 0.55;        /* pixels per frame, about 33 a second */
+    var REST = 5000;         /* how long a row waits after you let go */
+    var slow = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function fill(row, list, back){
+      var track = document.createElement("div");
+      track.className = "track";
+      /* twice through: when the scroll passes the halfway mark it can jump back
+         by exactly half and nobody sees the join */
+      for(var pass = 0; pass < 2; pass++){
+        list.forEach(function (g){ track.appendChild(tile(g)); });
+      }
+      row.appendChild(track);
+
+      var half = 0;
+      function measure(){ half = track.scrollWidth / 2; }
+      measure();
+      window.addEventListener("resize", measure);
+      /* the pictures arrive late and change the width, so measure again then */
+      [].forEach.call(track.querySelectorAll("img"), function (img){
+        img.addEventListener("load", measure, { once:true });
+      });
+
+      var pos = back ? half : 0;        /* the second row starts from the far end */
+      row.scrollLeft = pos;
+      var held = 0;                     /* while > now, the row stays still */
+
+      function rest(){ held = Date.now() + REST; }
+
+      function frame(){
+        if(!slow && half && Date.now() > held && !dragging){
+          pos += back ? -SPEED : SPEED;
+          if(pos >= half) pos -= half;
+          if(pos < 0) pos += half;
+          row.scrollLeft = pos;
+        }
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+
+      /* a swipe, a wheel or a trackpad nudge: let it move, then wait */
+      row.addEventListener("scroll", function (){
+        if(Date.now() > held && !dragging) return;   /* our own drift */
+        pos = row.scrollLeft;
+        if(half){
+          if(pos >= half) { pos -= half; row.scrollLeft = pos; }
+          if(pos < 0) { pos += half; row.scrollLeft = pos; }
+        }
+      }, { passive:true });
+      row.addEventListener("touchstart", rest, { passive:true });
+      row.addEventListener("touchmove", rest, { passive:true });
+      row.addEventListener("wheel", rest, { passive:true });
+      row.addEventListener("mouseenter", function (){ held = Date.now() + REST; });
+      row.addEventListener("mouseleave", function (){ held = 0; });
+
+      /* Dragging with a mouse.
+
+         The pointer is captured only once the cursor has actually moved a few
+         pixels. Capturing it on the way down made the row the target of the
+         click that followed, so the tile underneath never opened - a plain
+         click has to stay a plain click. */
+      var dragging = false, pending = false, pointer = null;
+      var startX = 0, startScroll = 0, moved = 0;
+
+      row.addEventListener("pointerdown", function (e){
+        if(e.pointerType === "touch") return;        /* phones scroll natively */
+        if(e.button !== 0) return;
+        pending = true; dragging = false; moved = 0;
+        pointer = e.pointerId;
+        startX = e.clientX;
+        startScroll = row.scrollLeft;
+      });
+
+      row.addEventListener("pointermove", function (e){
+        if(!pending && !dragging) return;
+        var dx = e.clientX - startX;
+        moved = Math.max(moved, Math.abs(dx));
+        if(!dragging){
+          if(moved <= 5) return;                     /* still just a click */
+          dragging = true;
+          pending = false;
+          row.classList.add("dragging");
+          try { row.setPointerCapture(pointer); } catch (err){}
+        }
+        row.scrollLeft = startScroll - dx;
+        pos = row.scrollLeft;
+        e.preventDefault();
+      });
+
+      function endDrag(){
+        pending = false;
+        if(!dragging) return;
+        dragging = false;
+        row.classList.remove("dragging");
+        try { row.releasePointerCapture(pointer); } catch (err){}
+        rest();
+        /* a real drag shouldn't also open whatever was under the cursor */
+        row.addEventListener("click", function (ev){
+          ev.preventDefault(); ev.stopPropagation();
+        }, { capture:true, once:true });
+      }
+      row.addEventListener("pointerup", endDrag);
+      row.addEventListener("pointercancel", endDrag);
+    }
+
+    /* half in each row - the top row in order, the bottom row reversed, so the
+       two rows never show the same game side by side */
+    var half = Math.ceil(GAMES.length / 2);
+    fill(document.getElementById("row-1"), GAMES.slice(0, half), false);
+    fill(document.getElementById("row-2"), GAMES.slice(half).reverse(), true);
+  })();
+</script>
+
+</body>
+</html>
