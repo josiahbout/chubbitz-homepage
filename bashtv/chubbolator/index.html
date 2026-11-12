@@ -5,19 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0a0b0e">
 <meta name="description" content="Make your own Chubbitz on Bash.tv, and win a prize for making a game.">
-<title>Make your chubbitz</title>
+<title>Make your chubbitz!</title>
 
 <meta property="og:site_name" content="The Chubbitz">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://thechubbitz.com/bashtv/chubbolator">
-<meta property="og:title" content="Make your chubbitz">
+<meta property="og:title" content="Make your chubbitz!">
 <meta property="og:description" content="Make your own Chubbitz, and win a prize for making a game!">
 <meta property="og:image" content="https://thechubbitz.com/media/bashtv/chubbitz-games-banner.jpg">
 <meta property="og:image:width" content="2048">
 <meta property="og:image:height" content="682">
 <meta property="og:image:alt" content="Chubbitz walking down a path toward a mountain">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Make your chubbitz">
+<meta name="twitter:title" content="Make your chubbitz!">
 <meta name="twitter:description" content="Make your own Chubbitz, and win a prize for making a game!">
 <meta name="twitter:image" content="https://thechubbitz.com/media/bashtv/chubbitz-games-banner.jpg">
 
@@ -182,6 +182,15 @@
     text-align:center;
     text-wrap:balance;
   }
+  /* The gold is set here rather than on the path so the one colour covers
+     every stroke in the icon. */
+  .trophy{
+    width:1em;
+    height:1em;
+    margin-left:.3em;
+    vertical-align:-.08em;
+    color:#f0b429;
+  }
   .prize-lead{
     margin:0 0 16px;
     text-align:center;
@@ -189,6 +198,59 @@
     line-height:1.6;
     color:var(--text-dim);
   }
+  .prizes{
+    list-style:none;
+    margin:0 0 18px;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .prizes li{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 15px;
+    border-radius:var(--radius-md);
+    background:var(--card);
+    border:1px solid var(--line);
+  }
+  .prize-icon{
+    flex:none;
+    width:38px;
+    height:38px;
+    display:grid;
+    place-items:center;
+    border-radius:11px;
+    overflow:hidden;
+    background:rgba(79,142,247,.14);
+    border:1px solid rgba(79,142,247,.3);
+    color:var(--accent-2);
+  }
+  .prize-icon img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .prize-icon svg{ width:19px; height:19px; display:block; }
+  .prize-text{
+    flex:1;
+    min-width:0;
+    font-size:14.5px;
+    line-height:1.45;
+    font-weight:600;
+    color:var(--text);
+  }
+  /* the small print that has to travel with the sticker sheet */
+  .prize-note{
+    display:inline-block;
+    margin-left:3px;
+    padding:1px 7px;
+    border-radius:999px;
+    background:rgba(255,255,255,.06);
+    border:1px solid var(--line);
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--text-faint);
+    white-space:nowrap;
+  }
+
   .steps{
     /* the numbers are drawn as badges below, so the list's own are off */
     list-style:none;
@@ -255,7 +317,7 @@
     font-family:'Fredoka', sans-serif;
     font-weight:700;
     font-size:clamp(19px, 5.4vw, 23px);
-    color:#fff;
+    color:var(--text-dim);
     text-wrap:balance;
   }
 
@@ -285,27 +347,18 @@
     transition:transform .15s ease, border-color .15s ease;
   }
   .big-card:hover{ transform:translateY(-2px); border-color:var(--line-hover); }
-  .big-card img{
+  .big-card img,
+  .big-card video{
     display:block;
     width:100%;
     height:auto;
     aspect-ratio:16 / 9;
     object-fit:cover;
   }
-  .big-card-name{
-    position:absolute;
-    left:0; right:0; bottom:0;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    padding:28px 14px 12px;
-    background:linear-gradient(to top, rgba(10,11,14,.92), rgba(10,11,14,.55) 55%, transparent);
-    font-size:16px;
-    font-weight:700;
-    color:#fff;
-  }
-  .big-card-name svg{ flex:none; width:16px; height:16px; color:var(--text-dim); }
+  .big-card:hover .tile-play{ background:rgba(10,11,14,.15); }
+  .big-card .tile-play span{ width:62px; height:62px; }
+  .big-card .tile-play svg{ width:26px; height:26px; margin-left:4px; }
+
   footer{
     text-align:center;
     margin-top:26px;
@@ -343,7 +396,7 @@
 </div>
 
 <header class="top">
-  <h1>Make your chubbitz</h1>
+  <h1>Make your chubbitz!</h1>
 </header>
 
 <div class="page">
@@ -353,21 +406,41 @@
       <!-- The Chubbolator itself, leading with its picture the way the game
            tiles further down do. Not lazy-loaded: it is the first thing on
            the page, so it is already on screen. -->
+      <!-- The card carries no words any more, so the link needs a name of its
+           own for anyone not looking at the picture. -->
       <a class="big-card" data-track="games_click" data-track-label="chubbolator_top"
+         aria-label="Make your own Chubbitz"
          href="https://bash.tv/chat/03grcu1q3bx3k59ebv9nv004m" target="_blank" rel="noopener noreferrer">
-        <img src="/media/bashtv/chubbolator-thumb.png" width="1280" height="720"
-             decoding="async" alt="">
-        <span class="big-card-name">
-          Make your own Chubbitz!
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-        </span>
+        <!-- The old still is the poster, so something is on screen from the
+             first paint and there is still a picture if the clip won't play. -->
+        <video width="960" height="540" autoplay muted loop playsinline
+               preload="metadata" poster="/media/bashtv/chubbolator-thumb.png"
+               aria-hidden="true" tabindex="-1">
+          <source src="/media/bashtv/chubbolator-thumb.mp4" type="video/mp4">
+        </video>
+        <span class="tile-play" aria-hidden="true"><span>
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </span></span>
       </a>
     </li>
   </ul>
 
   <section class="prize">
-    <h2>Want to win a prize?</h2>
-    <p class="prize-lead">The Chubbitz is giving a prize to anyone who makes a game! Here&rsquo;s how it works:</p>
+    <h2>Want to win a prize?<svg class="trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4.5A1.5 1.5 0 0 0 3 7.5 4.5 4.5 0 0 0 7.5 12"/><path d="M17 6h2.5A1.5 1.5 0 0 1 21 7.5 4.5 4.5 0 0 1 16.5 12"/></svg></h2>
+    <p class="prize-lead">The Chubbitz is giving a prize to anyone who makes a game!</p>
+    <ul class="prizes">
+      <li>
+        <span class="prize-icon"><img src="/media/instagram.webp" width="38" height="38" loading="lazy" decoding="async" alt=""></span>
+        <span class="prize-text">A follow from <strong>The Chubbitz</strong> Instagram page!</span>
+      </li>
+      <li>
+        <span class="prize-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12.5V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7.5z"/><path d="M13.5 21.5V16a2 2 0 0 1 2-2h5.5"/></svg>
+        </span>
+        <span class="prize-text">A free Chubbitz sticker sheet! <span class="prize-note">U.S. only</span></span>
+      </li>
+    </ul>
+    <p class="prize-lead">Here&rsquo;s how it works:</p>
     <ol class="steps">
       <li>
         <span class="step-num">1</span>
