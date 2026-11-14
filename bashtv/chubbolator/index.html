@@ -292,6 +292,15 @@
     background:var(--card);
     border:1px solid var(--line);
   }
+  /* quiet fine print under the steps */
+  .fine-print{
+    margin:10px 4px 0;
+    font-size:12px;
+    line-height:1.5;
+    font-style:italic;
+    color:var(--text-faint);
+  }
+  .fine-print + .fine-print{ margin-top:4px; }
   .step-num{
     flex:none;
     width:26px;
@@ -480,6 +489,8 @@
           target="_blank" rel="noopener noreferrer">this form</a> with relevant information!</span>
       </li>
     </ol>
+    <p class="fine-print">The game must be newly created after Nov 14th.</p>
+    <p class="fine-print">Sticker sheet will be provided while supplies last. Limited to one per person.</p>
   </section>
 
 </div>
