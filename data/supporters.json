@@ -1,6 +1,6 @@
 {
-   "count" : 9,
-   "generated_at" : "2026-11-17T18:36:28.825673+00:00",
+   "count" : 10,
+   "generated_at" : "2026-11-18T18:36:23.724093+00:00",
    "role" : "Sky Supporter",
    "supporters" : [
       {
@@ -20,6 +20,12 @@
          "hash" : "02b8c82fd659191a36716271a6b210a6",
          "id" : "1240154829829963859",
          "name" : "bludragonyt"
+      },
+      {
+         "ext" : "png",
+         "hash" : "cc58cb3e741cf6e154d9b9e487bcd3d3",
+         "id" : "1452388876852269139",
+         "name" : "hioribori"
       },
       {
          "ext" : "png",
@@ -58,5 +64,5 @@
          "name" : "joneila"
       }
    ],
-   "synced_at" : "2026-11-18T02:40:04Z"
+   "synced_at" : "2026-11-19T02:40:03Z"
 }
